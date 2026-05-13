@@ -400,7 +400,7 @@ async function guardarNuevaOT() {
     try {
       await enviarAGAS({ ...ot, form: 'OT_CREAR' });
     } catch(e) {
-      // OK, queda en local, se sincronizará después
+      showToast('⚠️ Error GAS: ' + e.message, 'warn', 8000);
     }
   }
 }

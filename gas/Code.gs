@@ -19,6 +19,7 @@
 // ─── CONFIGURACIÓN ─────────────────────────────────────────────────────
 const SPREADSHEET_ID    = '1h1cNml-yMtj1lDk_XQYV3Qa5O9vBtGf-ks6OnhzK3Xo';
 const DRIVE_FOLDER_NAME = 'AClímate — Fotos Operativas';
+const EMAIL_DESTINATARIOS = 'aporras@avelectromecanica.com,aclimatecr@avelectromecanica.com,aalfaro@avelectromecanica.com';
 // ───────────────────────────────────────────────────────────────────────
 
 // ── GET: devuelve OTs abiertas para los formularios ──────────────────
@@ -64,6 +65,20 @@ function doPost(e) {
   }
 }
 
+// ── Email helper ─────────────────────────────────────────────────────
+function enviarEmail(asunto, lineas) {
+  try {
+    const cuerpo = lineas.join('\n');
+    MailApp.sendEmail({
+      to: EMAIL_DESTINATARIOS,
+      subject: '[AClímate] ' + asunto,
+      body: cuerpo + '\n\n—\nEnviado automáticamente por AClímate Forms'
+    });
+  } catch(e) {
+    Logger.log('Email error: ' + e.toString());
+  }
+}
+
 // ── OTs — Crear ─────────────────────────────────────────────────────
 function manejarOTCrear(d) {
   const sheet = getSheet('OTs');
@@ -79,6 +94,16 @@ function manejarOTCrear(d) {
     d.id, d.cliente, d.tipo, d.tecnico, d.descripcion || '',
     d.fecha_asignacion, 'Abierta', d.timestamp, ''
   ]);
+
+  enviarEmail('Nueva OT creada: ' + d.id, [
+    'OT:       ' + d.id,
+    'Cliente:  ' + d.cliente,
+    'Tipo:     ' + d.tipo,
+    'Técnico:  ' + d.tecnico,
+    'Fecha:    ' + d.fecha_asignacion,
+    'Descripción: ' + (d.descripcion || '—'),
+  ]);
+
   return { id: d.id };
 }
 
@@ -90,6 +115,13 @@ function manejarOTCerrar(d) {
     if (data[i][0] === d.id) {
       sheet.getRange(i + 1, 7).setValue('Cerrada');
       sheet.getRange(i + 1, 9).setValue(new Date().toISOString());
+
+      enviarEmail('OT cerrada: ' + d.id, [
+        'OT:      ' + d.id,
+        'Estado:  Cerrada',
+        'Cierre:  ' + new Date().toLocaleString('es-CR'),
+      ]);
+
       return { id: d.id, estado: 'Cerrada' };
     }
   }
@@ -132,6 +164,18 @@ function manejarF01(d) {
     itemsStr, d.observaciones || '', d.firma, fotos
   ]);
 
+  enviarEmail('F-01 Despacho — ' + d.ot + ' | ' + d.tecnico, [
+    'Fecha:    ' + d.fecha,
+    'Técnico:  ' + d.tecnico,
+    'OT:       ' + d.ot,
+    'Cliente:  ' + d.cliente,
+    '',
+    'Ítems despachados:',
+    itemsStr || '—',
+    '',
+    'Observaciones: ' + (d.observaciones || '—'),
+  ]);
+
   return { form: 'F01', ot: d.ot };
 }
 
@@ -160,6 +204,19 @@ function manejarF02(d) {
     d.multimetro, d.pinzas, d.taladro, d.escalera,
     d.epp_tecnico, d.epp_asistente, d.documentos_camion,
     d.materiales_verificados, d.problema || '', fotos
+  ]);
+
+  const problemasF02 = d.problema ? ('⚠️ Problema: ' + d.problema) : 'Sin problemas';
+  enviarEmail('F-02 Checklist Inicio — ' + d.fecha + ' | ' + d.tecnico, [
+    'Fecha:     ' + d.fecha,
+    'Técnico:   ' + d.tecnico,
+    '',
+    'Combustible:          ' + d.combustible,
+    'EPP técnico:          ' + d.epp_tecnico,
+    'EPP asistente:        ' + d.epp_asistente,
+    'Materiales verif.:    ' + d.materiales_verificados,
+    '',
+    problemasF02,
   ]);
 
   return { form: 'F02' };
@@ -197,6 +254,27 @@ function manejarF03(d) {
     d.observaciones || '', fotosT, fotosV
   ]);
 
+  const problemasF03 = d.hubo_problema === 'Sí' ? ('⚠️ ' + (d.problema_detalle || 'Sin detalle')) : 'Sin problemas';
+  enviarEmail('F-03 Reporte Trabajo — ' + d.ot + ' | ' + d.tecnico, [
+    'Fecha:        ' + d.fecha,
+    'OT:           ' + d.ot,
+    'Cliente:      ' + d.cliente,
+    'Técnico:      ' + d.tecnico,
+    'Tipo trabajo: ' + d.tipo_trabajo,
+    '',
+    'Llegada: ' + d.hora_llegada + '  |  Inicio: ' + d.hora_inicio + '  |  Fin: ' + d.hora_fin,
+    '',
+    'Descripción del trabajo:',
+    d.descripcion || '—',
+    '',
+    'Ítems utilizados:',
+    itemsStr || '—',
+    '',
+    'Estado del equipo: ' + d.estado_equipo,
+    'VoBo cliente:      ' + d.vobo,
+    problemasF03,
+  ]);
+
   return { form: 'F03', ot: d.ot };
 }
 
@@ -226,6 +304,19 @@ function manejarF04(d) {
     d.material_en_camion, d.material_camion_detalle || '',
     d.firma, fotos
   ]);
+
+  enviarEmail('F-04 Devolución — ' + d.ot + ' | ' + d.tecnico, [
+    'Fecha:    ' + d.fecha,
+    'OT:       ' + d.ot,
+    'Técnico:  ' + d.tecnico,
+    '',
+    'Ítems devueltos:',
+    itemsStr || '—',
+    '',
+    'Estado ítems:       ' + d.estado_items,
+    'Material en camión: ' + d.material_en_camion,
+    d.material_camion_detalle ? ('Detalle camión: ' + d.material_camion_detalle) : '',
+  ].filter(l => l !== ''));
 
   return { form: 'F04', ot: d.ot };
 }
@@ -259,6 +350,24 @@ function manejarF05(d) {
     d.resumen_dia, fotos
   ]);
 
+  const incidenteF05 = d.incidente_camion === 'Sí' ? ('⚠️ Incidente: ' + (d.incidente_detalle || 'Sin detalle')) : 'Sin incidentes';
+  const mantoF05 = d.requiere_mantenimiento === 'Sí' ? ('🔧 Mantenimiento: ' + (d.mantenimiento_detalle || 'Sin detalle')) : 'No requiere mantenimiento';
+  enviarEmail('F-05 Checklist Cierre — ' + d.fecha + ' | ' + d.tecnico, [
+    'Fecha:              ' + d.fecha,
+    'Técnico:            ' + d.tecnico,
+    '',
+    'Estado camión:      ' + d.estado_camion,
+    'Combustible cierre: ' + d.combustible_cierre,
+    'Sobrantes devueltos:' + d.sobrantes_devueltos,
+    'Herramientas OK:    ' + d.herramientas,
+    '',
+    incidenteF05,
+    mantoF05,
+    '',
+    'Resumen del día:',
+    d.resumen_dia || '—',
+  ]);
+
   return { form: 'F05' };
 }
 
@@ -286,6 +395,21 @@ function manejarF06(d) {
     d.hay_vuelto, d.monto_vuelto || '',
     d.observaciones || '', fotoR
   ]);
+
+  const aprobF06 = d.aprobado_pm === 'No' ? ('⚠️ Sin aprobación PM: ' + (d.justificacion_no_aprobado || '—')) : 'Aprobado por PM';
+  enviarEmail('F-06 Viático — ₡' + d.monto + ' | ' + d.tecnico, [
+    'Fecha:      ' + d.fecha,
+    'Técnico:    ' + d.tecnico,
+    'OT:         ' + d.ot,
+    '',
+    'Tipo gasto: ' + d.tipo_gasto,
+    'Descripción:' + d.descripcion,
+    'Monto:      ₡' + d.monto,
+    aprobF06,
+    d.hay_vuelto === 'Sí' ? ('Vuelto: ₡' + (d.monto_vuelto || '0')) : '',
+    '',
+    'Observaciones: ' + (d.observaciones || '—'),
+  ].filter(l => l !== ''));
 
   return { form: 'F06' };
 }
