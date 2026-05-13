@@ -4,7 +4,7 @@
 
 const CONFIG = {
   // URL del Google Apps Script desplegado (reemplazar después de publicar)
-  GAS_URL: 'https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec',
+  GAS_URL: 'https://script.google.com/macros/s/AKfycbwcizqOIHoKEXdaqqDRHwTgo7a135kfMUPUQNxmDSfQzBz8mC5CIv4CRMMbRh5GtFrkuA/exec',
 
   // Equipo operativo de campo
   EQUIPO: [

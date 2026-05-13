@@ -17,7 +17,7 @@
  */
 
 // ─── CONFIGURACIÓN ─────────────────────────────────────────────────────
-const SPREADSHEET_ID    = 'TU_SPREADSHEET_ID_AQUI';
+const SPREADSHEET_ID    = '1h1cNml-yMtj1lDk_XQYV3Qa5O9vBtGf-ks6OnhzK3Xo';
 const DRIVE_FOLDER_NAME = 'AClímate — Fotos Operativas';
 // ───────────────────────────────────────────────────────────────────────
 
