@@ -58,6 +58,38 @@
       cursor: pointer;
     }
     .btn-cerrar-ot:hover { background: #FDEDEC; }
+    .btn-editar-ot {
+      padding: 7px 12px;
+      background: none;
+      border: 1.5px solid var(--azul);
+      color: var(--azul);
+      border-radius: 8px;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-editar-ot:hover { background: var(--azul-light); }
+    .seccion-modal {
+      border-top: 1px solid var(--gris-borde);
+      margin: 14px 0 0;
+      padding-top: 12px;
+    }
+    .seccion-modal-titulo {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--texto-sub);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 10px;
+    }
+    .presupuesto-info {
+      font-size: .75rem;
+      color: var(--texto-sub);
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      background: var(--azul-light);
+      border-radius: 6px;
+    }
     .tabs {
       display: flex;
       gap: 0;
@@ -216,7 +248,7 @@
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-titulo">
-      Nueva OT
+      <span id="modal-titulo-texto">Nueva OT</span>
       <button class="btn-modal-close" onclick="cerrarModal()">✕</button>
     </div>
 
@@ -260,6 +292,35 @@
       <input type="date" id="ot-fecha">
     </div>
 
+    <!-- Contacto en sitio -->
+    <div class="seccion-modal">
+      <div class="seccion-modal-titulo">Contacto en sitio</div>
+      <div class="campo">
+        <label>Nombre del contacto</label>
+        <input type="text" id="ot-contacto-nombre" placeholder="Persona de contacto en el lugar">
+      </div>
+      <div class="campo">
+        <label>Teléfono</label>
+        <input type="tel" id="ot-contacto-tel" placeholder="8888-0000">
+      </div>
+    </div>
+
+    <!-- Dirección -->
+    <div class="campo" style="margin-top:10px">
+      <label>Dirección / Ubicación</label>
+      <textarea id="ot-direccion" placeholder="Dirección exacta, cómo llegar, referencias..." rows="2"></textarea>
+    </div>
+
+    <!-- Presupuesto de materiales -->
+    <div class="seccion-modal">
+      <div class="seccion-modal-titulo">Presupuesto de materiales</div>
+      <div class="presupuesto-info">Los técnicos verán estos ítems como referencia en F-01 y recibirán alerta si despachan más de lo aprobado.</div>
+      <div class="items-wrapper" id="items-presupuesto"></div>
+      <button type="button" class="btn-add-item" onclick="agregarItemPresupuesto()" style="margin-top:6px">
+        ＋ Agregar ítem al presupuesto
+      </button>
+    </div>
+
     <div style="height: 16px;"></div>
     <button type="button" class="btn-submit" id="btn-guardar-ot" style="position:static; width:100%; margin-top:8px;" onclick="guardarNuevaOT()">
       ✅ Crear OT
@@ -274,6 +335,7 @@
 </div>
 
 <script src="config.js"></script>
+<script src="catalogo.js"></script>
 <script src="utils.js"></script>
 <script>
 
@@ -290,18 +352,16 @@ document.getElementById('ot-fecha').value = fechaHoy();
 // ── Render ────────────────────────────────────────────────────────────
 async function renderOTs() {
   const ots = await cargarOTs();
-  const abiertas  = ots.filter(o => o.estado === 'Abierta');
-  const cerradas  = ots.filter(o => o.estado === 'Cerrada');
+  const abiertas = ots.filter(o => o.estado === 'Abierta');
+  const cerradas = ots.filter(o => o.estado === 'Cerrada');
 
   document.getElementById('count-abiertas').textContent = abiertas.length;
 
-  // Abiertas
   const labierta = document.getElementById('lista-abiertas');
   labierta.innerHTML = '';
   document.getElementById('empty-abiertas').style.display = abiertas.length ? 'none' : 'block';
   abiertas.forEach(ot => labierta.appendChild(crearCardOT(ot, true)));
 
-  // Cerradas
   const lcerrada = document.getElementById('lista-cerradas');
   lcerrada.innerHTML = '';
   document.getElementById('empty-cerradas').style.display = cerradas.length ? 'none' : 'block';
@@ -312,11 +372,15 @@ function crearCardOT(ot, esAbierta) {
   const card = document.createElement('div');
   card.className = 'ot-card' + (esAbierta ? '' : ' cerrada');
 
-  const tipo = ot.tipo || ot.tipo_de_trabajo || '—';
-  const tech = ot.tecnico || ot.técnico_asignado || '—';
-  const fecha = ot.fecha_asignacion || ot.fecha_de_asignación || '—';
+  const tipo    = ot.tipo    || '—';
+  const tech    = ot.tecnico || ot['técnico'] || '—';
+  const fecha   = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
+  const desc    = ot.descripcion || ot['descripción'] || '';
+  const contacto = ot.contacto_nombre || '';
+  const tel      = ot.contacto_tel    || '';
+  const dir      = ot.direccion       || '';
+  const nPres    = Array.isArray(ot.presupuesto) ? ot.presupuesto.length : 0;
 
-  const desc = ot.descripcion || ot['descripción'] || '';
   card.innerHTML = `
     <div class="ot-card-header">
       <span class="ot-id">${ot.id || '—'}</span>
@@ -327,9 +391,16 @@ function crearCardOT(ot, esAbierta) {
       <span>${tipo}</span>
       <span>👤 ${tech}</span>
       <span>📅 ${fecha}</span>
+      ${nPres ? `<span>📦 ${nPres} ítem${nPres > 1 ? 's' : ''} presup.</span>` : ''}
     </div>
-    ${desc ? `<div style="font-size:.78rem;color:var(--texto-sub);margin-top:2px;">${desc}</div>` : ''}
-    ${esAbierta ? `<div class="ot-acciones"><button class="btn-cerrar-ot" onclick="confirmarCierre('${ot.id}')">🔒 Cerrar OT</button></div>` : ''}
+    ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:3px;">📍 ${dir}</div>` : ''}
+    ${(contacto || tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel ? ' — ' + tel : ''}</div>` : ''}
+    ${desc      ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">${desc}</div>` : ''}
+    ${esAbierta ? `
+      <div class="ot-acciones">
+        <button class="btn-cerrar-ot" onclick="confirmarCierre('${ot.id}')">🔒 Cerrar</button>
+        <button class="btn-editar-ot" onclick="abrirModal('${ot.id}')">✏️ Editar</button>
+      </div>` : ''}
   `;
   return card;
 }
@@ -340,12 +411,12 @@ function mostrarTab(tab) {
   document.getElementById('tab-cerradas').style.display = tab === 'cerradas' ? 'block' : 'none';
   document.getElementById('btn-tab-abiertas').className = 'tab' + (tab === 'abiertas' ? ' active' : '');
   document.getElementById('btn-tab-cerradas').className = 'tab' + (tab === 'cerradas' ? ' active' : '');
-  // Ocultar/mostrar botón nueva OT
   document.getElementById('btn-nueva-ot').style.display = tab === 'abiertas' ? '' : 'none';
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────
 let _tipoSeleccionado = '';
+let _editandoOTId = null;
 
 function seleccionarTipo(el) {
   document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
@@ -354,13 +425,75 @@ function seleccionarTipo(el) {
   document.getElementById('ot-tipo').value = _tipoSeleccionado;
 }
 
-function abrirModal() {
-  document.getElementById('ot-numero').value = generarNumOT();
-  document.getElementById('ot-cliente').value = '';
+function agregarItemPresupuesto() {
+  crearItemRow(CATALOGO_COMPLETO, document.getElementById('items-presupuesto'));
+}
+
+function _limpiarModal() {
+  document.getElementById('ot-cliente').value     = '';
   document.getElementById('ot-descripcion').value = '';
-  document.getElementById('ot-fecha').value = fechaHoy();
+  document.getElementById('ot-fecha').value        = fechaHoy();
+  document.getElementById('ot-contacto-nombre').value = '';
+  document.getElementById('ot-contacto-tel').value    = '';
+  document.getElementById('ot-direccion').value        = '';
   document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
   _tipoSeleccionado = '';
+  const cnt = document.getElementById('items-presupuesto');
+  cnt.innerHTML = '';
+  _itemCounter = 0;
+}
+
+function abrirModal(otId = null) {
+  _editandoOTId = otId;
+  _limpiarModal();
+
+  if (otId) {
+    // Modo edición: pre-llenar con datos existentes
+    document.getElementById('modal-titulo-texto').textContent = 'Editar OT';
+    document.getElementById('btn-guardar-ot').textContent = '💾 Guardar cambios';
+
+    const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
+    const ot  = ots.find(o => o.id === otId);
+    if (!ot) { showToast('OT no encontrada', 'error'); return; }
+
+    document.getElementById('ot-numero').value          = ot.id;
+    document.getElementById('ot-cliente').value         = ot.cliente || '';
+    document.getElementById('ot-descripcion').value     = ot.descripcion || '';
+    document.getElementById('ot-fecha').value           = ot.fecha_asignacion || fechaHoy();
+    document.getElementById('ot-contacto-nombre').value = ot.contacto_nombre || '';
+    document.getElementById('ot-contacto-tel').value    = ot.contacto_tel    || '';
+    document.getElementById('ot-direccion').value       = ot.direccion       || '';
+    document.getElementById('ot-tecnico').value         = ot.tecnico || '';
+
+    if (ot.tipo) {
+      const pill = document.querySelector(`.color-pill[data-tipo="${ot.tipo}"]`);
+      if (pill) seleccionarTipo(pill);
+    }
+
+    // Restaurar ítems del presupuesto
+    if (Array.isArray(ot.presupuesto) && ot.presupuesto.length) {
+      const cnt = document.getElementById('items-presupuesto');
+      ot.presupuesto.forEach(item => {
+        crearItemRow(CATALOGO_COMPLETO, cnt);
+        const rows   = cnt.querySelectorAll('.item-row');
+        const last   = rows[rows.length - 1];
+        const hid    = last.querySelector('.ac-hidden');
+        const txt    = last.querySelector('.autocomplete-input');
+        const qty    = last.querySelector('.item-qty');
+        const sel    = last.querySelector('.ac-selected');
+        if (hid) hid.value = item.codigo;
+        if (txt) txt.value = item.codigo + ' — ' + item.nombre;
+        if (qty) qty.value = item.cantidad;
+        if (sel) { sel.textContent = '✓ ' + item.nombre; sel.classList.add('show'); }
+      });
+    }
+  } else {
+    // Modo creación
+    document.getElementById('modal-titulo-texto').textContent = 'Nueva OT';
+    document.getElementById('btn-guardar-ot').textContent = '✅ Crear OT';
+    document.getElementById('ot-numero').value = generarNumOT();
+  }
+
   document.getElementById('modal-overlay').classList.add('show');
 }
 
@@ -377,27 +510,45 @@ async function guardarNuevaOT() {
   if (!tipo)    { showToast('Seleccioná el tipo de trabajo', 'warn'); return; }
   if (!tecnico) { showToast('Seleccioná el técnico', 'warn'); return; }
 
+  const presupuesto    = recogerItems(document.getElementById('items-presupuesto'));
+  const presupuesto_str = presupuesto.map(it => `${it.codigo} | ${it.nombre} | ${it.cantidad}`).join('\n');
+
   const ot = {
     id:               document.getElementById('ot-numero').value,
-    cliente:          cliente,
-    tipo:             tipo,
-    tecnico:          tecnico,
+    cliente,
+    tipo,
+    tecnico,
     descripcion:      document.getElementById('ot-descripcion').value.trim(),
     fecha_asignacion: document.getElementById('ot-fecha').value,
-    estado:           'Abierta',
-    timestamp:        new Date().toISOString()
+    contacto_nombre:  document.getElementById('ot-contacto-nombre').value.trim(),
+    contacto_tel:     document.getElementById('ot-contacto-tel').value.trim(),
+    direccion:        document.getElementById('ot-direccion').value.trim(),
+    presupuesto
   };
 
-  // Guardar localmente primero
-  guardarOT(ot);
+  if (_editandoOTId) {
+    // Actualizar OT existente en localStorage
+    const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
+    const idx = ots.findIndex(o => o.id === _editandoOTId);
+    if (idx >= 0) {
+      ot.estado    = ots[idx].estado;
+      ot.timestamp = ots[idx].timestamp;
+      ots[idx]     = ot;
+      localStorage.setItem('ots_local', JSON.stringify(ots));
+    }
+  } else {
+    ot.estado    = 'Abierta';
+    ot.timestamp = new Date().toISOString();
+    guardarOT(ot);
+  }
+
   cerrarModal();
   await renderOTs();
-  showToast('OT ' + ot.id + ' creada', 'success');
+  showToast(_editandoOTId ? 'OT actualizada' : 'OT ' + ot.id + ' creada', 'success');
 
-  // Sincronizar con GAS en background
   if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
     try {
-      await enviarAGAS({ ...ot, form: 'OT_CREAR' });
+      await enviarAGAS({ ...ot, form: _editandoOTId ? 'OT_EDITAR' : 'OT_CREAR', presupuesto_str });
     } catch(e) {
       showToast('⚠️ Error GAS: ' + e.message, 'warn', 8000);
     }

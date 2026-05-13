@@ -85,6 +85,15 @@
     </div>
   </div>
 
+  <!-- PRESUPUESTO OT (aparece al seleccionar OT con presupuesto) -->
+  <div class="seccion" id="seccion-presupuesto" style="display:none">
+    <div class="seccion-titulo">📋 Presupuesto aprobado para esta OT</div>
+    <div style="font-size:.78rem;color:var(--texto-sub);margin-bottom:8px;">
+      Ítems y cantidades aprobadas. Recibirás una alerta si despachás más de lo presupuestado.
+    </div>
+    <div id="lista-presupuesto"></div>
+  </div>
+
   <!-- SECCIÓN 2: Materiales retirados -->
   <div class="seccion">
     <div class="seccion-titulo">Materiales retirados</div>
@@ -190,6 +199,26 @@ selOT.addEventListener('change', function() {
   const disp = document.getElementById('cliente-display');
   if (this.value) disp.classList.remove('vacio');
   else            disp.classList.add('vacio');
+
+  // Mostrar presupuesto si la OT tiene materiales asignados
+  const ots   = JSON.parse(localStorage.getItem('ots_local') || '[]');
+  const ot    = ots.find(o => o.id === this.value);
+  const secPres  = document.getElementById('seccion-presupuesto');
+  const listaPres = document.getElementById('lista-presupuesto');
+
+  if (ot && Array.isArray(ot.presupuesto) && ot.presupuesto.length) {
+    secPres.style.display = 'block';
+    listaPres.innerHTML = ot.presupuesto.map(it =>
+      `<div style="display:flex;justify-content:space-between;align-items:center;
+        padding:7px 4px;border-bottom:1px solid var(--gris-borde);font-size:.84rem;">
+        <span>${it.codigo} — ${it.nombre}</span>
+        <strong style="color:var(--azul-dark);margin-left:8px;">${it.cantidad}</strong>
+      </div>`
+    ).join('');
+  } else {
+    secPres.style.display = 'none';
+    listaPres.innerHTML   = '';
+  }
 });
 
 // ── Ítems ─────────────────────────────────────────────────────────
@@ -220,6 +249,22 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
   if (!validarForm(formEl)) return;
   const items = recogerItems(itemsCnt);
   if (!items.length) { showToast('Agregá al menos un ítem', 'warn'); return; }
+
+  // ── Verificar presupuesto ──────────────────────────────────────────
+  const otsLocal  = JSON.parse(localStorage.getItem('ots_local') || '[]');
+  const otActual  = otsLocal.find(o => o.id === selOT.value);
+  if (otActual && Array.isArray(otActual.presupuesto) && otActual.presupuesto.length) {
+    const budgetMap = {};
+    otActual.presupuesto.forEach(it => { budgetMap[it.codigo] = Number(it.cantidad); });
+    const excedidos = items.filter(it => budgetMap[it.codigo] !== undefined && Number(it.cantidad) > budgetMap[it.codigo]);
+    if (excedidos.length) {
+      const detalle = excedidos.map(it =>
+        `• ${it.codigo}: despachás ${it.cantidad}, presupuesto ${budgetMap[it.codigo]}`
+      ).join('\n');
+      const ok = confirm(`⚠️ ALERTA: Excedés el presupuesto aprobado en:\n\n${detalle}\n\n¿Deseás continuar de todas formas?`);
+      if (!ok) return;
+    }
+  }
 
   const data = {
     form:         FORM_ID,
