@@ -160,7 +160,7 @@ function manejarOTCerrar(d) {
   for (let i = 1; i < data.length; i++) {
     if (data[i][0] === d.id) {
       sheet.getRange(i + 1, 7).setValue('Cerrada');
-      sheet.getRange(i + 1, 9).setValue(new Date().toISOString());
+      sheet.getRange(i + 1, 9).setValue(Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a'));
 
       enviarEmail('OT cerrada: ' + d.id, [
         'OT:      ' + d.id,

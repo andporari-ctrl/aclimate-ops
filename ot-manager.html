@@ -372,14 +372,34 @@ function crearCardOT(ot, esAbierta) {
   const card = document.createElement('div');
   card.className = 'ot-card' + (esAbierta ? '' : ' cerrada');
 
-  const tipo    = ot.tipo    || '—';
-  const tech    = ot.tecnico || ot['técnico'] || '—';
-  const fecha   = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
-  const desc    = ot.descripcion || ot['descripción'] || '';
+  const tipo     = ot.tipo    || '—';
+  const tech     = ot.tecnico || ot['técnico'] || '—';
+  const fecha    = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
+  const desc     = ot.descripcion || ot['descripción'] || '';
   const contacto = ot.contacto_nombre || '';
   const tel      = ot.contacto_tel    || '';
   const dir      = ot.direccion       || '';
-  const nPres    = Array.isArray(ot.presupuesto) ? ot.presupuesto.length : 0;
+
+  // Normalizar presupuesto: puede ser array (local) o string (desde GAS)
+  let presItems = [];
+  if (Array.isArray(ot.presupuesto)) {
+    presItems = ot.presupuesto;
+  } else if (typeof ot.presupuesto === 'string' && ot.presupuesto.trim()) {
+    presItems = ot.presupuesto.split('\n').filter(l => l.trim()).map(line => {
+      const p = line.split('|').map(s => s.trim());
+      return { codigo: p[0] || '', nombre: p[1] || '', cantidad: p[2] || '' };
+    });
+  }
+
+  const presHtml = presItems.length ? `
+    <div style="margin-top:8px;border-top:1px solid var(--gris-borde);padding-top:7px;">
+      <div style="font-size:.7rem;font-weight:700;color:var(--texto-sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">📦 Presupuesto de materiales</div>
+      ${presItems.map(it => `
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:3px 0;border-bottom:1px solid #f0f0f0;">
+          <span style="color:var(--texto)">${it.codigo} — ${it.nombre}</span>
+          <strong style="color:var(--azul-dark);margin-left:8px;">×${it.cantidad}</strong>
+        </div>`).join('')}
+    </div>` : '';
 
   card.innerHTML = `
     <div class="ot-card-header">
@@ -391,11 +411,11 @@ function crearCardOT(ot, esAbierta) {
       <span>${tipo}</span>
       <span>👤 ${tech}</span>
       <span>📅 ${fecha}</span>
-      ${nPres ? `<span>📦 ${nPres} ítem${nPres > 1 ? 's' : ''} presup.</span>` : ''}
     </div>
     ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:3px;">📍 ${dir}</div>` : ''}
     ${(contacto || tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel ? ' — ' + tel : ''}</div>` : ''}
     ${desc      ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">${desc}</div>` : ''}
+    ${presHtml}
     ${esAbierta ? `
       <div class="ot-acciones">
         <button class="btn-cerrar-ot" onclick="confirmarCierre('${ot.id}')">🔒 Cerrar</button>
@@ -538,7 +558,7 @@ async function guardarNuevaOT() {
     }
   } else {
     ot.estado    = 'Abierta';
-    ot.timestamp = new Date().toISOString();
+    ot.timestamp = timestampCR();
     guardarOT(ot);
   }
 
@@ -568,7 +588,7 @@ async function confirmarCierre(otId) {
   showToast('OT ' + otId + ' cerrada', 'success');
 
   if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
-    try { await enviarAGAS({ form: 'OT_CERRAR', id: otId, timestamp: new Date().toISOString() }); }
+    try { await enviarAGAS({ form: 'OT_CERRAR', id: otId, timestamp: timestampCR() }); }
     catch(e) {}
   }
 }

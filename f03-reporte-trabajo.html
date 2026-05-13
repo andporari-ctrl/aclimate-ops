@@ -302,7 +302,7 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
   const fd = new FormData(formEl);
   const data = {
     form: FORM_ID,
-    timestamp: new Date().toISOString(),
+    timestamp: timestampCR(),
     items,
     fotos_trabajo: fotosTrabajoInput._fotos || [],
     fotos_vobo:    fotoVoboInput._fotos || []

@@ -221,7 +221,7 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
   const fd = new FormData(formEl);
   const data = {
     form: FORM_ID,
-    timestamp: new Date().toISOString(),
+    timestamp: timestampCR(),
     fotos: fotoInput._fotos || []
   };
   fd.forEach((v, k) => { data[k] = v; });

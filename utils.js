@@ -413,10 +413,22 @@ window.addEventListener('online', async () => {
   }
 });
 
-// ── Fecha/hora actual formateada ─────────────────────────────────────
+// ── Fecha/hora actual formateada (zona Costa Rica) ───────────────────
+const TZ = 'America/Costa_Rica';
+
 function fechaHoy() {
-  return new Date().toISOString().split('T')[0];
+  return new Date().toLocaleDateString('en-CA', { timeZone: TZ }); // YYYY-MM-DD
 }
+
 function horaAhora() {
-  return new Date().toTimeString().slice(0, 5);
+  return new Date().toLocaleTimeString('es-CR', {
+    timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: true
+  });
+}
+
+function timestampCR() {
+  return new Date().toLocaleString('es-CR', {
+    timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+  });
 }
