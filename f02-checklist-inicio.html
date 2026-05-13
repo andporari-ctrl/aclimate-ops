@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>F-02 Checklist Inicio de Jornada — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Checklist Inicio de Jornada</h1>
+    <p>Verificación del camión antes de salir</p>
+  </div>
+  <span class="badge-form">F-02</span>
+</div>
+
+<div id="autosave-bar"></div>
+
+<form id="form-f02" novalidate>
+
+  <!-- SECCIÓN 1: Datos generales -->
+  <div class="seccion">
+    <div class="seccion-titulo">Datos generales</div>
+
+    <div class="campo">
+      <label>Fecha <span class="req">*</span></label>
+      <input type="date" name="fecha" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Técnico responsable <span class="req">*</span></label>
+      <select name="tecnico" required>
+        <option value="">— Seleccionar —</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: Estado del camión -->
+  <div class="seccion">
+    <div class="seccion-titulo">Estado del camión</div>
+
+    <div class="campo">
+      <label>Combustible <span class="req">*</span></label>
+      <select name="combustible" required>
+        <option value="">— Seleccionar —</option>
+        <option>Lleno</option>
+        <option>3/4</option>
+        <option>1/2</option>
+        <option>1/4</option>
+        <option>Reserva</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Limpieza interior <span class="req">*</span></label>
+      <select name="limpieza_interior" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Requiere limpieza</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Limpieza exterior <span class="req">*</span></label>
+      <select name="limpieza_exterior" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Requiere limpieza</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: Herramientas de refrigeración -->
+  <div class="seccion">
+    <div class="seccion-titulo">Herramientas de refrigeración</div>
+
+    <div class="campo">
+      <label>Manifold de refrigeración <span class="req">*</span></label>
+      <select name="manifold" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Bomba de vacío <span class="req">*</span></label>
+      <select name="bomba_vacio" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Balanza de refrigerante <span class="req">*</span></label>
+      <select name="balanza" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Detector de fugas <span class="req">*</span></label>
+      <select name="detector_fugas" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: Herramientas de medición y eléctricas -->
+  <div class="seccion">
+    <div class="seccion-titulo">Medición y herramienta eléctrica</div>
+
+    <div class="campo">
+      <label>Multímetro <span class="req">*</span></label>
+      <select name="multimetro" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Pinzas amperimétricas <span class="req">*</span></label>
+      <select name="pinzas" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Taladro + baterías cargadas <span class="req">*</span></label>
+      <select name="taladro" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Escalera <span class="req">*</span></label>
+      <select name="escalera" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Dañado</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: EPP y documentos -->
+  <div class="seccion">
+    <div class="seccion-titulo">EPP y documentos</div>
+
+    <div class="campo">
+      <label>EPP técnico completo <span class="req">*</span></label>
+      <select name="epp_tecnico" required>
+        <option value="">— Seleccionar —</option>
+        <option>Completo</option>
+        <option>Falta algo</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>EPP asistente completo <span class="req">*</span></label>
+      <select name="epp_asistente" required>
+        <option value="">— Seleccionar —</option>
+        <option>Completo</option>
+        <option>Falta algo</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Documentos del camión (RITEVE, póliza) <span class="req">*</span></label>
+      <select name="documentos_camion" required>
+        <option value="">— Seleccionar —</option>
+        <option>OK</option>
+        <option>Vencido</option>
+        <option>Faltante</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Materiales del día cargados según F-01 <span class="req">*</span></label>
+      <select name="materiales_verificados" required>
+        <option value="">— Seleccionar —</option>
+        <option>Verificados</option>
+        <option>Hay diferencia</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 6: Foto y reporte -->
+  <div class="seccion">
+    <div class="seccion-titulo">Foto del camión cargado</div>
+
+    <div class="campo">
+      <label>Foto del camión cargado <span class="req">*</span></label>
+      <div class="foto-zona">
+        <input type="file" id="foto-input" accept="image/*" capture="camera" class="foto-required">
+        <div class="icon">📷</div>
+        <p>Foto del camión listo para salir</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="fotos-preview"></div>
+      <span class="campo-error-msg">Foto obligatoria</span>
+    </div>
+
+    <div class="campo">
+      <label>¿Hay algún problema que reportar?</label>
+      <textarea name="problema" placeholder="Describí cualquier anomalía observada (opcional)..."></textarea>
+    </div>
+  </div>
+
+</form>
+
+<div class="submit-bar">
+  <button type="button" class="btn-submit" id="btn-submit">
+    📤 Enviar F-02
+  </button>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Enviando checklist...</p>
+</div>
+<div id="success-screen">
+  <div class="check">✅</div>
+  <h2>¡F-02 enviado!</h2>
+  <p>Checklist de inicio registrado. ¡Buen día de trabajo!</p>
+  <button class="btn-nuevo" onclick="location.href='index.html'">← Volver al inicio</button>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script>
+const FORM_ID = 'F02';
+const formEl  = document.getElementById('form-f02');
+
+// Poblar técnicos
+CONFIG.EQUIPO.forEach(nombre => {
+  const opt = document.createElement('option');
+  opt.value = opt.textContent = nombre;
+  formEl.querySelector('[name="tecnico"]').appendChild(opt);
+});
+
+formEl.querySelector('[name="fecha"]').value = fechaHoy();
+
+const fotoInput = document.getElementById('foto-input');
+setupFotoField(fotoInput, document.getElementById('fotos-preview'));
+
+// Auto-guardado
+let asSave;
+formEl.addEventListener('input', () => {
+  clearTimeout(asSave);
+  asSave = setTimeout(() => autoSave(FORM_ID, formEl), CONFIG.AUTOSAVE_INTERVAL);
+});
+restoreDraft(FORM_ID, formEl);
+
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  if (!validarForm(formEl)) return;
+
+  const fd = new FormData(formEl);
+  const data = {
+    form: FORM_ID,
+    timestamp: new Date().toISOString(),
+    fotos: fotoInput._fotos || []
+  };
+  fd.forEach((v, k) => { data[k] = v; });
+
+  showLoading('Enviando F-02...');
+  try {
+    await enviarConFallback(data, FORM_ID);
+    clearDraft(FORM_ID);
+    showSuccess('Checklist de inicio registrado correctamente.');
+  } catch(e) {
+    hideLoading();
+    showToast('Error al enviar. Guardado localmente.', 'error');
+  }
+});
+</script>
+</body>
+</html>

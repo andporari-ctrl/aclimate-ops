@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>F-01 Despacho de Materiales — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    .info-display {
+      padding: 10px 12px;
+      background: var(--azul-light);
+      border: 1.5px solid var(--azul);
+      border-radius: 8px;
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--azul-dark);
+      min-height: 42px;
+    }
+    .info-display.vacio { color: var(--texto-sub); font-weight: 400; font-style: italic; }
+    .firma-check-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .firma-check-wrap:has(input:checked) {
+      border-color: var(--verde);
+      background: #EAFAF1;
+    }
+    .firma-check-wrap input[type="checkbox"] {
+      width: 20px; height: 20px; accent-color: var(--verde); flex-shrink: 0;
+    }
+    .firma-check-wrap span { font-size: .88rem; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Despacho de Materiales</h1>
+    <p>Salida de bodega — completar antes de cargar el camión</p>
+  </div>
+  <span class="badge-form">F-01</span>
+</div>
+
+<div id="autosave-bar"></div>
+
+<form id="form-f01" novalidate>
+
+  <!-- SECCIÓN 1: Datos generales -->
+  <div class="seccion">
+    <div class="seccion-titulo">Datos generales</div>
+
+    <div class="campo">
+      <label>Fecha <span class="req">*</span></label>
+      <input type="date" name="fecha" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Técnico responsable <span class="req">*</span></label>
+      <select name="tecnico" id="select-tecnico" required>
+        <option value="">— Seleccionar —</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Orden de Trabajo (OT) <span class="req">*</span></label>
+      <select name="ot" id="select-ot" required>
+        <option value="">— Cargando OTs... —</option>
+      </select>
+      <span class="campo-error-msg">Seleccioná la OT</span>
+    </div>
+
+    <div class="campo">
+      <label>Cliente / Sitio</label>
+      <div class="info-display vacio" id="cliente-display">← Se llena al seleccionar OT</div>
+      <input type="hidden" name="cliente" id="cliente-hidden">
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: Materiales retirados -->
+  <div class="seccion">
+    <div class="seccion-titulo">Materiales retirados</div>
+    <div class="alerta-info">
+      Registrá cada ítem que sale de bodega para esta OT.<br>
+      <strong>Regla:</strong> Despachado (aquí) = Usado (F-03) + Devuelto (F-04)
+    </div>
+
+    <div class="items-wrapper" id="items-container"></div>
+
+    <button type="button" class="btn-add-item" id="btn-add-item">
+      ＋ Agregar ítem
+    </button>
+  </div>
+
+  <!-- SECCIÓN 3: Foto y confirmación -->
+  <div class="seccion">
+    <div class="seccion-titulo">Foto y confirmación</div>
+
+    <div class="campo">
+      <label>Foto del material retirado <span class="req">*</span></label>
+      <div class="foto-zona">
+        <input type="file" id="foto-input" accept="image/*" capture="camera" class="foto-required" multiple>
+        <div class="icon">📷</div>
+        <p>Foto de los materiales antes de cargar al camión</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="fotos-preview"></div>
+      <span class="campo-error-msg">Foto obligatoria</span>
+    </div>
+
+    <div class="campo">
+      <label>Observaciones</label>
+      <textarea name="observaciones" placeholder="Estado del material, sustituciones, notas... (opcional)"></textarea>
+    </div>
+
+    <div class="campo" id="campo-firma">
+      <label>Confirmación de responsabilidad <span class="req">*</span></label>
+      <label class="firma-check-wrap">
+        <input type="checkbox" id="firma-check">
+        <span id="firma-texto">Confirmá tu nombre para continuar</span>
+      </label>
+      <input type="hidden" name="firma" id="firma-hidden">
+      <span class="campo-error-msg">Confirmación obligatoria</span>
+    </div>
+  </div>
+
+</form>
+
+<div class="submit-bar">
+  <button type="button" class="btn-submit" id="btn-submit">📤 Enviar F-01</button>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay"><div class="spinner"></div><p>Enviando F-01...</p></div>
+<div id="success-screen">
+  <div class="check">✅</div>
+  <h2>¡F-01 enviado!</h2>
+  <p>Despacho registrado. El total despachado debe coincidir con F-03 + F-04 al cerrar la OT.</p>
+  <button class="btn-nuevo" onclick="location.href='index.html'">← Inicio</button>
+  <button class="btn-nuevo" onclick="reiniciar()">Nuevo despacho</button>
+</div>
+
+<script src="config.js"></script>
+<script src="catalogo.js"></script>
+<script src="utils.js"></script>
+<script>
+const FORM_ID  = 'F01';
+const formEl   = document.getElementById('form-f01');
+const itemsCnt = document.getElementById('items-container');
+
+// ── Técnico ────────────────────────────────────────────────────────
+const selTecnico = document.getElementById('select-tecnico');
+CONFIG.EQUIPO.forEach(nombre => {
+  const opt = document.createElement('option');
+  opt.value = opt.textContent = nombre;
+  selTecnico.appendChild(opt);
+});
+formEl.querySelector('[name="fecha"]').value = fechaHoy();
+
+// Auto-fill firma cuando seleccionan técnico
+selTecnico.addEventListener('change', function() {
+  document.getElementById('firma-texto').textContent =
+    this.value
+      ? `Yo, ${this.value}, confirmo que la información es correcta y completa`
+      : 'Confirmá tu nombre para continuar';
+  document.getElementById('firma-check').checked = false;
+  document.getElementById('firma-hidden').value  = '';
+});
+
+document.getElementById('firma-check').addEventListener('change', function() {
+  document.getElementById('firma-hidden').value = this.checked ? selTecnico.value : '';
+});
+
+// ── OT Dropdown ─────────────────────────────────────────────────────
+const selOT = document.getElementById('select-ot');
+poblarSelectOT(selOT);
+conectarOTSelect(selOT, {
+  clienteDisplay: document.getElementById('cliente-display'),
+  clienteHidden:  document.getElementById('cliente-hidden')
+});
+selOT.addEventListener('change', function() {
+  const disp = document.getElementById('cliente-display');
+  if (this.value) disp.classList.remove('vacio');
+  else            disp.classList.add('vacio');
+});
+
+// ── Ítems ─────────────────────────────────────────────────────────
+crearItemRow(CATALOGO_COMPLETO, itemsCnt);
+document.getElementById('btn-add-item').addEventListener('click', () =>
+  crearItemRow(CATALOGO_COMPLETO, itemsCnt));
+
+// ── Foto ──────────────────────────────────────────────────────────
+const fotoInput = document.getElementById('foto-input');
+setupFotoField(fotoInput, document.getElementById('fotos-preview'));
+
+// ── Auto-guardado ──────────────────────────────────────────────────
+let asSave;
+formEl.addEventListener('input', () => {
+  clearTimeout(asSave);
+  asSave = setTimeout(() => autoSave(FORM_ID, formEl), CONFIG.AUTOSAVE_INTERVAL);
+});
+restoreDraft(FORM_ID, formEl);
+
+// ── Submit ─────────────────────────────────────────────────────────
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  // Validar firma manual
+  if (!document.getElementById('firma-hidden').value) {
+    document.getElementById('campo-firma').classList.add('error');
+    showToast('Confirmá tu responsabilidad marcando la casilla', 'warn');
+    return;
+  }
+  if (!validarForm(formEl)) return;
+  const items = recogerItems(itemsCnt);
+  if (!items.length) { showToast('Agregá al menos un ítem', 'warn'); return; }
+
+  const data = {
+    form:         FORM_ID,
+    fecha:        formEl.fecha.value,
+    tecnico:      selTecnico.value,
+    ot:           selOT.value,
+    cliente:      document.getElementById('cliente-hidden').value,
+    items,
+    observaciones:formEl.observaciones.value.trim(),
+    firma:        document.getElementById('firma-hidden').value,
+    fotos:        fotoInput._fotos || [],
+    timestamp:    new Date().toISOString()
+  };
+
+  showLoading();
+  try {
+    await enviarConFallback(data, FORM_ID);
+    clearDraft(FORM_ID);
+    showSuccess('Despacho registrado. Recordá F-01 = F-03 + F-04.');
+  } catch(e) {
+    hideLoading();
+    showToast('Error al enviar. Guardado localmente.', 'error');
+  }
+});
+
+function reiniciar() {
+  document.getElementById('success-screen').classList.remove('show');
+  formEl.reset();
+  formEl.querySelector('[name="fecha"]').value = fechaHoy();
+  itemsCnt.innerHTML = ''; _itemCounter = 0;
+  crearItemRow(CATALOGO_COMPLETO, itemsCnt);
+  document.getElementById('fotos-preview').innerHTML = '';
+  fotoInput._hasFile = false; fotoInput._fotos = [];
+  document.getElementById('cliente-display').textContent = '← Se llena al seleccionar OT';
+  document.getElementById('cliente-display').classList.add('vacio');
+  document.getElementById('firma-texto').textContent = 'Confirmá tu nombre para continuar';
+  poblarSelectOT(selOT);
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Gestor de OTs — AClímate PM</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    .pm-badge {
+      background: #E67E22;
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+    .ot-list { padding: 12px 12px 0; }
+    .ot-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--sombra);
+      border-left: 4px solid var(--azul);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ot-card.cerrada { border-left-color: var(--gris-borde); opacity: .6; }
+    .ot-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .ot-id { font-weight: 700; font-size: .95rem; color: var(--azul-dark); }
+    .ot-badge-abierta {
+      font-size: .7rem; font-weight: 700;
+      background: #EAFAF1; color: var(--verde);
+      padding: 2px 8px; border-radius: 10px; border: 1px solid var(--verde);
+    }
+    .ot-badge-cerrada {
+      font-size: .7rem; font-weight: 700;
+      background: #F4F6F8; color: var(--texto-sub);
+      padding: 2px 8px; border-radius: 10px;
+    }
+    .ot-cliente { font-size: .88rem; color: var(--texto); }
+    .ot-meta { font-size: .75rem; color: var(--texto-sub); display: flex; gap: 12px; flex-wrap: wrap; }
+    .ot-acciones { display: flex; gap: 8px; margin-top: 6px; }
+    .btn-cerrar-ot {
+      padding: 7px 12px;
+      background: none;
+      border: 1.5px solid var(--rojo);
+      color: var(--rojo);
+      border-radius: 8px;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-cerrar-ot:hover { background: #FDEDEC; }
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin: 12px 12px 0;
+      background: var(--gris-borde);
+      border-radius: 10px;
+      padding: 3px;
+    }
+    .tab {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: .82rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--texto-sub);
+      transition: all .15s;
+    }
+    .tab.active { background: #fff; color: var(--azul-dark); box-shadow: var(--sombra); }
+    #tab-cerradas { display: none; }
+
+    /* Modal crear OT */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 400;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px 16px 32px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-titulo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--azul-dark);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-modal-close {
+      background: none; border: none;
+      font-size: 1.4rem; cursor: pointer; color: var(--texto-sub);
+    }
+    .color-tipo {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;
+    }
+    .color-pill {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all .12s;
+    }
+    .color-pill.selected { border-color: var(--azul-dark); box-shadow: 0 0 0 2px rgba(44,62,80,.2); }
+    .pill-instalacion  { background: #D6EAF8; color: #1A5276; }
+    .pill-mantenimiento{ background: #D5F5E3; color: #1D6A39; }
+    .pill-correctivo   { background: #FDEBD0; color: #7D4E00; }
+    .pill-inspeccion   { background: #F5EEF8; color: #4A235A; }
+    .pill-predictivo   { background: #FDFEFE; color: #212F3C; border: 1.5px solid #CDD6E0; }
+
+    .btn-crear-ot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: calc(100% - 24px);
+      position: fixed;
+      bottom: 16px; left: 12px; right: 12px;
+      padding: 15px;
+      background: var(--azul-dark);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(44,62,80,.3);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--texto-sub);
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .num-abiertas {
+      background: var(--rojo);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 1px 5px;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Gestor de Órdenes de Trabajo</h1>
+    <p>Solo para uso del PM</p>
+  </div>
+  <span class="pm-badge">PM</span>
+</div>
+
+<div id="autosave-bar"></div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" id="btn-tab-abiertas" onclick="mostrarTab('abiertas')">
+    Abiertas <span class="num-abiertas" id="count-abiertas">0</span>
+  </div>
+  <div class="tab" id="btn-tab-cerradas" onclick="mostrarTab('cerradas')">
+    Cerradas
+  </div>
+</div>
+
+<!-- Lista OTs abiertas -->
+<div class="ot-list" id="tab-abiertas">
+  <div class="empty-state" id="empty-abiertas" style="display:none">
+    <div class="icon">📋</div>
+    <p>No hay OTs abiertas.<br>Creá la primera con el botón de abajo.</p>
+  </div>
+  <div id="lista-abiertas"></div>
+</div>
+
+<!-- Lista OTs cerradas -->
+<div class="ot-list" id="tab-cerradas">
+  <div class="empty-state" id="empty-cerradas" style="display:none">
+    <div class="icon">✅</div>
+    <p>No hay OTs cerradas aún.</p>
+  </div>
+  <div id="lista-cerradas"></div>
+</div>
+
+<!-- Botón fijo crear OT -->
+<button class="btn-crear-ot" id="btn-nueva-ot" onclick="abrirModal()">
+  ＋ Nueva Orden de Trabajo
+</button>
+
+<!-- Modal crear OT -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-titulo">
+      Nueva OT
+      <button class="btn-modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+
+    <div class="campo">
+      <label>Número de OT</label>
+      <input type="text" id="ot-numero" placeholder="Se genera automáticamente" readonly
+        style="background: var(--azul-light); color: var(--azul-dark); font-weight:700;">
+    </div>
+
+    <div class="campo">
+      <label>Cliente / Institución / Sitio <span class="req">*</span></label>
+      <input type="text" id="ot-cliente" placeholder="Ej: CCSS — Área de Salud Grecia">
+    </div>
+
+    <div class="campo">
+      <label>Tipo de trabajo <span class="req">*</span></label>
+      <div class="color-tipo">
+        <div class="color-pill pill-instalacion"   data-tipo="Instalación"               onclick="seleccionarTipo(this)">🔵 Instalación</div>
+        <div class="color-pill pill-mantenimiento" data-tipo="Mantenimiento Preventivo"  onclick="seleccionarTipo(this)">🟢 Mant. Preventivo</div>
+        <div class="color-pill pill-correctivo"    data-tipo="Mantenimiento Correctivo"  onclick="seleccionarTipo(this)">🟠 Mant. Correctivo</div>
+        <div class="color-pill pill-inspeccion"    data-tipo="Inspección"                onclick="seleccionarTipo(this)">🟣 Inspección</div>
+        <div class="color-pill pill-predictivo"    data-tipo="Mantenimiento Predictivo"  onclick="seleccionarTipo(this)">⚪ Mant. Predictivo</div>
+      </div>
+      <input type="hidden" id="ot-tipo">
+    </div>
+
+    <div class="campo">
+      <label>Técnico asignado <span class="req">*</span></label>
+      <select id="ot-tecnico">
+        <option value="">— Seleccionar —</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>Descripción / Notas para la cuadrilla</label>
+      <textarea id="ot-descripcion" placeholder="Materiales especiales, contacto en sitio, acceso, instrucciones..." rows="3"></textarea>
+    </div>
+
+    <div class="campo">
+      <label>Fecha de asignación</label>
+      <input type="date" id="ot-fecha">
+    </div>
+
+    <div style="height: 16px;"></div>
+    <button type="button" class="btn-submit" id="btn-guardar-ot" style="position:static; width:100%; margin-top:8px;" onclick="guardarNuevaOT()">
+      ✅ Crear OT
+    </button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Guardando OT...</p>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script>
+
+// Poblar técnicos en modal
+const selTec = document.getElementById('ot-tecnico');
+CONFIG.EQUIPO.forEach(n => {
+  const o = document.createElement('option');
+  o.value = o.textContent = n;
+  selTec.appendChild(o);
+});
+
+document.getElementById('ot-fecha').value = fechaHoy();
+
+// ── Render ────────────────────────────────────────────────────────────
+async function renderOTs() {
+  const ots = await cargarOTs();
+  const abiertas  = ots.filter(o => o.estado === 'Abierta');
+  const cerradas  = ots.filter(o => o.estado === 'Cerrada');
+
+  document.getElementById('count-abiertas').textContent = abiertas.length;
+
+  // Abiertas
+  const labierta = document.getElementById('lista-abiertas');
+  labierta.innerHTML = '';
+  document.getElementById('empty-abiertas').style.display = abiertas.length ? 'none' : 'block';
+  abiertas.forEach(ot => labierta.appendChild(crearCardOT(ot, true)));
+
+  // Cerradas
+  const lcerrada = document.getElementById('lista-cerradas');
+  lcerrada.innerHTML = '';
+  document.getElementById('empty-cerradas').style.display = cerradas.length ? 'none' : 'block';
+  cerradas.forEach(ot => lcerrada.appendChild(crearCardOT(ot, false)));
+}
+
+function crearCardOT(ot, esAbierta) {
+  const card = document.createElement('div');
+  card.className = 'ot-card' + (esAbierta ? '' : ' cerrada');
+
+  const tipo = ot.tipo || ot.tipo_de_trabajo || '—';
+  const tech = ot.tecnico || ot.técnico_asignado || '—';
+  const fecha = ot.fecha_asignacion || ot.fecha_de_asignación || '—';
+
+  card.innerHTML = `
+    <div class="ot-card-header">
+      <span class="ot-id">${ot.id || ot.id_de_ot || '—'}</span>
+      <span class="${esAbierta ? 'ot-badge-abierta' : 'ot-badge-cerrada'}">${ot.estado}</span>
+    </div>
+    <div class="ot-cliente">${ot.cliente || ot['cliente_/_institución_/_sitio'] || '—'}</div>
+    <div class="ot-meta">
+      <span>${tipo}</span>
+      <span>👤 ${tech}</span>
+      <span>📅 ${fecha}</span>
+    </div>
+    ${ot.descripcion || ot.descripción_/_notas_para_la_cuadrilla
+      ? `<div style="font-size:.78rem;color:var(--texto-sub);margin-top:2px;">${ot.descripcion || ot.descripción_/_notas_para_la_cuadrilla}</div>`
+      : ''}
+    ${esAbierta ? `<div class="ot-acciones"><button class="btn-cerrar-ot" onclick="confirmarCierre('${ot.id}')">🔒 Cerrar OT</button></div>` : ''}
+  `;
+  return card;
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────
+function mostrarTab(tab) {
+  document.getElementById('tab-abiertas').style.display = tab === 'abiertas' ? 'block' : 'none';
+  document.getElementById('tab-cerradas').style.display = tab === 'cerradas' ? 'block' : 'none';
+  document.getElementById('btn-tab-abiertas').className = 'tab' + (tab === 'abiertas' ? ' active' : '');
+  document.getElementById('btn-tab-cerradas').className = 'tab' + (tab === 'cerradas' ? ' active' : '');
+  // Ocultar/mostrar botón nueva OT
+  document.getElementById('btn-nueva-ot').style.display = tab === 'abiertas' ? '' : 'none';
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────
+let _tipoSeleccionado = '';
+
+function seleccionarTipo(el) {
+  document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  _tipoSeleccionado = el.dataset.tipo;
+  document.getElementById('ot-tipo').value = _tipoSeleccionado;
+}
+
+function abrirModal() {
+  document.getElementById('ot-numero').value = generarNumOT();
+  document.getElementById('ot-cliente').value = '';
+  document.getElementById('ot-descripcion').value = '';
+  document.getElementById('ot-fecha').value = fechaHoy();
+  document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
+  _tipoSeleccionado = '';
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+async function guardarNuevaOT() {
+  const cliente = document.getElementById('ot-cliente').value.trim();
+  const tipo    = _tipoSeleccionado;
+  const tecnico = document.getElementById('ot-tecnico').value;
+
+  if (!cliente) { showToast('Ingresá el cliente o sitio', 'warn'); return; }
+  if (!tipo)    { showToast('Seleccioná el tipo de trabajo', 'warn'); return; }
+  if (!tecnico) { showToast('Seleccioná el técnico', 'warn'); return; }
+
+  const ot = {
+    id:               document.getElementById('ot-numero').value,
+    cliente:          cliente,
+    tipo:             tipo,
+    tecnico:          tecnico,
+    descripcion:      document.getElementById('ot-descripcion').value.trim(),
+    fecha_asignacion: document.getElementById('ot-fecha').value,
+    estado:           'Abierta',
+    timestamp:        new Date().toISOString()
+  };
+
+  // Guardar localmente primero
+  guardarOT(ot);
+  cerrarModal();
+  await renderOTs();
+  showToast('OT ' + ot.id + ' creada', 'success');
+
+  // Sincronizar con GAS en background
+  if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
+    try {
+      await enviarAGAS({ ...ot, form: 'OT_CREAR' });
+    } catch(e) {
+      // OK, queda en local, se sincronizará después
+    }
+  }
+}
+
+// ── Cerrar OT ────────────────────────────────────────────────────────
+async function confirmarCierre(otId) {
+  if (!confirm(`¿Cerrar la OT ${otId}?\n\nVerificá antes que F-01 = F-03 + F-04.`)) return;
+
+  const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
+  const ot  = ots.find(o => o.id === otId);
+  if (ot) { ot.estado = 'Cerrada'; }
+  localStorage.setItem('ots_local', JSON.stringify(ots));
+
+  await renderOTs();
+  showToast('OT ' + otId + ' cerrada', 'success');
+
+  if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
+    try { await enviarAGAS({ form: 'OT_CERRAR', id: otId, timestamp: new Date().toISOString() }); }
+    catch(e) {}
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+renderOTs();
+</script>
+
+</body>
+</html>

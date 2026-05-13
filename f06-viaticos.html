@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>F-06 Viáticos y Gastos — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Viáticos y Gastos</h1>
+    <p>Registro de uso de Tarjeta Corporativa</p>
+  </div>
+  <span class="badge-form">F-06</span>
+</div>
+
+<div id="autosave-bar"></div>
+
+<!-- Alerta de flujo obligatorio -->
+<div style="margin: 12px 12px 0;">
+  <div class="alerta-info" style="border-left-color: var(--naranja); background: #FEF9E7;">
+    ⚠️ <strong>Flujo obligatorio:</strong> Solicitar aprobación en WhatsApp Viáticos ANTES de gastar → Esperar visto bueno del PM → Realizar compra → Subir recibo aquí.
+  </div>
+</div>
+
+<form id="form-f06" novalidate>
+
+  <!-- SECCIÓN 1: Datos generales -->
+  <div class="seccion">
+    <div class="seccion-titulo">Datos del gasto</div>
+
+    <div class="campo">
+      <label>Fecha del gasto <span class="req">*</span></label>
+      <input type="date" name="fecha" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Técnico responsable <span class="req">*</span></label>
+      <select name="tecnico" required>
+        <option value="">— Seleccionar —</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>OT asociada <span class="req">*</span></label>
+      <select name="ot" id="select-ot" required>
+        <option value="">— Cargando OTs... —</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Tipo de gasto <span class="req">*</span></label>
+      <select name="tipo_gasto" required>
+        <option value="">— Seleccionar —</option>
+        <option>Combustible</option>
+        <option>Material de emergencia</option>
+        <option>Alimentación</option>
+        <option>Peaje / Parqueo</option>
+        <option>Insumo menor</option>
+        <option>Otro</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Descripción del gasto <span class="req">*</span></label>
+      <input type="text" name="descripcion" placeholder="Ej: Gasolina en RECOPE Grecia" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Monto del gasto (₡) <span class="req">*</span></label>
+      <input type="number" name="monto" placeholder="0" min="0" step="1" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: Aprobación previa -->
+  <div class="seccion">
+    <div class="seccion-titulo">Aprobación previa del PM</div>
+
+    <div class="campo">
+      <label>¿Fue aprobado previamente por el PM? <span class="req">*</span></label>
+      <select name="aprobado_pm" id="aprobado-pm" required>
+        <option value="">— Seleccionar —</option>
+        <option value="Sí">Sí — tengo la aprobación</option>
+        <option value="No">No — gasto de emergencia</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-sin-aprobacion" style="display:none">
+      <label>Justificación del gasto sin aprobación previa <span class="req">*</span></label>
+      <textarea name="justificacion_no_aprobado"
+        placeholder="Explicá la emergencia que justificó gastar sin aprobación previa..." rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: Recibo y vuelto -->
+  <div class="seccion">
+    <div class="seccion-titulo">Recibo y vuelto</div>
+
+    <div class="campo">
+      <label>Foto del recibo / factura <span class="req">*</span></label>
+      <div class="foto-zona">
+        <input type="file" id="foto-recibo" accept="image/*" capture="camera" class="foto-required">
+        <div class="icon">🧾</div>
+        <p>Fotografiá el recibo original</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="fotos-recibo-preview"></div>
+      <span class="campo-error-msg">Recibo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>¿Hay vuelto pendiente de entregar? <span class="req">*</span></label>
+      <select name="hay_vuelto" id="hay-vuelto" required>
+        <option value="">— Seleccionar —</option>
+        <option value="No">No</option>
+        <option value="Sí">Sí</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-monto-vuelto" style="display:none">
+      <label>Monto del vuelto (₡) <span class="req">*</span></label>
+      <input type="number" name="monto_vuelto" placeholder="0" min="0" step="1">
+      <span class="txt-sub mt-2">El vuelto debe entregarse al PM en el día.</span>
+    </div>
+
+    <div class="campo">
+      <label>Observaciones</label>
+      <textarea name="observaciones" placeholder="Notas adicionales (opcional)..."></textarea>
+    </div>
+  </div>
+
+</form>
+
+<div class="submit-bar">
+  <button type="button" class="btn-submit" id="btn-submit">
+    📤 Enviar F-06
+  </button>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Enviando registro de viáticos...</p>
+</div>
+<div id="success-screen">
+  <div class="check">✅</div>
+  <h2>¡F-06 enviado!</h2>
+  <p>Gasto registrado correctamente.</p>
+  <button class="btn-nuevo" onclick="location.href='index.html'">← Volver al inicio</button>
+  <button class="btn-nuevo" onclick="reiniciar()">Registrar otro gasto</button>
+</div>
+
+<script src="config.js"></script>
+<script src="catalogo.js"></script>
+<script src="utils.js"></script>
+<script>
+const FORM_ID = 'F06';
+const formEl  = document.getElementById('form-f06');
+
+CONFIG.EQUIPO.forEach(nombre => {
+  const opt = document.createElement('option');
+  opt.value = opt.textContent = nombre;
+  formEl.querySelector('[name="tecnico"]').appendChild(opt);
+});
+
+formEl.querySelector('[name="fecha"]').value = fechaHoy();
+
+// OT dropdown con opción "Gasto general"
+poblarSelectOT(document.getElementById('select-ot'), { incluirGeneral: true });
+
+document.getElementById('aprobado-pm').addEventListener('change', function() {
+  document.getElementById('campo-sin-aprobacion').style.display = this.value === 'No' ? 'block' : 'none';
+});
+
+document.getElementById('hay-vuelto').addEventListener('change', function() {
+  document.getElementById('campo-monto-vuelto').style.display = this.value === 'Sí' ? 'block' : 'none';
+});
+
+const fotoRecibo = document.getElementById('foto-recibo');
+setupFotoField(fotoRecibo, document.getElementById('fotos-recibo-preview'));
+
+let asSave;
+formEl.addEventListener('input', () => {
+  clearTimeout(asSave);
+  asSave = setTimeout(() => autoSave(FORM_ID, formEl), CONFIG.AUTOSAVE_INTERVAL);
+});
+restoreDraft(FORM_ID, formEl);
+
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  if (!validarForm(formEl)) return;
+
+  const fd = new FormData(formEl);
+  const data = {
+    form: FORM_ID,
+    timestamp: new Date().toISOString(),
+    foto_recibo: fotoRecibo._fotos?.[0] || null
+  };
+  fd.forEach((v, k) => { data[k] = v; });
+
+  showLoading('Enviando F-06...');
+  try {
+    await enviarConFallback(data, FORM_ID);
+    clearDraft(FORM_ID);
+    showSuccess('Gasto registrado correctamente.');
+  } catch(e) {
+    hideLoading();
+    showToast('Error al enviar. Guardado localmente.', 'error');
+  }
+});
+
+function reiniciar() {
+  document.getElementById('success-screen').classList.remove('show');
+  formEl.reset();
+  formEl.querySelector('[name="fecha"]').value = fechaHoy();
+  document.getElementById('fotos-recibo-preview').innerHTML = '';
+  fotoRecibo._hasFile = false;
+  fotoRecibo._fotos = [];
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

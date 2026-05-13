@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>F-05 Checklist Cierre de Jornada — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Checklist Cierre de Jornada</h1>
+    <p>Revisión del camión antes de estacionar</p>
+  </div>
+  <span class="badge-form">F-05</span>
+</div>
+
+<div id="autosave-bar"></div>
+
+<form id="form-f05" novalidate>
+
+  <!-- SECCIÓN 1: Datos generales -->
+  <div class="seccion">
+    <div class="seccion-titulo">Datos generales</div>
+
+    <div class="campo">
+      <label>Fecha <span class="req">*</span></label>
+      <input type="date" name="fecha" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Técnico responsable <span class="req">*</span></label>
+      <select name="tecnico" required>
+        <option value="">— Seleccionar —</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: Materiales y herramientas -->
+  <div class="seccion">
+    <div class="seccion-titulo">Materiales y herramientas</div>
+
+    <div class="campo">
+      <label>¿Se devolvieron todos los materiales sobrantes? <span class="req">*</span></label>
+      <select name="sobrantes_devueltos" id="sobrantes-devueltos" required>
+        <option value="">— Seleccionar —</option>
+        <option value="Sí">Sí — todo devuelto a bodega</option>
+        <option value="No">No</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-sobrantes-justif" style="display:none">
+      <label>¿Por qué no se devolvieron? <span class="req">*</span></label>
+      <textarea name="sobrantes_justificacion" placeholder="Explicá qué quedó pendiente y cuándo se devolverá..." rows="2"></textarea>
+    </div>
+
+    <div class="campo">
+      <label>Herramientas completas y en su lugar <span class="req">*</span></label>
+      <select name="herramientas" id="herramientas-select" required>
+        <option value="">— Seleccionar —</option>
+        <option value="Todas">Todas en su lugar</option>
+        <option value="Falta algo">Falta algo</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-herramientas-detalle" style="display:none">
+      <label>¿Qué herramienta falta? <span class="req">*</span></label>
+      <textarea name="herramientas_detalle" placeholder="Indicá qué herramienta falta y qué pasó..." rows="2"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: Estado del camión -->
+  <div class="seccion">
+    <div class="seccion-titulo">Estado del camión al cierre</div>
+
+    <div class="campo">
+      <label>Estado del camión <span class="req">*</span></label>
+      <select name="estado_camion" required>
+        <option value="">— Seleccionar —</option>
+        <option>Limpio y en orden</option>
+        <option>Requiere limpieza</option>
+        <option>Daño a reportar</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Combustible al cierre <span class="req">*</span></label>
+      <select name="combustible_cierre" required>
+        <option value="">— Seleccionar —</option>
+        <option>Lleno</option>
+        <option>3/4</option>
+        <option>1/2</option>
+        <option>1/4</option>
+        <option>Reserva</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>¿Incidente con el camión hoy? <span class="req">*</span></label>
+      <select name="incidente_camion" id="incidente-camion" required>
+        <option value="">— Seleccionar —</option>
+        <option value="No">No</option>
+        <option value="Sí">Sí</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-incidente-detalle" style="display:none">
+      <label>Describí el incidente <span class="req">*</span></label>
+      <textarea name="incidente_detalle" placeholder="¿Qué pasó? ¿Dónde? ¿Hay daños?" rows="3"></textarea>
+    </div>
+
+    <div class="campo">
+      <label>¿Se requiere mantenimiento del camión? <span class="req">*</span></label>
+      <select name="requiere_mantenimiento" id="req-mant" required>
+        <option value="">— Seleccionar —</option>
+        <option value="No">No</option>
+        <option value="Sí">Sí</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-mant-detalle" style="display:none">
+      <label>¿Qué mantenimiento se requiere? <span class="req">*</span></label>
+      <textarea name="mantenimiento_detalle" placeholder="Describí qué revisión o reparación se necesita..." rows="2"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: Foto y resumen -->
+  <div class="seccion">
+    <div class="seccion-titulo">Foto interior y resumen del día</div>
+
+    <div class="campo">
+      <label>Foto interior del camión al cierre <span class="req">*</span></label>
+      <div class="foto-zona">
+        <input type="file" id="foto-input" accept="image/*" capture="camera" class="foto-required">
+        <div class="icon">📷</div>
+        <p>Foto del interior del camión ordenado</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="fotos-preview"></div>
+      <span class="campo-error-msg">Foto obligatoria</span>
+    </div>
+
+    <div class="campo">
+      <label>Resumen del día <span class="req">*</span></label>
+      <input type="text" name="resumen_dia" placeholder="Ej: 2 instalaciones completadas, 1 mant. pendiente" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+  </div>
+
+</form>
+
+<div class="submit-bar">
+  <button type="button" class="btn-submit" id="btn-submit">
+    📤 Enviar F-05
+  </button>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Enviando checklist de cierre...</p>
+</div>
+<div id="success-screen">
+  <div class="check">✅</div>
+  <h2>¡F-05 enviado!</h2>
+  <p>Checklist de cierre registrado. ¡Buen descanso!</p>
+  <button class="btn-nuevo" onclick="location.href='index.html'">← Volver al inicio</button>
+</div>
+
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script>
+const FORM_ID = 'F05';
+const formEl  = document.getElementById('form-f05');
+
+CONFIG.EQUIPO.forEach(nombre => {
+  const opt = document.createElement('option');
+  opt.value = opt.textContent = nombre;
+  formEl.querySelector('[name="tecnico"]').appendChild(opt);
+});
+
+formEl.querySelector('[name="fecha"]').value = fechaHoy();
+
+// Condicionales
+document.getElementById('sobrantes-devueltos').addEventListener('change', function() {
+  document.getElementById('campo-sobrantes-justif').style.display = this.value === 'No' ? 'block' : 'none';
+});
+document.getElementById('herramientas-select').addEventListener('change', function() {
+  document.getElementById('campo-herramientas-detalle').style.display = this.value === 'Falta algo' ? 'block' : 'none';
+});
+document.getElementById('incidente-camion').addEventListener('change', function() {
+  document.getElementById('campo-incidente-detalle').style.display = this.value === 'Sí' ? 'block' : 'none';
+});
+document.getElementById('req-mant').addEventListener('change', function() {
+  document.getElementById('campo-mant-detalle').style.display = this.value === 'Sí' ? 'block' : 'none';
+});
+
+const fotoInput = document.getElementById('foto-input');
+setupFotoField(fotoInput, document.getElementById('fotos-preview'));
+
+let asSave;
+formEl.addEventListener('input', () => {
+  clearTimeout(asSave);
+  asSave = setTimeout(() => autoSave(FORM_ID, formEl), CONFIG.AUTOSAVE_INTERVAL);
+});
+restoreDraft(FORM_ID, formEl);
+
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  if (!validarForm(formEl)) return;
+
+  const fd = new FormData(formEl);
+  const data = {
+    form: FORM_ID,
+    timestamp: new Date().toISOString(),
+    fotos: fotoInput._fotos || []
+  };
+  fd.forEach((v, k) => { data[k] = v; });
+
+  showLoading('Enviando F-05...');
+  try {
+    await enviarConFallback(data, FORM_ID);
+    clearDraft(FORM_ID);
+    showSuccess('Checklist de cierre registrado correctamente.');
+  } catch(e) {
+    hideLoading();
+    showToast('Error al enviar. Guardado localmente.', 'error');
+  }
+});
+</script>
+</body>
+</html>

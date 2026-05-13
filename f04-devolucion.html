@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>F-04 Devolución de Materiales — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    .info-display {
+      padding: 10px 12px;
+      background: var(--azul-light);
+      border: 1.5px solid var(--azul);
+      border-radius: 8px;
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--azul-dark);
+      min-height: 42px;
+    }
+    .info-display.vacio { color: var(--texto-sub); font-weight: 400; font-style: italic; }
+    .firma-check-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .firma-check-wrap:has(input:checked) { border-color: var(--verde); background: #EAFAF1; }
+    .firma-check-wrap input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--verde); flex-shrink: 0; }
+    .firma-check-wrap span { font-size: .88rem; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Devolución de Materiales</h1>
+    <p>Sobrantes de vuelta a bodega — mismo día</p>
+  </div>
+  <span class="badge-form">F-04</span>
+</div>
+
+<div id="autosave-bar"></div>
+
+<form id="form-f04" novalidate>
+
+  <!-- SECCIÓN 1: Datos generales -->
+  <div class="seccion">
+    <div class="seccion-titulo">Datos generales</div>
+
+    <div class="campo">
+      <label>Fecha de devolución <span class="req">*</span></label>
+      <input type="date" name="fecha" required>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>Técnico responsable <span class="req">*</span></label>
+      <select name="tecnico" id="select-tecnico" required>
+        <option value="">— Seleccionar —</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>OT de origen de los sobrantes <span class="req">*</span></label>
+      <select name="ot" id="select-ot" required>
+        <option value="">— Cargando OTs... —</option>
+      </select>
+      <span class="campo-error-msg">Seleccioná la OT</span>
+    </div>
+
+    <div class="campo">
+      <label>Cliente / Sitio</label>
+      <div class="info-display vacio" id="cliente-display">← Se llena al seleccionar OT</div>
+      <input type="hidden" name="cliente" id="cliente-hidden">
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: Materiales devueltos -->
+  <div class="seccion">
+    <div class="seccion-titulo">Materiales devueltos a bodega</div>
+    <div class="alerta-info">
+      <strong>Regla:</strong> Despachado (F-01) = Usado (F-03) + Devuelto (aquí)
+      <br>Todo sobrante regresa a bodega física. El camión NO es bodega permanente.
+    </div>
+    <div class="items-wrapper" id="items-container"></div>
+    <button type="button" class="btn-add-item" id="btn-add-item">
+      ＋ Agregar ítem a devolver
+    </button>
+  </div>
+
+  <!-- SECCIÓN 3: Estado -->
+  <div class="seccion">
+    <div class="seccion-titulo">Estado de los materiales</div>
+
+    <div class="campo">
+      <label>Estado general de los ítems devueltos <span class="req">*</span></label>
+      <select name="estado_items" required>
+        <option value="">— Seleccionar —</option>
+        <option>Nuevo (sin usar)</option>
+        <option>Usado — reutilizable</option>
+        <option>Dañado</option>
+        <option>No apto — descartar</option>
+        <option>Mixto (varios estados)</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo">
+      <label>¿Quedó material en el camión sin devolver? <span class="req">*</span></label>
+      <select name="material_en_camion" id="material-camion" required>
+        <option value="">— Seleccionar —</option>
+        <option value="No">No — todo devuelto a bodega</option>
+        <option value="Sí">Sí — hay material pendiente</option>
+      </select>
+      <span class="campo-error-msg">Campo obligatorio</span>
+    </div>
+
+    <div class="campo" id="campo-material-camion-detalle" style="display:none">
+      <label>¿Qué quedó y por qué? <span class="req">*</span></label>
+      <textarea name="material_camion_detalle" placeholder="¿Qué material quedó en camión? ¿Cuándo se devolverá?" rows="2"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: Foto y confirmación -->
+  <div class="seccion">
+    <div class="seccion-titulo">Foto y confirmación</div>
+
+    <div class="campo">
+      <label>Foto de los materiales en bodega <span class="req">*</span></label>
+      <div class="foto-zona">
+        <input type="file" id="foto-input" accept="image/*" capture="camera" class="foto-required" multiple>
+        <div class="icon">📷</div>
+        <p>Foto de los ítems ya en la bodega física</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="fotos-preview"></div>
+      <span class="campo-error-msg">Foto obligatoria</span>
+    </div>
+
+    <div class="campo" id="campo-firma">
+      <label>Confirmación de responsabilidad <span class="req">*</span></label>
+      <label class="firma-check-wrap">
+        <input type="checkbox" id="firma-check">
+        <span id="firma-texto">Confirmá tu nombre para continuar</span>
+      </label>
+      <input type="hidden" name="firma" id="firma-hidden">
+      <span class="campo-error-msg">Confirmación obligatoria</span>
+    </div>
+  </div>
+
+</form>
+
+<div class="submit-bar">
+  <button type="button" class="btn-submit" id="btn-submit">📤 Enviar F-04</button>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay"><div class="spinner"></div><p>Enviando devolución...</p></div>
+<div id="success-screen">
+  <div class="check">✅</div>
+  <h2>¡F-04 enviado!</h2>
+  <p>Devolución registrada. El PM verificará F-01 = F-03 + F-04.</p>
+  <button class="btn-nuevo" onclick="location.href='index.html'">← Inicio</button>
+  <button class="btn-nuevo" onclick="reiniciar()">Nueva devolución</button>
+</div>
+
+<script src="config.js"></script>
+<script src="catalogo.js"></script>
+<script src="utils.js"></script>
+<script>
+const FORM_ID  = 'F04';
+const formEl   = document.getElementById('form-f04');
+const itemsCnt = document.getElementById('items-container');
+
+// ── Técnico ────────────────────────────────────────────────────────
+const selTecnico = document.getElementById('select-tecnico');
+CONFIG.EQUIPO.forEach(nombre => {
+  const opt = document.createElement('option');
+  opt.value = opt.textContent = nombre;
+  selTecnico.appendChild(opt);
+});
+formEl.querySelector('[name="fecha"]').value = fechaHoy();
+
+selTecnico.addEventListener('change', function() {
+  document.getElementById('firma-texto').textContent = this.value
+    ? `Yo, ${this.value}, confirmo que los materiales ingresaron a bodega`
+    : 'Confirmá tu nombre para continuar';
+  document.getElementById('firma-check').checked = false;
+  document.getElementById('firma-hidden').value  = '';
+});
+document.getElementById('firma-check').addEventListener('change', function() {
+  document.getElementById('firma-hidden').value = this.checked ? selTecnico.value : '';
+});
+
+// ── OT Dropdown ─────────────────────────────────────────────────────
+const selOT   = document.getElementById('select-ot');
+const dispCli = document.getElementById('cliente-display');
+poblarSelectOT(selOT);
+conectarOTSelect(selOT, {
+  clienteDisplay: dispCli,
+  clienteHidden:  document.getElementById('cliente-hidden')
+});
+selOT.addEventListener('change', function() {
+  dispCli.classList.toggle('vacio', !this.value);
+});
+
+// ── Ítems ──────────────────────────────────────────────────────────
+crearItemRow(CATALOGO_COMPLETO, itemsCnt);
+document.getElementById('btn-add-item').addEventListener('click', () =>
+  crearItemRow(CATALOGO_COMPLETO, itemsCnt));
+
+// ── Condicional material en camión ─────────────────────────────────
+document.getElementById('material-camion').addEventListener('change', function() {
+  document.getElementById('campo-material-camion-detalle').style.display =
+    this.value === 'Sí' ? 'block' : 'none';
+});
+
+// ── Foto ──────────────────────────────────────────────────────────
+const fotoInput = document.getElementById('foto-input');
+setupFotoField(fotoInput, document.getElementById('fotos-preview'));
+
+// ── Auto-guardado ──────────────────────────────────────────────────
+let asSave;
+formEl.addEventListener('input', () => {
+  clearTimeout(asSave);
+  asSave = setTimeout(() => autoSave(FORM_ID, formEl), CONFIG.AUTOSAVE_INTERVAL);
+});
+restoreDraft(FORM_ID, formEl);
+
+// ── Submit ─────────────────────────────────────────────────────────
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  if (!document.getElementById('firma-hidden').value) {
+    document.getElementById('campo-firma').classList.add('error');
+    showToast('Confirmá tu responsabilidad marcando la casilla', 'warn');
+    return;
+  }
+  if (!validarForm(formEl)) return;
+  const items = recogerItems(itemsCnt);
+  if (!items.length) { showToast('Registrá al menos un ítem a devolver', 'warn'); return; }
+
+  const fd = new FormData(formEl);
+  const data = {
+    form: FORM_ID,
+    timestamp: new Date().toISOString(),
+    items,
+    fotos: fotoInput._fotos || []
+  };
+  fd.forEach((v, k) => { if (!k.startsWith('item_')) data[k] = v; });
+
+  showLoading();
+  try {
+    await enviarConFallback(data, FORM_ID);
+    clearDraft(FORM_ID);
+    showSuccess('Devolución registrada correctamente.');
+  } catch(e) {
+    hideLoading();
+    showToast('Error al enviar. Guardado localmente.', 'error');
+  }
+});
+
+function reiniciar() {
+  document.getElementById('success-screen').classList.remove('show');
+  formEl.reset();
+  formEl.querySelector('[name="fecha"]').value = fechaHoy();
+  itemsCnt.innerHTML = ''; _itemCounter = 0;
+  crearItemRow(CATALOGO_COMPLETO, itemsCnt);
+  document.getElementById('fotos-preview').innerHTML = '';
+  fotoInput._hasFile = false; fotoInput._fotos = [];
+  dispCli.textContent = '← Se llena al seleccionar OT'; dispCli.classList.add('vacio');
+  document.getElementById('firma-texto').textContent = 'Confirmá tu nombre para continuar';
+  poblarSelectOT(selOT);
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
