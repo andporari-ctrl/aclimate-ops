@@ -352,8 +352,9 @@ document.getElementById('ot-fecha').value = fechaHoy();
 // ── Render ────────────────────────────────────────────────────────────
 async function renderOTs() {
   const ots = await cargarOTs();
-  const abiertas = ots.filter(o => o.estado === 'Abierta');
-  const cerradas = ots.filter(o => o.estado === 'Cerrada');
+  const porId = (a, b) => (b.id || '').localeCompare(a.id || '');
+  const abiertas = ots.filter(o => o.estado === 'Abierta').sort(porId);
+  const cerradas = ots.filter(o => o.estado === 'Cerrada').sort(porId);
 
   document.getElementById('count-abiertas').textContent = abiertas.length;
 
@@ -379,6 +380,7 @@ function crearCardOT(ot, esAbierta) {
   const contacto = ot.contacto_nombre || '';
   const tel      = ot.contacto_tel    || '';
   const dir      = ot.direccion       || '';
+  const creado   = ot.timestamp || ot['timestamp_creación'] || '';
 
   // Normalizar presupuesto: puede ser array (local) o string (desde GAS)
   let presItems = [];
@@ -412,7 +414,8 @@ function crearCardOT(ot, esAbierta) {
       <span>👤 ${tech}</span>
       <span>📅 ${fecha}</span>
     </div>
-    ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:3px;">📍 ${dir}</div>` : ''}
+    ${creado    ? `<div style="font-size:.72rem;color:var(--texto-sub);margin-top:2px;">🕐 Creada: ${creado}</div>` : ''}
+    ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">📍 ${dir}</div>` : ''}
     ${(contacto || tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel ? ' — ' + tel : ''}</div>` : ''}
     ${desc      ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">${desc}</div>` : ''}
     ${presHtml}
