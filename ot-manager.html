@@ -196,6 +196,117 @@
       padding: 1px 5px;
       margin-left: 4px;
     }
+    /* ── Trabajos ── */
+    .trabajo-row {
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #FAFAFA;
+    }
+    .trabajo-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .trabajo-num {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--texto-sub);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .btn-del-trabajo {
+      background: none;
+      border: 1.5px solid var(--gris-borde);
+      color: var(--texto-sub);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: .75rem;
+      cursor: pointer;
+    }
+    .btn-del-trabajo:hover { background: #FDEDEC; border-color: var(--rojo); color: var(--rojo); }
+    .trabajo-desc {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 8px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      font-size: .85rem;
+      resize: vertical;
+      font-family: inherit;
+    }
+    .trabajo-desc:focus { outline: none; border-color: var(--azul); }
+    .toggle-pres-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: .8rem;
+      color: var(--texto-sub);
+    }
+    .pres-items-box {
+      margin-top: 8px;
+      padding: 10px;
+      background: var(--azul-light);
+      border-radius: 8px;
+    }
+    .btn-agregar-trabajo {
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: 1.5px dashed var(--gris-borde);
+      border-radius: 8px;
+      color: var(--texto-sub);
+      font-size: .85rem;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .btn-agregar-trabajo:hover { background: var(--azul-light); border-color: var(--azul); color: var(--azul); }
+    .tipo-tag {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: .7rem;
+      font-weight: 600;
+      margin: 2px 3px 2px 0;
+    }
+    .btn-eliminar-ot {
+      padding: 7px 10px;
+      background: none;
+      border: 1.5px solid var(--gris-borde);
+      color: var(--texto-sub);
+      border-radius: 8px;
+      font-size: .85rem;
+      cursor: pointer;
+    }
+    .btn-eliminar-ot:hover { background: #FDEDEC; border-color: var(--rojo); color: var(--rojo); }
+    .trabajo-card {
+      margin-top: 8px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      font-size: .78rem;
+    }
+    .trabajo-card-desc {
+      margin-top: 3px;
+      font-size: .74rem;
+      color: var(--texto-sub);
+    }
+    .trabajo-card-pres {
+      margin-top: 5px;
+      padding-top: 5px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+    .trabajo-card-pres-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: .73rem;
+      padding: 2px 0;
+      color: var(--texto-sub);
+    }
   </style>
 </head>
 <body>
@@ -264,27 +375,10 @@
     </div>
 
     <div class="campo">
-      <label>Tipo de trabajo <span class="req">*</span></label>
-      <div class="color-tipo">
-        <div class="color-pill pill-instalacion"   data-tipo="Instalación"               onclick="seleccionarTipo(this)">🔵 Instalación</div>
-        <div class="color-pill pill-mantenimiento" data-tipo="Mantenimiento Preventivo"  onclick="seleccionarTipo(this)">🟢 Mant. Preventivo</div>
-        <div class="color-pill pill-correctivo"    data-tipo="Mantenimiento Correctivo"  onclick="seleccionarTipo(this)">🟠 Mant. Correctivo</div>
-        <div class="color-pill pill-inspeccion"    data-tipo="Inspección"                onclick="seleccionarTipo(this)">🟣 Inspección</div>
-        <div class="color-pill pill-predictivo"    data-tipo="Mantenimiento Predictivo"  onclick="seleccionarTipo(this)">⚪ Mant. Predictivo</div>
-      </div>
-      <input type="hidden" id="ot-tipo">
-    </div>
-
-    <div class="campo">
       <label>Técnico asignado <span class="req">*</span></label>
       <select id="ot-tecnico">
         <option value="">— Seleccionar —</option>
       </select>
-    </div>
-
-    <div class="campo">
-      <label>Descripción / Notas para la cuadrilla</label>
-      <textarea id="ot-descripcion" placeholder="Materiales especiales, contacto en sitio, acceso, instrucciones..." rows="3"></textarea>
     </div>
 
     <div class="campo">
@@ -311,13 +405,19 @@
       <textarea id="ot-direccion" placeholder="Dirección exacta, cómo llegar, referencias..." rows="2"></textarea>
     </div>
 
-    <!-- Presupuesto de materiales -->
+    <!-- Notas generales -->
+    <div class="campo">
+      <label>Notas generales para la cuadrilla</label>
+      <textarea id="ot-descripcion" placeholder="Acceso al sitio, instrucciones especiales, observaciones..." rows="2"></textarea>
+    </div>
+
+    <!-- Trabajos a realizar -->
     <div class="seccion-modal">
-      <div class="seccion-modal-titulo">Presupuesto de materiales</div>
-      <div class="presupuesto-info">Los técnicos verán estos ítems como referencia en F-01 y recibirán alerta si despachan más de lo aprobado.</div>
-      <div class="items-wrapper" id="items-presupuesto"></div>
-      <button type="button" class="btn-add-item" onclick="agregarItemPresupuesto()" style="margin-top:6px">
-        ＋ Agregar ítem al presupuesto
+      <div class="seccion-modal-titulo">Trabajos a realizar <span class="req">*</span></div>
+      <div class="presupuesto-info">Agregá un trabajo por cada tipo de actividad. Cada uno puede tener su propio presupuesto de materiales (opcional).</div>
+      <div id="trabajos-container"></div>
+      <button type="button" class="btn-agregar-trabajo" onclick="agregarTrabajo()">
+        ＋ Agregar trabajo
       </button>
     </div>
 
@@ -346,8 +446,17 @@ CONFIG.EQUIPO.forEach(n => {
   o.value = o.textContent = n;
   selTec.appendChild(o);
 });
-
 document.getElementById('ot-fecha').value = fechaHoy();
+
+// ── Helpers de tipo ───────────────────────────────────────────────────
+function tipoStyle(tipo) {
+  if (tipo.includes('Instalación'))   return 'background:#D6EAF8;color:#1A5276';
+  if (tipo.includes('Preventivo'))    return 'background:#D5F5E3;color:#1D6A39';
+  if (tipo.includes('Correctivo'))    return 'background:#FDEBD0;color:#7D4E00';
+  if (tipo.includes('Inspección'))    return 'background:#F5EEF8;color:#4A235A';
+  if (tipo.includes('Predictivo'))    return 'background:#F4F6F7;color:#566573';
+  return 'background:#EBF5FB;color:#1A5276';
+}
 
 // ── Render ────────────────────────────────────────────────────────────
 async function renderOTs() {
@@ -373,35 +482,45 @@ function crearCardOT(ot, esAbierta) {
   const card = document.createElement('div');
   card.className = 'ot-card' + (esAbierta ? '' : ' cerrada');
 
-  const tipo     = ot.tipo    || '—';
-  const tech     = ot.tecnico || ot['técnico'] || '—';
-  const fecha    = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
-  const desc     = ot.descripcion || ot['descripción'] || '';
+  const tech   = ot.tecnico || ot['técnico'] || '—';
+  const fecha  = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
+  const desc   = ot.descripcion || ot['descripción'] || '';
+  const dir    = ot.direccion       || '';
   const contacto = ot.contacto_nombre || '';
-  const tel      = ot.contacto_tel    || '';
-  const dir      = ot.direccion       || '';
-  const creado   = ot.timestamp || ot['timestamp_creación'] || '';
+  const tel    = ot.contacto_tel    || '';
+  const creado = ot.timestamp || ot['timestamp_creación'] || '';
 
-  // Normalizar presupuesto: puede ser array (local) o string (desde GAS)
-  let presItems = [];
-  if (Array.isArray(ot.presupuesto)) {
-    presItems = ot.presupuesto;
-  } else if (typeof ot.presupuesto === 'string' && ot.presupuesto.trim()) {
-    presItems = ot.presupuesto.split('\n').filter(l => l.trim()).map(line => {
-      const p = line.split('|').map(s => s.trim());
-      return { codigo: p[0] || '', nombre: p[1] || '', cantidad: p[2] || '' };
-    });
+  // Normalizar trabajos (nuevo) o tipo+presupuesto (legado)
+  let trabajos = Array.isArray(ot.trabajos) && ot.trabajos.length ? ot.trabajos : null;
+  if (!trabajos) {
+    // Compatibilidad con OTs viejas: construir un trabajo sintético
+    let presItems = [];
+    if (Array.isArray(ot.presupuesto)) presItems = ot.presupuesto;
+    else if (typeof ot.presupuesto === 'string' && ot.presupuesto.trim()) {
+      presItems = ot.presupuesto.split('\n').filter(l => l.trim()).map(l => {
+        const p = l.split('|').map(s => s.trim());
+        return { codigo: p[0]||'', nombre: p[1]||'', cantidad: p[2]||'' };
+      });
+    }
+    trabajos = [{ tipo: ot.tipo || '—', descripcion: desc, presupuesto: presItems }];
   }
 
-  const presHtml = presItems.length ? `
-    <div style="margin-top:8px;border-top:1px solid var(--gris-borde);padding-top:7px;">
-      <div style="font-size:.7rem;font-weight:700;color:var(--texto-sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">📦 Presupuesto de materiales</div>
-      ${presItems.map(it => `
-        <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:3px 0;border-bottom:1px solid #f0f0f0;">
-          <span style="color:var(--texto)">${it.codigo} — ${it.nombre}</span>
-          <strong style="color:var(--azul-dark);margin-left:8px;">×${it.cantidad}</strong>
-        </div>`).join('')}
-    </div>` : '';
+  const trabajosHtml = trabajos.map(t => {
+    const presHtml = (t.presupuesto || []).length ? `
+      <div class="trabajo-card-pres">
+        ${t.presupuesto.map(it => `
+          <div class="trabajo-card-pres-item">
+            <span>${it.codigo} — ${it.nombre}</span>
+            <strong style="color:var(--azul-dark);">×${it.cantidad}</strong>
+          </div>`).join('')}
+      </div>` : '';
+    return `
+      <div class="trabajo-card" style="${tipoStyle(t.tipo)}">
+        <strong>${t.tipo}</strong>
+        ${t.descripcion ? `<div class="trabajo-card-desc">${t.descripcion}</div>` : ''}
+        ${presHtml}
+      </div>`;
+  }).join('');
 
   card.innerHTML = `
     <div class="ot-card-header">
@@ -410,19 +529,19 @@ function crearCardOT(ot, esAbierta) {
     </div>
     <div class="ot-cliente">${ot.cliente || '—'}</div>
     <div class="ot-meta">
-      <span>${tipo}</span>
       <span>👤 ${tech}</span>
       <span>📅 ${fecha}</span>
     </div>
     ${creado    ? `<div style="font-size:.72rem;color:var(--texto-sub);margin-top:2px;">🕐 Creada: ${creado}</div>` : ''}
     ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">📍 ${dir}</div>` : ''}
-    ${(contacto || tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel ? ' — ' + tel : ''}</div>` : ''}
-    ${desc      ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">${desc}</div>` : ''}
-    ${presHtml}
+    ${(contacto||tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel?' — '+tel:''}</div>` : ''}
+    ${desc && !trabajos[0]?.descripcion ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">${desc}</div>` : ''}
+    ${trabajosHtml}
     ${esAbierta ? `
       <div class="ot-acciones">
-        <button class="btn-cerrar-ot" onclick="confirmarCierre('${ot.id}')">🔒 Cerrar</button>
-        <button class="btn-editar-ot" onclick="abrirModal('${ot.id}')">✏️ Editar</button>
+        <button class="btn-cerrar-ot"  onclick="confirmarCierre('${ot.id}')">🔒 Cerrar</button>
+        <button class="btn-editar-ot"  onclick="abrirModal('${ot.id}')">✏️ Editar</button>
+        <button class="btn-eliminar-ot" onclick="confirmarEliminar('${ot.id}')" title="Eliminar OT">🗑️</button>
       </div>` : ''}
   `;
   return card;
@@ -437,33 +556,124 @@ function mostrarTab(tab) {
   document.getElementById('btn-nueva-ot').style.display = tab === 'abiertas' ? '' : 'none';
 }
 
-// ── Modal ─────────────────────────────────────────────────────────────
-let _tipoSeleccionado = '';
-let _editandoOTId = null;
+// ── Trabajos ──────────────────────────────────────────────────────────
+let _trabajoCounter = 0;
+let _editandoOTId   = null;
 
-function seleccionarTipo(el) {
-  document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
+function agregarTrabajo(datos = null) {
+  const id  = _trabajoCounter++;
+  const cnt = document.getElementById('trabajos-container');
+  const num = cnt.children.length + 1;
+
+  const div = document.createElement('div');
+  div.className = 'trabajo-row';
+  div.dataset.trabajoId = id;
+  div.innerHTML = `
+    <div class="trabajo-row-header">
+      <span class="trabajo-num">Trabajo ${num}</span>
+      <button type="button" class="btn-del-trabajo" onclick="eliminarTrabajo(this)">✕ Quitar</button>
+    </div>
+    <div class="color-tipo">
+      <div class="color-pill pill-instalacion"   data-tipo="Instalación"              onclick="selTipoPill(this)">🔵 Instalación</div>
+      <div class="color-pill pill-mantenimiento" data-tipo="Mantenimiento Preventivo" onclick="selTipoPill(this)">🟢 Mant. Preventivo</div>
+      <div class="color-pill pill-correctivo"    data-tipo="Mantenimiento Correctivo" onclick="selTipoPill(this)">🟠 Mant. Correctivo</div>
+      <div class="color-pill pill-inspeccion"    data-tipo="Inspección"               onclick="selTipoPill(this)">🟣 Inspección</div>
+      <div class="color-pill pill-predictivo"    data-tipo="Mantenimiento Predictivo" onclick="selTipoPill(this)">⚪ Mant. Predictivo</div>
+    </div>
+    <input type="hidden" class="trabajo-tipo-hidden">
+    <textarea class="trabajo-desc" rows="2" placeholder="Descripción del trabajo, unidades, alcance... (opcional)"></textarea>
+    <label class="toggle-pres-label">
+      <input type="checkbox" class="chk-pres" onchange="togglePresTrabajo(this, ${id})">
+      <span>📦 Asignar materiales a este trabajo (opcional)</span>
+    </label>
+    <div class="pres-items-box" id="pres-box-${id}" style="display:none">
+      <div class="items-wrapper" id="items-trabajo-${id}"></div>
+      <button type="button" class="btn-add-item" style="margin-top:6px" onclick="agregarItemTrabajo(${id})">＋ Agregar ítem</button>
+    </div>
+  `;
+  cnt.appendChild(div);
+
+  // Pre-rellenar si se pasan datos (modo edición)
+  if (datos) {
+    if (datos.tipo) {
+      const pill = div.querySelector(`.color-pill[data-tipo="${datos.tipo}"]`);
+      if (pill) selTipoPill(pill);
+    }
+    if (datos.descripcion) div.querySelector('.trabajo-desc').value = datos.descripcion;
+    if (Array.isArray(datos.presupuesto) && datos.presupuesto.length) {
+      const chk = div.querySelector('.chk-pres');
+      chk.checked = true;
+      togglePresTrabajo(chk, id);
+      const itemsCnt = document.getElementById('items-trabajo-' + id);
+      itemsCnt.innerHTML = '';
+      datos.presupuesto.forEach(item => {
+        crearItemRow(CATALOGO_COMPLETO, itemsCnt);
+        const rows = itemsCnt.querySelectorAll('.item-row');
+        const last = rows[rows.length - 1];
+        const hid  = last.querySelector('.ac-hidden');
+        const txt  = last.querySelector('.autocomplete-input');
+        const qty  = last.querySelector('.item-qty');
+        const sel  = last.querySelector('.ac-selected');
+        if (hid) hid.value = item.codigo;
+        if (txt) txt.value = item.codigo + ' — ' + item.nombre;
+        if (qty) qty.value = item.cantidad;
+        if (sel) { sel.textContent = '✓ ' + item.nombre; sel.classList.add('show'); }
+      });
+    }
+  }
+}
+
+function selTipoPill(el) {
+  const row = el.closest('.trabajo-row');
+  row.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
-  _tipoSeleccionado = el.dataset.tipo;
-  document.getElementById('ot-tipo').value = _tipoSeleccionado;
+  row.querySelector('.trabajo-tipo-hidden').value = el.dataset.tipo;
 }
 
-function agregarItemPresupuesto() {
-  crearItemRow(CATALOGO_COMPLETO, document.getElementById('items-presupuesto'));
+function eliminarTrabajo(btn) {
+  btn.closest('.trabajo-row').remove();
+  // Renumerar
+  document.querySelectorAll('.trabajo-row').forEach((row, i) => {
+    row.querySelector('.trabajo-num').textContent = 'Trabajo ' + (i + 1);
+  });
 }
 
+function togglePresTrabajo(chk, id) {
+  const box = document.getElementById('pres-box-' + id);
+  box.style.display = chk.checked ? 'block' : 'none';
+  if (chk.checked && document.getElementById('items-trabajo-' + id).children.length === 0) {
+    agregarItemTrabajo(id);
+  }
+}
+
+function agregarItemTrabajo(id) {
+  crearItemRow(CATALOGO_COMPLETO, document.getElementById('items-trabajo-' + id));
+}
+
+function recogerTrabajos() {
+  const trabajos = [];
+  document.querySelectorAll('.trabajo-row').forEach(row => {
+    const tipo = row.querySelector('.trabajo-tipo-hidden').value;
+    if (!tipo) return;
+    const desc = row.querySelector('.trabajo-desc').value.trim();
+    const itemsCnt = row.querySelector('.items-wrapper');
+    const presupuesto = itemsCnt ? recogerItems(itemsCnt) : [];
+    trabajos.push({ tipo, descripcion: desc, presupuesto });
+  });
+  return trabajos;
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────
 function _limpiarModal() {
-  document.getElementById('ot-cliente').value     = '';
-  document.getElementById('ot-descripcion').value = '';
-  document.getElementById('ot-fecha').value        = fechaHoy();
-  document.getElementById('ot-contacto-nombre').value = '';
-  document.getElementById('ot-contacto-tel').value    = '';
-  document.getElementById('ot-direccion').value        = '';
-  document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
-  _tipoSeleccionado = '';
-  const cnt = document.getElementById('items-presupuesto');
-  cnt.innerHTML = '';
-  _itemCounter = 0;
+  document.getElementById('ot-cliente').value          = '';
+  document.getElementById('ot-descripcion').value      = '';
+  document.getElementById('ot-fecha').value             = fechaHoy();
+  document.getElementById('ot-contacto-nombre').value  = '';
+  document.getElementById('ot-contacto-tel').value     = '';
+  document.getElementById('ot-direccion').value         = '';
+  document.getElementById('trabajos-container').innerHTML = '';
+  _trabajoCounter = 0;
+  agregarTrabajo(); // empezar con un trabajo vacío
 }
 
 function abrirModal(otId = null) {
@@ -471,53 +681,47 @@ function abrirModal(otId = null) {
   _limpiarModal();
 
   if (otId) {
-    // Modo edición: pre-llenar con datos existentes
     document.getElementById('modal-titulo-texto').textContent = 'Editar OT';
-    document.getElementById('btn-guardar-ot').textContent = '💾 Guardar cambios';
+    document.getElementById('btn-guardar-ot').textContent     = '💾 Guardar cambios';
 
     const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
     const ot  = ots.find(o => o.id === otId);
     if (!ot) { showToast('OT no encontrada', 'error'); return; }
 
-    document.getElementById('ot-numero').value          = ot.id;
-    document.getElementById('ot-cliente').value         = ot.cliente || '';
-    document.getElementById('ot-descripcion').value     = ot.descripcion || '';
-    document.getElementById('ot-fecha').value           = ot.fecha_asignacion || fechaHoy();
+    document.getElementById('ot-numero').value         = ot.id;
+    document.getElementById('ot-cliente').value        = ot.cliente || '';
+    document.getElementById('ot-descripcion').value    = ot.descripcion || '';
+    document.getElementById('ot-fecha').value          = ot.fecha_asignacion || fechaHoy();
     document.getElementById('ot-contacto-nombre').value = ot.contacto_nombre || '';
-    document.getElementById('ot-contacto-tel').value    = ot.contacto_tel    || '';
-    document.getElementById('ot-direccion').value       = ot.direccion       || '';
-    document.getElementById('ot-tecnico').value         = ot.tecnico || '';
+    document.getElementById('ot-contacto-tel').value   = ot.contacto_tel    || '';
+    document.getElementById('ot-direccion').value      = ot.direccion       || '';
+    document.getElementById('ot-tecnico').value        = ot.tecnico || '';
 
-    if (ot.tipo) {
-      const pill = document.querySelector(`.color-pill[data-tipo="${ot.tipo}"]`);
-      if (pill) seleccionarTipo(pill);
-    }
-
-    // Restaurar ítems del presupuesto
-    if (Array.isArray(ot.presupuesto) && ot.presupuesto.length) {
-      const cnt = document.getElementById('items-presupuesto');
-      ot.presupuesto.forEach(item => {
-        crearItemRow(CATALOGO_COMPLETO, cnt);
-        const rows   = cnt.querySelectorAll('.item-row');
-        const last   = rows[rows.length - 1];
-        const hid    = last.querySelector('.ac-hidden');
-        const txt    = last.querySelector('.autocomplete-input');
-        const qty    = last.querySelector('.item-qty');
-        const sel    = last.querySelector('.ac-selected');
-        if (hid) hid.value = item.codigo;
-        if (txt) txt.value = item.codigo + ' — ' + item.nombre;
-        if (qty) qty.value = item.cantidad;
-        if (sel) { sel.textContent = '✓ ' + item.nombre; sel.classList.add('show'); }
-      });
-    }
+    // Restaurar trabajos
+    document.getElementById('trabajos-container').innerHTML = '';
+    _trabajoCounter = 0;
+    const trabajos = Array.isArray(ot.trabajos) && ot.trabajos.length
+      ? ot.trabajos
+      : [{ tipo: ot.tipo || '', descripcion: ot.descripcion || '', presupuesto: _normPresupuesto(ot.presupuesto) }];
+    trabajos.forEach(t => agregarTrabajo(t));
   } else {
-    // Modo creación
     document.getElementById('modal-titulo-texto').textContent = 'Nueva OT';
-    document.getElementById('btn-guardar-ot').textContent = '✅ Crear OT';
+    document.getElementById('btn-guardar-ot').textContent     = '✅ Crear OT';
     document.getElementById('ot-numero').value = generarNumOT();
   }
 
   document.getElementById('modal-overlay').classList.add('show');
+}
+
+function _normPresupuesto(pres) {
+  if (Array.isArray(pres)) return pres;
+  if (typeof pres === 'string' && pres.trim()) {
+    return pres.split('\n').filter(l => l.trim()).map(l => {
+      const p = l.split('|').map(s => s.trim());
+      return { codigo: p[0]||'', nombre: p[1]||'', cantidad: p[2]||'' };
+    });
+  }
+  return [];
 }
 
 function cerrarModal() {
@@ -526,31 +730,32 @@ function cerrarModal() {
 
 async function guardarNuevaOT() {
   const cliente = document.getElementById('ot-cliente').value.trim();
-  const tipo    = _tipoSeleccionado;
   const tecnico = document.getElementById('ot-tecnico').value;
-
   if (!cliente) { showToast('Ingresá el cliente o sitio', 'warn'); return; }
-  if (!tipo)    { showToast('Seleccioná el tipo de trabajo', 'warn'); return; }
   if (!tecnico) { showToast('Seleccioná el técnico', 'warn'); return; }
 
-  const presupuesto    = recogerItems(document.getElementById('items-presupuesto'));
-  const presupuesto_str = presupuesto.map(it => `${it.codigo} | ${it.nombre} | ${it.cantidad}`).join('\n');
+  const trabajos = recogerTrabajos();
+  if (!trabajos.length) { showToast('Agregá al menos un trabajo con tipo', 'warn'); return; }
+
+  const presupuesto_str = trabajos
+    .flatMap(t => (t.presupuesto || []).map(it => `${it.codigo} | ${it.nombre} | ${it.cantidad}`))
+    .join('\n');
 
   const ot = {
     id:               document.getElementById('ot-numero').value,
     cliente,
-    tipo,
+    tipo:             trabajos[0].tipo,  // retrocompat
     tecnico,
     descripcion:      document.getElementById('ot-descripcion').value.trim(),
     fecha_asignacion: document.getElementById('ot-fecha').value,
     contacto_nombre:  document.getElementById('ot-contacto-nombre').value.trim(),
     contacto_tel:     document.getElementById('ot-contacto-tel').value.trim(),
     direccion:        document.getElementById('ot-direccion').value.trim(),
-    presupuesto
+    trabajos,
+    presupuesto:      trabajos.flatMap(t => t.presupuesto || []) // retrocompat
   };
 
   if (_editandoOTId) {
-    // Actualizar OT existente en localStorage
     const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
     const idx = ots.findIndex(o => o.id === _editandoOTId);
     if (idx >= 0) {
@@ -581,18 +786,26 @@ async function guardarNuevaOT() {
 // ── Cerrar OT ────────────────────────────────────────────────────────
 async function confirmarCierre(otId) {
   if (!confirm(`¿Cerrar la OT ${otId}?\n\nVerificá antes que F-01 = F-03 + F-04.`)) return;
-
   const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
   const ot  = ots.find(o => o.id === otId);
-  if (ot) { ot.estado = 'Cerrada'; }
+  if (ot) ot.estado = 'Cerrada';
   localStorage.setItem('ots_local', JSON.stringify(ots));
-
   await renderOTs();
   showToast('OT ' + otId + ' cerrada', 'success');
-
   if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
-    try { await enviarAGAS({ form: 'OT_CERRAR', id: otId, timestamp: timestampCR() }); }
-    catch(e) {}
+    try { await enviarAGAS({ form: 'OT_CERRAR', id: otId, timestamp: timestampCR() }); } catch(e) {}
+  }
+}
+
+// ── Eliminar OT ───────────────────────────────────────────────────────
+async function confirmarEliminar(otId) {
+  if (!confirm(`⚠️ ¿Eliminar permanentemente la OT ${otId}?\n\nEsta acción no se puede deshacer.`)) return;
+  const ots   = JSON.parse(localStorage.getItem('ots_local') || '[]');
+  localStorage.setItem('ots_local', JSON.stringify(ots.filter(o => o.id !== otId)));
+  await renderOTs();
+  showToast('OT ' + otId + ' eliminada', 'success');
+  if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
+    try { await enviarAGAS({ form: 'OT_ELIMINAR', id: otId }); } catch(e) {}
   }
 }
 

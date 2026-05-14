@@ -68,7 +68,15 @@
       <input type="hidden" name="cliente" id="cliente-hidden">
     </div>
 
-    <div class="campo">
+    <!-- Selector de trabajo (si la OT tiene trabajos definidos) -->
+    <div class="campo" id="campo-trabajo-selector" style="display:none">
+      <label>Trabajo a reportar <span class="req">*</span></label>
+      <div id="trabajos-btns" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;"></div>
+      <span class="campo-error-msg">Seleccioná el trabajo</span>
+    </div>
+
+    <!-- Tipo manual (para OTs sin trabajos definidos) -->
+    <div class="campo" id="campo-tipo-manual">
       <label>Tipo de trabajo <span class="req">*</span></label>
       <select name="tipo_trabajo" id="select-tipo" required>
         <option value="">— Seleccionar —</option>
@@ -241,18 +249,73 @@ formEl.querySelector('[name="fecha"]').value = fechaHoy();
 formEl.querySelector('[name="hora_llegada"]').value = horaAhora();
 
 // ── OT Dropdown ─────────────────────────────────────────────────────
-const selOT    = document.getElementById('select-ot');
-const selTipo  = document.getElementById('select-tipo');
-const dispCli  = document.getElementById('cliente-display');
+const selOT   = document.getElementById('select-ot');
+const selTipo = document.getElementById('select-tipo');
+const dispCli = document.getElementById('cliente-display');
 poblarSelectOT(selOT);
 conectarOTSelect(selOT, {
   clienteDisplay: dispCli,
-  clienteHidden:  document.getElementById('cliente-hidden'),
-  tipoSelect:     selTipo
+  clienteHidden:  document.getElementById('cliente-hidden')
 });
+
+let _trabajoIdx = -1;
+
 selOT.addEventListener('change', function() {
   dispCli.classList.toggle('vacio', !this.value);
+  _trabajoIdx = -1;
+
+  if (!this.value) {
+    document.getElementById('campo-trabajo-selector').style.display = 'none';
+    document.getElementById('campo-tipo-manual').style.display      = 'block';
+    selTipo.required = true;
+    return;
+  }
+
+  const ots     = JSON.parse(localStorage.getItem('ots_local') || '[]');
+  const ot      = ots.find(o => o.id === this.value);
+  const trabajos = ot && Array.isArray(ot.trabajos) && ot.trabajos.length ? ot.trabajos : null;
+
+  if (trabajos) {
+    // Mostrar selector de trabajos
+    document.getElementById('campo-tipo-manual').style.display      = 'none';
+    selTipo.required = false;
+    document.getElementById('campo-trabajo-selector').style.display = 'block';
+
+    const btnsDiv = document.getElementById('trabajos-btns');
+    btnsDiv.innerHTML = trabajos.map((t, i) => `
+      <button type="button"
+        onclick="seleccionarTrabajo(${i}, '${t.tipo.replace(/'/g,"\\'")}', this)"
+        style="text-align:left;padding:10px 12px;border-radius:8px;border:1.5px solid var(--gris-borde);
+               background:#fff;cursor:pointer;font-size:.85rem;font-weight:600;">
+        ${t.tipo}
+        ${t.descripcion ? `<div style="font-weight:400;font-size:.78rem;color:var(--texto-sub);margin-top:2px;">${t.descripcion}</div>` : ''}
+      </button>`).join('');
+
+    // Auto-seleccionar si solo hay un trabajo
+    if (trabajos.length === 1) {
+      seleccionarTrabajo(0, trabajos[0].tipo, btnsDiv.querySelector('button'));
+    }
+  } else {
+    // OT sin trabajos definidos — dropdown manual
+    document.getElementById('campo-trabajo-selector').style.display = 'none';
+    document.getElementById('campo-tipo-manual').style.display      = 'block';
+    selTipo.required = true;
+    if (ot && ot.tipo) selTipo.value = ot.tipo;
+  }
 });
+
+function seleccionarTrabajo(idx, tipo, btn) {
+  document.querySelectorAll('#trabajos-btns button').forEach(b => {
+    b.style.borderColor = 'var(--gris-borde)';
+    b.style.background  = '#fff';
+  });
+  btn.style.borderColor = 'var(--azul)';
+  btn.style.background  = 'var(--azul-light)';
+  selTipo.value = tipo;
+  _trabajoIdx   = idx;
+  // Quitar error visual si había
+  document.getElementById('campo-trabajo-selector').classList.remove('error');
+}
 
 // ── Ítems ──────────────────────────────────────────────────────────
 crearItemRow(CATALOGO_COMPLETO, itemsCnt);
@@ -290,6 +353,12 @@ restoreDraft(FORM_ID, formEl);
 
 // ── Submit ─────────────────────────────────────────────────────────
 document.getElementById('btn-submit').addEventListener('click', async () => {
+  // Validar trabajo seleccionado (si la OT tiene trabajos definidos)
+  if (document.getElementById('campo-trabajo-selector').style.display !== 'none' && _trabajoIdx < 0) {
+    document.getElementById('campo-trabajo-selector').classList.add('error');
+    showToast('Seleccioná el trabajo que vas a reportar', 'warn');
+    return;
+  }
   if (!fotosTrabajoInput._fotos || fotosTrabajoInput._fotos.length < 2) {
     fotosTrabajoInput._hasFile = false;
     showToast('Se requieren al menos 2 fotos del trabajo terminado', 'warn');
@@ -304,6 +373,7 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
     form: FORM_ID,
     timestamp: timestampCR(),
     items,
+    trabajo_idx:   _trabajoIdx >= 0 ? _trabajoIdx : undefined,
     fotos_trabajo: fotosTrabajoInput._fotos || [],
     fotos_vobo:    fotoVoboInput._fotos || []
   };

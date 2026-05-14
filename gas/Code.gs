@@ -101,6 +101,7 @@ function doPost(e) {
       case 'OT_CREAR':              resultado = manejarOTCrear(data);             break;
       case 'OT_EDITAR':             resultado = manejarOTEditar(data);            break;
       case 'OT_CERRAR':             resultado = manejarOTCerrar(data);            break;
+      case 'OT_ELIMINAR':          resultado = manejarOTEliminar(data);          break;
       case 'INVENTARIO_IMPORTAR':   resultado = manejarInventarioImportar(data);  break;
       case 'INVENTARIO_COMPRA':    resultado = manejarInventarioCompra(data);    break;
       default:    throw new Error('Formulario desconocido: ' + formId);
@@ -131,37 +132,41 @@ function enviarEmail(asunto, lineas) {
 function manejarOTCrear(d) {
   const sheet = getSheet('OTs');
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['ID', 'Cliente', 'Tipo', 'Técnico', 'Descripción', 'Fecha Asignación', 'Estado', 'Timestamp Creación', 'Timestamp Cierre', 'Contacto', 'Teléfono', 'Dirección', 'Presupuesto']);
+    sheet.appendRow(['ID', 'Cliente', 'Tipo', 'Técnico', 'Descripción', 'Fecha Asignación', 'Estado', 'Timestamp Creación', 'Timestamp Cierre', 'Contacto', 'Teléfono', 'Dirección', 'Presupuesto', 'Trabajos']);
     formatearEncabezados(sheet);
-  } else if (sheet.getLastColumn() < 13) {
-    // Migrar hoja existente: agregar columnas nuevas
-    const encabezados = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    const nuevos = ['Contacto', 'Teléfono', 'Dirección', 'Presupuesto'];
-    nuevos.forEach((h, i) => {
-      if (!encabezados.includes(h)) {
-        sheet.getRange(1, encabezados.length + i + 1).setValue(h);
-      }
+  } else {
+    const hdrs = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    ['Contacto', 'Teléfono', 'Dirección', 'Presupuesto', 'Trabajos'].forEach(h => {
+      if (!hdrs.includes(h)) { hdrs.push(h); sheet.getRange(1, hdrs.length).setValue(h); }
     });
     formatearEncabezados(sheet);
   }
 
-  const existentes = leerOTs(sheet);
-  if (existentes.find(o => o.id === d.id)) throw new Error('OT ' + d.id + ' ya existe.');
+  const otsActuales = leerOTs(sheet);
+  if (otsActuales.find(o => o.id === d.id)) throw new Error('OT ' + d.id + ' ya existe.');
+
+  const trabajos = Array.isArray(d.trabajos) ? d.trabajos : [];
+  const tipoStr  = trabajos.length > 1
+    ? trabajos.map(t => t.tipo).join(' / ')
+    : trabajos.length === 1 ? trabajos[0].tipo : (d.tipo || '');
+  const presStr  = trabajos.flatMap(t => (t.presupuesto || []).map(it => `${it.codigo} | ${it.nombre} | ${it.cantidad}`)).join('\n') || d.presupuesto_str || '';
 
   sheet.appendRow([
-    d.id, d.cliente, d.tipo, d.tecnico, d.descripcion || '',
+    d.id, d.cliente, tipoStr, d.tecnico, d.descripcion || '',
     d.fecha_asignacion, 'Abierta', d.timestamp, '',
-    d.contacto_nombre || '', d.contacto_tel || '', d.direccion || '', d.presupuesto_str || ''
+    d.contacto_nombre || '', d.contacto_tel || '', d.direccion || '',
+    presStr, trabajos.length ? JSON.stringify(trabajos) : ''
   ]);
 
   enviarEmail('Nueva OT creada: ' + d.id, [
-    'OT:       ' + d.id,
-    'Cliente:  ' + d.cliente,
-    'Tipo:     ' + d.tipo,
-    'Técnico:  ' + d.tecnico,
-    'Fecha:    ' + d.fecha_asignacion,
+    'OT:          ' + d.id,
+    'Cliente:     ' + d.cliente,
+    'Tipo:        ' + tipoStr,
+    'Técnico:     ' + d.tecnico,
+    'Fecha:       ' + d.fecha_asignacion,
     'Descripción: ' + (d.descripcion || '—'),
-  ]);
+    trabajos.length > 1 ? ('Trabajos:    ' + trabajos.length) : '',
+  ].filter(Boolean));
 
   return { id: d.id };
 }
@@ -171,25 +176,31 @@ function manejarOTEditar(d) {
   const sheet = getSheet('OTs');
   const data  = sheet.getDataRange().getValues();
   const headers = data[0];
-
-  const col = h => headers.indexOf(h) + 1; // 1-indexed, 0 si no existe
+  const col = h => headers.indexOf(h) + 1;
 
   for (let i = 1; i < data.length; i++) {
     if (data[i][0] === d.id) {
+      const trabajos = Array.isArray(d.trabajos) ? d.trabajos : [];
+      const tipoStr  = trabajos.length > 1
+        ? trabajos.map(t => t.tipo).join(' / ')
+        : trabajos.length === 1 ? trabajos[0].tipo : (d.tipo || '');
+      const presStr  = trabajos.flatMap(t => (t.presupuesto || []).map(it => `${it.codigo} | ${it.nombre} | ${it.cantidad}`)).join('\n') || d.presupuesto_str || '';
+
       sheet.getRange(i + 1, col('Cliente')).setValue(d.cliente || '');
-      sheet.getRange(i + 1, col('Tipo')).setValue(d.tipo || '');
+      sheet.getRange(i + 1, col('Tipo')).setValue(tipoStr);
       sheet.getRange(i + 1, col('Técnico')).setValue(d.tecnico || '');
       sheet.getRange(i + 1, col('Descripción')).setValue(d.descripcion || '');
       sheet.getRange(i + 1, col('Fecha Asignación')).setValue(d.fecha_asignacion || '');
       if (col('Contacto')    > 0) sheet.getRange(i + 1, col('Contacto')).setValue(d.contacto_nombre || '');
       if (col('Teléfono')    > 0) sheet.getRange(i + 1, col('Teléfono')).setValue(d.contacto_tel    || '');
       if (col('Dirección')   > 0) sheet.getRange(i + 1, col('Dirección')).setValue(d.direccion      || '');
-      if (col('Presupuesto') > 0) sheet.getRange(i + 1, col('Presupuesto')).setValue(d.presupuesto_str || '');
+      if (col('Presupuesto') > 0) sheet.getRange(i + 1, col('Presupuesto')).setValue(presStr);
+      if (col('Trabajos')    > 0) sheet.getRange(i + 1, col('Trabajos')).setValue(trabajos.length ? JSON.stringify(trabajos) : '');
 
       enviarEmail('OT editada: ' + d.id, [
         'OT:      ' + d.id,
         'Cliente: ' + (d.cliente || ''),
-        'Tipo:    ' + (d.tipo    || ''),
+        'Tipo:    ' + tipoStr,
         'Técnico: ' + (d.tecnico || ''),
         d.direccion ? ('Dirección: ' + d.direccion) : '',
       ].filter(l => l !== ''));
@@ -229,8 +240,30 @@ function leerOTs(sheet) {
   return data.slice(1).map(row => {
     const obj = {};
     headers.forEach((h, i) => { obj[String(h).toLowerCase().replace(/\s+/g, '_')] = row[i]; });
+    if (typeof obj.trabajos === 'string' && obj.trabajos.trim()) {
+      try { obj.trabajos = JSON.parse(obj.trabajos); } catch(e) { obj.trabajos = []; }
+    } else {
+      obj.trabajos = Array.isArray(obj.trabajos) ? obj.trabajos : [];
+    }
     return obj;
   });
+}
+
+// ── OTs — Eliminar ───────────────────────────────────────────────────
+function manejarOTEliminar(d) {
+  const sheet = getSheet('OTs');
+  const data  = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === d.id) {
+      sheet.deleteRow(i + 1);
+      enviarEmail('OT eliminada: ' + d.id, [
+        'La OT ' + d.id + ' fue eliminada permanentemente por el PM.',
+        'Timestamp: ' + Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a'),
+      ]);
+      return { id: d.id, eliminada: true };
+    }
+  }
+  throw new Error('OT ' + d.id + ' no encontrada para eliminar.');
 }
 
 // ── F-01 Despacho de Materiales ─────────────────────────────────────
@@ -873,4 +906,34 @@ function testEmail() {
     subject: '[AClímate] Test de configuración',
     body: 'Si recibís este email, la configuración de notificaciones está correcta.'
   });
+}
+
+// ── Limpieza de datos de prueba (ejecutar UNA VEZ antes de producción) ─
+// Borra todos los registros operativos manteniendo cabeceras e inventario.
+function limpiarDatosPrueba() {
+  const HOJAS_A_LIMPIAR = [
+    'OTs',
+    'F01-Despacho',
+    'F02-ChecklistInicio',
+    'F03-ReporteTrabajo',
+    'F04-Devolucion',
+    'F05-ChecklistCierre',
+    'F06-Viaticos',
+    'Movimientos'
+  ];
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const resumen = [];
+
+  HOJAS_A_LIMPIAR.forEach(nombre => {
+    const sh = ss.getSheetByName(nombre);
+    if (!sh) { resumen.push(`${nombre}: no existe (ok)`); return; }
+    const lastRow = sh.getLastRow();
+    if (lastRow <= 1) { resumen.push(`${nombre}: ya vacía`); return; }
+    sh.deleteRows(2, lastRow - 1);
+    resumen.push(`${nombre}: ${lastRow - 1} fila(s) eliminada(s)`);
+  });
+
+  Logger.log('── Limpieza completada ──\n' + resumen.join('\n'));
+  return resumen;
 }
