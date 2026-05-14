@@ -140,6 +140,19 @@
       font-size: .7rem;
       color: var(--texto-sub);
     }
+    .inv-item-ubic-camion {
+      display: inline-block;
+      margin-top: 3px;
+      background: #F0F3F4;
+      border: 1px solid #BDC3C7;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .68rem;
+      font-family: monospace;
+      font-weight: 700;
+      color: #566573;
+      letter-spacing: .04em;
+    }
     .inv-item-stock {
       text-align: right;
       flex-shrink: 0;
@@ -515,10 +528,11 @@ function renderItems(items) {
   lista.innerHTML = items.map(it => {
     const s = semaforo(it);
     const existencia = Number(it['Existencia'] ?? it.existencia ?? 0);
-    const ubicacion  = it['Ubicación'] || it.ubicacion || '';
-    const codigo     = it['Código']    || it.codigo    || '';
-    const nombre     = it['Descripción'] || it.descripcion || '';
-    const cat        = it['Categoría'] || it.categoria || '';
+    const ubicacion   = it['Ubicación']    || it.ubicacion     || '';
+    const codigo      = it['Código']       || it.codigo        || '';
+    const nombre      = it['Descripción']  || it.descripcion   || '';
+    const cat         = it['Categoría']    || it.categoria     || '';
+    const ubicCamion  = it['Ubic. Camión'] || it.ubicacion_camion || '';
     return `
     <div class="inv-item">
       <div class="semaforo ${s}"></div>
@@ -526,6 +540,7 @@ function renderItems(items) {
         <div class="inv-item-codigo">${codigo}</div>
         <div class="inv-item-nombre" title="${nombre}">${nombre}</div>
         <div class="inv-item-cat">${cat}</div>
+        ${ubicCamion ? `<div class="inv-item-ubic-camion">📍 ${ubicCamion}</div>` : ''}
       </div>
       <div class="inv-item-stock">
         <div class="qty ${s}">${existencia}</div>
