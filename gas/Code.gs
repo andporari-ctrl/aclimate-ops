@@ -53,6 +53,14 @@ function doGet(e) {
     }
   }
 
+  if (action === 'dashboard') {
+    try {
+      return jsonOk(computarDashboard());
+    } catch(err) {
+      return jsonError(err.toString());
+    }
+  }
+
   if (action === 'movimientos') {
     try {
       const sheet = getSheet('Movimientos');
@@ -507,13 +515,132 @@ function manejarF06(d) {
   return { form: 'F06' };
 }
 
+// ── Dashboard — Cálculo de KPIs ──────────────────────────────────────
+function computarDashboard() {
+  const ss  = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const ahora = new Date();
+  const ts  = Utilities.formatDate(ahora, 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a');
+
+  function sheetRows(nombre) {
+    const sh = ss.getSheetByName(nombre);
+    if (!sh || sh.getLastRow() <= 1) return [];
+    const data = sh.getDataRange().getValues();
+    const h = data[0];
+    return data.slice(1).map(r => {
+      const o = {}; h.forEach((k, i) => { o[String(k)] = r[i]; }); return o;
+    });
+  }
+  function sheetCount(nombre) {
+    const sh = ss.getSheetByName(nombre);
+    return sh ? Math.max(0, sh.getLastRow() - 1) : 0;
+  }
+
+  // ── OTs ──
+  const ots = sheetRows('OTs');
+  const otsAbiertas  = ots.filter(o => o['Estado'] === 'Abierta');
+  const otsCerradas  = ots.filter(o => o['Estado'] === 'Cerrada');
+  const tiposOT      = {};
+  ots.forEach(o => { const t = o['Tipo'] || '—'; tiposOT[t] = (tiposOT[t]||0)+1; });
+
+  // ── Inventario ──
+  const inv = sheetRows('Inventario');
+  const invConStock  = inv.filter(i => Number(i['Existencia']) > 0).length;
+  const invSinStock  = inv.filter(i => Number(i['Existencia']) <= 0).length;
+  const invStockBajo = inv.filter(i => {
+    const e = Number(i['Existencia']), m = Number(i['Stock Mín']);
+    return e > 0 && m > 0 && e < m;
+  }).length;
+  const valorTotal   = inv.reduce((s, i) => s + (Number(i['Existencia'])||0) * (Number(i['Costo Unit (₡)'])||0), 0);
+  const invCamionOK  = inv.filter(i => i['Ubicación']==='CAMIÓN' && i['Estado']==='OK').length;
+  const invCamionDan = inv.filter(i => i['Ubicación']==='CAMIÓN' && i['Estado'] && i['Estado']!=='OK').length;
+
+  // ── Movimientos (últimos 30 días) ──
+  const movs = sheetRows('Movimientos');
+  const hace30d = new Date(ahora.getTime() - 30*24*60*60*1000);
+  const parseFecha = f => { try { const [d,m,y]=String(f).split('/'); return new Date(y,m-1,d); } catch(e){return new Date(0);} };
+  const movs30   = movs.filter(m => parseFecha(m['Fecha']) >= hace30d);
+  const salidas30  = movs30.filter(m => m['Tipo']==='Salida').length;
+  const devol30    = movs30.filter(m => m['Tipo']==='Devolución').length;
+  const compras30  = movs30.filter(m => m['Tipo']==='Compra').length;
+  const consumo30  = movs30.filter(m => m['Tipo']==='Consumo').length;
+
+  // ── F06 Viáticos ──
+  const viat = sheetRows('F06-Viaticos');
+  const totalViat   = viat.reduce((s, v) => s + (Number(v['Monto (₡)'])||0), 0);
+  const sinAprob    = viat.filter(v => v['Aprobado PM']==='No').length;
+  const totalVuelto = viat.reduce((s, v) => s + (Number(v['Monto Vuelto (₡)'])||0), 0);
+
+  // ── F03 Incidencias de trabajo ──
+  const f03 = sheetRows('F03-ReporteTrabajo');
+  const problemas  = f03.filter(r => r['Hubo Problema']==='Sí').length;
+  const voboNeg    = f03.filter(r => r['VoBo']==='No').length;
+
+  // ── F05 Incidencias camión ──
+  const f05 = sheetRows('F05-ChecklistCierre');
+  const incCamion  = f05.filter(r => r['Incidente']==='Sí').length;
+  const mantoReq   = f05.filter(r => r['Requiere Mantenimiento']==='Sí').length;
+
+  // ── Formularios enviados (total acumulado) ──
+  const forms = {
+    'F01-Despacho':       sheetCount('F01-Despacho'),
+    'F02-Inicio':         sheetCount('F02-ChecklistInicio'),
+    'F03-Trabajo':        sheetCount('F03-ReporteTrabajo'),
+    'F04-Devolución':     sheetCount('F04-Devolucion'),
+    'F05-Cierre':         sheetCount('F05-ChecklistCierre'),
+    'F06-Viáticos':       sheetCount('F06-Viaticos'),
+  };
+  const totalForms = Object.values(forms).reduce((s, v) => s + v, 0);
+
+  // ── Control OT: diferencia F01 vs F03+F04 ──
+  const otsConDif = [];
+  if (movs.length) {
+    const porOT = {};
+    movs.forEach(m => {
+      const ot = m['OT'] || '—';
+      if (ot === '—') return;
+      if (!porOT[ot]) porOT[ot] = { salida: 0, consumo: 0, devolucion: 0 };
+      const qty = Number(m['Cantidad']) || 0;
+      if (m['Tipo'] === 'Salida')     porOT[ot].salida     += qty;
+      if (m['Tipo'] === 'Consumo')    porOT[ot].consumo    += qty;
+      if (m['Tipo'] === 'Devolución') porOT[ot].devolucion += qty;
+    });
+    Object.entries(porOT).forEach(([ot, v]) => {
+      const dif = v.salida - v.consumo - v.devolucion;
+      if (Math.abs(dif) > 0) otsConDif.push({ ot, salida: v.salida, consumo: v.consumo, devolucion: v.devolucion, diferencia: dif });
+    });
+  }
+
+  return {
+    timestamp: ts,
+    ots: {
+      total: ots.length, abiertas: otsAbiertas.length, cerradas: otsCerradas.length,
+      tipos: tiposOT,
+      recientes: otsAbiertas.slice(0, 8).map(o => ({
+        id: o['ID'] || o['id'] || '', cliente: o['Cliente'] || o['cliente'] || '',
+        tipo: o['Tipo'] || o['tipo'] || '', tecnico: o['Técnico'] || o['técnico'] || '',
+        fecha: o['Fecha Asignación'] || o['fecha_asignación'] || ''
+      }))
+    },
+    inventario: {
+      total: inv.length, con_stock: invConStock, sin_stock: invSinStock, stock_bajo: invStockBajo,
+      valor_estimado: Math.round(valorTotal),
+      camion_ok: invCamionOK, camion_dañado: invCamionDan
+    },
+    movimientos: { salidas_30d: salidas30, devoluciones_30d: devol30, compras_30d: compras30, consumo_30d: consumo30 },
+    viaticos: { total_acumulado: totalViat, sin_aprobacion: sinAprob, vuelto_total: totalVuelto, registros: viat.length },
+    incidencias: { trabajo: problemas, camion: incCamion, vobo_negativo: voboNeg, mantenimiento_pendiente: mantoReq },
+    formularios: { detalle: forms, total: totalForms },
+    control_ot: { ots_con_diferencia: otsConDif.length, detalle: otsConDif.slice(0, 10) }
+  };
+}
+
 // ── Inventario — Importar (seed inicial desde Excel Maestro) ─────────
 function manejarInventarioImportar(d) {
   const sheet = getSheet('Inventario');
   const INV_HEADERS = [
     'Código', 'Ubicación', 'Categoría', 'Descripción', 'Marca',
     'Proveedor', 'Ubic. Camión', 'Stock Mín', 'Stock Máx',
-    'Existencia', 'Costo Unit (₡)', 'Última Actualización'
+    'Existencia', 'Costo Unit (₡)', 'CTD Inicial', 'Estado', 'Última Actualización'
   ];
 
   // Crear encabezados si la hoja está vacía
@@ -541,7 +668,8 @@ function manejarInventarioImportar(d) {
       it.codigo, it.ubicacion, it.categoria, it.descripcion,
       it.marca || '', it.proveedor || '', it.ubicacion_camion || '',
       Number(it.stock_min) || 0, Number(it.stock_max) || 0,
-      Number(it.existencia) || 0, Number(it.costo_unit) || 0, ts
+      Number(it.existencia) || 0, Number(it.costo_unit) || 0,
+      Number(it.ctd_inicial) || 0, it.estado || '', ts
     ];
     if (existMap[it.codigo]) {
       sheet.getRange(existMap[it.codigo], 1, 1, row.length).setValues([row]);

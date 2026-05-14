@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Dashboard Operativo — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    body { background: #F4F6F8; }
+
+    /* ── Header ── */
+    .dash-header {
+      background: #2C3E50;
+      color: #fff;
+      padding: 14px 16px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dash-header img { height: 32px; border-radius: 4px; }
+    .dash-header h1 { font-size: 1rem; font-weight: 800; margin: 0; }
+    .dash-header p { font-size: .72rem; opacity: .75; margin: 2px 0 0; }
+    .dash-ts {
+      margin-left: auto;
+      text-align: right;
+      font-size: .65rem;
+      opacity: .7;
+      line-height: 1.4;
+    }
+    .btn-refresh {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      border-radius: 6px;
+      padding: 5px 9px;
+      font-size: .75rem;
+      cursor: pointer;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    /* ── Quick stats ── */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 10px 10px 4px;
+    }
+    .qs-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+      border-top: 3px solid var(--gris-borde);
+    }
+    .qs-card.alerta { border-top-color: var(--rojo); }
+    .qs-card.ok     { border-top-color: #27AE60; }
+    .qs-card.warn   { border-top-color: #E67E22; }
+    .qs-card.info   { border-top-color: var(--azul); }
+    .qs-num  { font-size: 1.6rem; font-weight: 900; line-height: 1; color: var(--texto); }
+    .qs-lbl  { font-size: .6rem; color: var(--texto-sub); margin-top: 3px; line-height: 1.2; }
+
+    /* ── Secciones ── */
+    .seccion-dash {
+      margin: 8px 10px 0;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #E8ECF0;
+    }
+    .seccion-dash-titulo {
+      padding: 10px 14px;
+      font-size: .8rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .seccion-dash-titulo.azul    { background: #2980B9; }
+    .seccion-dash-titulo.verde   { background: #27AE60; }
+    .seccion-dash-titulo.naranja { background: #E67E22; }
+    .seccion-dash-titulo.rojo    { background: #C0392B; }
+    .seccion-dash-titulo.morado  { background: #8E44AD; }
+    .seccion-dash-titulo.gris    { background: #566573; }
+    .seccion-dash-body { padding: 10px 12px 12px; }
+
+    /* ── KPI grid 2 cols ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .kpi-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+    .kpi-box {
+      background: #F8F9FA;
+      border-radius: 8px;
+      padding: 9px 10px;
+      border: 1px solid #E8ECF0;
+    }
+    .kpi-box .kv { font-size: 1.4rem; font-weight: 900; color: var(--texto); }
+    .kpi-box .kl { font-size: .68rem; color: var(--texto-sub); margin-top: 2px; }
+    .kpi-box.verde  { border-left: 3px solid #27AE60; }
+    .kpi-box.amari  { border-left: 3px solid #E67E22; }
+    .kpi-box.rojo   { border-left: 3px solid var(--rojo); }
+    .kpi-box.azul   { border-left: 3px solid var(--azul); }
+    .kpi-box .kv.verde  { color: #27AE60; }
+    .kpi-box .kv.amari  { color: #E67E22; }
+    .kpi-box .kv.rojo   { color: var(--rojo); }
+    .kpi-box .kv.azul   { color: var(--azul-dark); }
+
+    /* ── OT list ── */
+    .ot-mini {
+      border: 1px solid #E8ECF0;
+      border-radius: 7px;
+      padding: 7px 10px;
+      margin-bottom: 5px;
+      font-size: .78rem;
+      background: #FAFBFC;
+    }
+    .ot-mini .ot-id { font-weight: 700; font-family: monospace; color: var(--azul-dark); }
+    .ot-mini .ot-cli { font-size: .72rem; color: var(--texto-sub); }
+    .ot-mini .ot-tipo {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: .65rem;
+      font-weight: 600;
+      background: #EBF5FB;
+      color: #1A5276;
+      margin-left: 5px;
+    }
+
+    /* ── Form bar ── */
+    .form-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #F0F2F4;
+      font-size: .8rem;
+    }
+    .form-bar:last-child { border-bottom: none; }
+    .form-bar .fb-name { font-weight: 600; }
+    .form-bar .fb-count {
+      background: var(--azul);
+      color: #fff;
+      border-radius: 12px;
+      padding: 2px 9px;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    /* ── Control OT diff ── */
+    .dif-item {
+      font-size: .76rem;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: #FEF9E7;
+      border-left: 3px solid #E67E22;
+      margin-bottom: 4px;
+    }
+    .dif-item .dif-ot { font-weight: 700; font-family: monospace; }
+
+    /* ── Tipos OT ── */
+    .tipo-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: .8rem;
+      border-bottom: 1px solid #F0F2F4;
+    }
+    .tipo-row:last-child { border-bottom: none; }
+
+    /* ── Loading ── */
+    .dash-loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--texto-sub);
+    }
+    .dash-loading .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #E8ECF0;
+      border-top-color: var(--azul);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    /* ── Footer ── */
+    .dash-footer {
+      padding: 20px 12px 32px;
+      text-align: center;
+    }
+    .dash-footer a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: 600;
+      margin: 4px;
+    }
+    .a-inventario { background: #D5F5E3; color: #1A5E2A; border: 1.5px solid #27AE60; }
+    .a-ots        { background: #FDEBD0; color: #7D4E00; border: 1.5px solid #E67E22; }
+    .a-inicio     { background: #EBF5FB; color: #1A5276; border: 1.5px solid var(--azul); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-banner {
+      background: #FADBD8; color: #C0392B;
+      padding: 10px 14px; margin: 8px 10px 0;
+      border-radius: 8px; font-size: .82rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="dash-header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div>
+    <h1>Dashboard Operativo</h1>
+    <p>AV Electromecánica S.A.</p>
+  </div>
+  <div class="dash-ts" id="dash-ts">—</div>
+  <button class="btn-refresh" onclick="cargarDashboard()">↺</button>
+</div>
+
+<!-- Loading state -->
+<div id="dash-loading" class="dash-loading">
+  <div class="spinner"></div>
+  <p>Cargando datos operativos...</p>
+</div>
+
+<!-- Error state -->
+<div id="dash-error" class="error-banner" style="display:none"></div>
+
+<!-- Content (hidden until loaded) -->
+<div id="dash-content" style="display:none">
+
+  <!-- Quick stats -->
+  <div class="quick-stats" id="quick-stats"></div>
+
+  <!-- Órdenes de Trabajo -->
+  <div class="seccion-dash">
+    <div class="seccion-dash-titulo azul">📋 Órdenes de Trabajo</div>
+    <div class="seccion-dash-body">
+      <div class="kpi-grid cols3" id="kpi-ots"></div>
+      <div style="margin-bottom:6px;font-size:.75rem;font-weight:700;color:var(--texto-sub);text-transform:uppercase;letter-spacing:.5px;">Por tipo</div>
+      <div id="tipos-ot"></div>
+      <div style="margin-top:10px;margin-bottom:6px;font-size:.75rem;font-weight:700;color:var(--texto-sub);text-transform:uppercase;letter-spacing:.5px;">Abiertas actualmente</div>
+      <div id="lista-ots-abiertas"></div>
+    </div>
+  </div>
+
+  <!-- Inventario -->
+  <div class="seccion-dash">
+    <div class="seccion-dash-titulo verde">📦 Inventario</div>
+    <div class="seccion-dash-body">
+      <div class="kpi-grid" id="kpi-inv"></div>
+      <div class="kpi-grid" id="kpi-inv2"></div>
+    </div>
+  </div>
+
+  <!-- Movimientos (30 días) -->
+  <div class="seccion-dash">
+    <div class="seccion-dash-titulo gris">🔄 Movimientos — últimos 30 días</div>
+    <div class="seccion-dash-body">
+      <div class="kpi-grid" id="kpi-movs"></div>
+    </div>
+  </div>
+
+  <!-- Control OT -->
+  <div class="seccion-dash" id="seccion-control-ot">
+    <div class="seccion-dash-titulo naranja">⚖️ Control por OT</div>
+    <div class="seccion-dash-body" id="kpi-control-ot"></div>
+  </div>
+
+  <!-- Viáticos -->
+  <div class="seccion-dash">
+    <div class="seccion-dash-titulo morado">💳 Viáticos y Gastos</div>
+    <div class="seccion-dash-body">
+      <div class="kpi-grid" id="kpi-viat"></div>
+    </div>
+  </div>
+
+  <!-- Incidencias -->
+  <div class="seccion-dash">
+    <div class="seccion-dash-titulo rojo">⚠️ Incidencias</div>
+    <div class="seccion-dash-body">
+      <div class="kpi-grid" id="kpi-inc"></div>
+    </div>
+  </div>
+
+  <!-- Formularios -->
+  <div class="seccion-dash">
+    <div class="seccion-dash-titulo azul">📝 Formularios enviados</div>
+    <div class="seccion-dash-body" id="kpi-forms"></div>
+  </div>
+
+  <!-- Footer links -->
+  <div class="dash-footer">
+    <a href="inventario.html" class="a-inventario">📦 Inventario</a>
+    <a href="ot-manager.html" class="a-ots">📋 Gestor OTs</a>
+    <a href="index.html" class="a-inicio">← Inicio</a>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script>
+
+function fmt(n) {
+  return Number(n || 0).toLocaleString('es-CR');
+}
+
+function kpiBox(valor, label, color = '') {
+  return `<div class="kpi-box ${color}">
+    <div class="kv ${color}">${valor}</div>
+    <div class="kl">${label}</div>
+  </div>`;
+}
+
+function renderDashboard(d) {
+  document.getElementById('dash-ts').innerHTML = 'Actualizado<br>' + d.timestamp;
+
+  // ── Quick stats ──
+  const alertas = (d.inventario.sin_stock || 0);
+  const warns   = (d.inventario.stock_bajo || 0) + (d.viaticos.sin_aprobacion || 0);
+  const incids  = (d.incidencias.trabajo || 0) + (d.incidencias.camion || 0);
+  document.getElementById('quick-stats').innerHTML = `
+    <div class="qs-card info"><div class="qs-num">${d.ots.abiertas}</div><div class="qs-lbl">OTs abiertas</div></div>
+    <div class="qs-card ${alertas > 50 ? 'alerta' : 'ok'}"><div class="qs-num">${alertas}</div><div class="qs-lbl">Sin stock</div></div>
+    <div class="qs-card ${incids > 0 ? 'alerta' : 'ok'}"><div class="qs-num">${incids}</div><div class="qs-lbl">Incidencias</div></div>
+    <div class="qs-card ${d.viaticos.sin_aprobacion > 0 ? 'warn' : 'ok'}"><div class="qs-num">${d.viaticos.sin_aprobacion}</div><div class="qs-lbl">Sin aprobación PM</div></div>`;
+
+  // ── OTs ──
+  document.getElementById('kpi-ots').innerHTML =
+    kpiBox(d.ots.total,    'Total OTs',  'azul') +
+    kpiBox(d.ots.abiertas, 'Abiertas',   d.ots.abiertas > 0 ? 'amari' : 'verde') +
+    kpiBox(d.ots.cerradas, 'Cerradas',   'verde');
+
+  const tiposHtml = Object.entries(d.ots.tipos || {})
+    .sort((a,b) => b[1]-a[1])
+    .map(([t, n]) => `<div class="tipo-row"><span>${t}</span><strong>${n}</strong></div>`)
+    .join('') || '<div style="font-size:.8rem;color:var(--texto-sub);">Sin datos</div>';
+  document.getElementById('tipos-ot').innerHTML = tiposHtml;
+
+  const otsHtml = (d.ots.recientes || []).map(o =>
+    `<div class="ot-mini">
+      <span class="ot-id">${o.id}</span><span class="ot-tipo">${o.tipo}</span>
+      <div class="ot-cli">${o.cliente}${o.tecnico ? ' · ' + o.tecnico : ''}</div>
+    </div>`
+  ).join('') || '<div style="font-size:.8rem;color:var(--texto-sub);padding:4px 0;">No hay OTs abiertas</div>';
+  document.getElementById('lista-ots-abiertas').innerHTML = otsHtml;
+
+  // ── Inventario ──
+  document.getElementById('kpi-inv').innerHTML =
+    kpiBox(fmt(d.inventario.total),     'Total ítems',  'azul') +
+    kpiBox(d.inventario.con_stock,      'Con stock',    'verde');
+  document.getElementById('kpi-inv2').innerHTML =
+    kpiBox(d.inventario.stock_bajo,     'Stock bajo',   d.inventario.stock_bajo > 0 ? 'amari' : 'verde') +
+    kpiBox(d.inventario.sin_stock,      'Sin stock',    d.inventario.sin_stock > 100 ? 'amari' : 'rojo') +
+    (d.inventario.valor_estimado > 0
+      ? `<div class="kpi-box azul" style="grid-column:span 2"><div class="kv azul">₡${fmt(d.inventario.valor_estimado)}</div><div class="kl">Valor estimado en bodega</div></div>`
+      : '') ;
+
+  // ── Movimientos ──
+  document.getElementById('kpi-movs').innerHTML =
+    kpiBox(d.movimientos.salidas_30d,     'Salidas (F01)',     'rojo') +
+    kpiBox(d.movimientos.consumo_30d,     'Consumos (F03)',    'azul') +
+    kpiBox(d.movimientos.devoluciones_30d,'Devoluciones (F04)','verde') +
+    kpiBox(d.movimientos.compras_30d,     'Compras ingresadas','amari');
+
+  // ── Control OT ──
+  const ctrl = d.control_ot || {};
+  let ctrlHtml = '';
+  if (ctrl.ots_con_diferencia === 0) {
+    ctrlHtml = `<div style="background:#D5F5E3;padding:9px 12px;border-radius:8px;font-size:.82rem;color:#1E8449;font-weight:600;">✓ Todas las OTs cuadran — F01 = F03 + F04</div>`;
+  } else {
+    ctrlHtml = `<div style="font-size:.8rem;color:var(--rojo);font-weight:700;margin-bottom:6px;">${ctrl.ots_con_diferencia} OT(s) con diferencia de inventario:</div>`;
+    (ctrl.detalle || []).forEach(dif => {
+      ctrlHtml += `<div class="dif-item">
+        <span class="dif-ot">${dif.ot}</span>
+        <span style="margin-left:8px;font-size:.72rem;">Salida: ${dif.salida} · Consumo: ${dif.consumo} · Devuelto: ${dif.devolucion} · <strong>Dif: ${dif.diferencia}</strong></span>
+      </div>`;
+    });
+  }
+  document.getElementById('kpi-control-ot').innerHTML = ctrlHtml;
+
+  // ── Viáticos ──
+  document.getElementById('kpi-viat').innerHTML =
+    `<div class="kpi-box morado" style="border-left-color:#8E44AD;grid-column:span 2"><div class="kv" style="color:#8E44AD;">₡${fmt(d.viaticos.total_acumulado)}</div><div class="kl">Total gastado acumulado</div></div>` +
+    kpiBox(d.viaticos.registros,      'Registros totales',   'azul') +
+    kpiBox(d.viaticos.sin_aprobacion, 'Sin aprobación PM',   d.viaticos.sin_aprobacion > 0 ? 'rojo' : 'verde');
+
+  // ── Incidencias ──
+  document.getElementById('kpi-inc').innerHTML =
+    kpiBox(d.incidencias.trabajo,              'Problemas en trabajo',  d.incidencias.trabajo > 0 ? 'rojo' : 'verde') +
+    kpiBox(d.incidencias.camion,               'Incidentes camión',     d.incidencias.camion > 0 ? 'rojo' : 'verde') +
+    kpiBox(d.incidencias.vobo_negativo,        'VoBo negativo (cliente)',d.incidencias.vobo_negativo > 0 ? 'amari' : 'verde') +
+    kpiBox(d.incidencias.mantenimiento_pendiente,'Manto pendiente',      d.incidencias.mantenimiento_pendiente > 0 ? 'amari' : 'verde');
+
+  // ── Formularios ──
+  const formsHtml = Object.entries(d.formularios.detalle || {}).map(([n, c]) =>
+    `<div class="form-bar"><span class="fb-name">${n}</span><span class="fb-count">${c}</span></div>`
+  ).join('') +
+  `<div style="padding-top:8px;font-size:.78rem;font-weight:700;color:var(--texto-sub);">Total enviados: <strong style="color:var(--texto)">${d.formularios.total}</strong></div>`;
+  document.getElementById('kpi-forms').innerHTML = formsHtml;
+}
+
+async function cargarDashboard() {
+  document.getElementById('dash-loading').style.display = 'block';
+  document.getElementById('dash-content').style.display = 'none';
+  document.getElementById('dash-error').style.display   = 'none';
+
+  try {
+    const resp = await fetch(CONFIG.GAS_URL + '?action=dashboard', { cache: 'no-store' });
+    const json = await resp.json();
+    if (json.status !== 'ok') throw new Error(json.message || 'Error del servidor');
+    document.getElementById('dash-loading').style.display = 'none';
+    document.getElementById('dash-content').style.display = 'block';
+    renderDashboard(json.data);
+  } catch(e) {
+    document.getElementById('dash-loading').style.display = 'none';
+    document.getElementById('dash-error').style.display   = 'block';
+    document.getElementById('dash-error').textContent     = '⚠️ No se pudo cargar: ' + e.message;
+  }
+}
+
+cargarDashboard();
+
+// Auto-refresh cada 5 minutos
+setInterval(cargarDashboard, 5 * 60 * 1000);
+
+</script>
+</body>
+</html>
