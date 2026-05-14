@@ -58,7 +58,8 @@
     .qs-card.warn   { border-top-color: #E67E22; }
     .qs-card.info   { border-top-color: var(--azul); }
     .qs-num  { font-size: 1.6rem; font-weight: 900; line-height: 1; color: var(--texto); }
-    .qs-lbl  { font-size: .6rem; color: var(--texto-sub); margin-top: 3px; line-height: 1.2; }
+    .qs-lbl  { font-size: .6rem; color: var(--texto-sub); margin-top: 3px; line-height: 1.2; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+    .qs-desc { font-size: .58rem; color: var(--texto-sub); margin-top: 2px; line-height: 1.25; opacity: .75; font-style: italic; }
 
     /* ── Secciones ── */
     .seccion-dash {
@@ -337,10 +338,10 @@ function renderDashboard(d) {
   const warns   = (d.inventario.stock_bajo || 0) + (d.viaticos.sin_aprobacion || 0);
   const incids  = (d.incidencias.trabajo || 0) + (d.incidencias.camion || 0);
   document.getElementById('quick-stats').innerHTML = `
-    <div class="qs-card info"><div class="qs-num">${d.ots.abiertas}</div><div class="qs-lbl">OTs abiertas</div></div>
-    <div class="qs-card ${alertas > 50 ? 'alerta' : 'ok'}"><div class="qs-num">${alertas}</div><div class="qs-lbl">Sin stock</div></div>
-    <div class="qs-card ${incids > 0 ? 'alerta' : 'ok'}"><div class="qs-num">${incids}</div><div class="qs-lbl">Incidencias</div></div>
-    <div class="qs-card ${d.viaticos.sin_aprobacion > 0 ? 'warn' : 'ok'}"><div class="qs-num">${d.viaticos.sin_aprobacion}</div><div class="qs-lbl">Sin aprobación PM</div></div>`;
+    <div class="qs-card info"><div class="qs-num">${d.ots.abiertas}</div><div class="qs-lbl">OTs abiertas</div><div class="qs-desc">En ejecución ahora</div></div>
+    <div class="qs-card ${alertas > 50 ? 'alerta' : 'ok'}"><div class="qs-num">${alertas}</div><div class="qs-lbl">Sin stock</div><div class="qs-desc">Ítems en cero en bodega</div></div>
+    <div class="qs-card ${incids > 0 ? 'alerta' : 'ok'}"><div class="qs-num">${incids}</div><div class="qs-lbl">Incidencias</div><div class="qs-desc">Problemas en trabajo + camión</div></div>
+    <div class="qs-card ${d.viaticos.sin_aprobacion > 0 ? 'warn' : 'ok'}"><div class="qs-num">${d.viaticos.sin_aprobacion}</div><div class="qs-lbl">Sin aprobación PM</div><div class="qs-desc">Gastos de F06 no autorizados</div></div>`;
 
   // ── OTs ──
   document.getElementById('kpi-ots').innerHTML =
@@ -399,15 +400,15 @@ function renderDashboard(d) {
   // ── Viáticos ──
   document.getElementById('kpi-viat').innerHTML =
     `<div class="kpi-box morado" style="border-left-color:#8E44AD;grid-column:span 2"><div class="kv" style="color:#8E44AD;">₡${fmt(d.viaticos.total_acumulado)}</div><div class="kl">Total gastado acumulado</div><div class="kd">Suma de todos los viáticos</div></div>` +
-    kpiBox(d.viaticos.registros,      'Registros totales',   'azul',  'Viáticos enviados') +
-    kpiBox(d.viaticos.sin_aprobacion, 'Sin aprobación PM',   d.viaticos.sin_aprobacion > 0 ? 'rojo' : 'verde', 'Gastos sin autorizar');
+    kpiBox(d.viaticos.registros,      'Registros totales',   'azul',  'F06 enviados por la cuadrilla') +
+    kpiBox(d.viaticos.sin_aprobacion, 'Sin aprobación PM',   d.viaticos.sin_aprobacion > 0 ? 'rojo' : 'verde', 'F06 marcados "No aprobado" — requieren revisión del PM');
 
   // ── Incidencias ──
   document.getElementById('kpi-inc').innerHTML =
-    kpiBox(d.incidencias.trabajo,               'Problemas en trabajo',  d.incidencias.trabajo > 0 ? 'rojo' : 'verde',   'Incidencias en F03') +
-    kpiBox(d.incidencias.camion,                'Incidentes camión',     d.incidencias.camion > 0 ? 'rojo' : 'verde',    'Incidencias en F05') +
-    kpiBox(d.incidencias.vobo_negativo,         'VoBo negativo',         d.incidencias.vobo_negativo > 0 ? 'amari' : 'verde', 'Cliente no firmó') +
-    kpiBox(d.incidencias.mantenimiento_pendiente,'Manto pendiente',      d.incidencias.mantenimiento_pendiente > 0 ? 'amari' : 'verde', 'Camión requiere revisión');
+    kpiBox(d.incidencias.trabajo,               'Problemas en trabajo',  d.incidencias.trabajo > 0 ? 'rojo' : 'verde',   'Fallas reportadas por el técnico al cerrar OT (F03)') +
+    kpiBox(d.incidencias.camion,                'Incidentes camión',     d.incidencias.camion > 0 ? 'rojo' : 'verde',    'Accidentes o daños reportados al cierre de jornada (F05)') +
+    kpiBox(d.incidencias.vobo_negativo,         'VoBo negativo',         d.incidencias.vobo_negativo > 0 ? 'amari' : 'verde', 'OTs donde el cliente no aprobó el trabajo realizado (F03)') +
+    kpiBox(d.incidencias.mantenimiento_pendiente,'Manto pendiente',      d.incidencias.mantenimiento_pendiente > 0 ? 'amari' : 'verde', 'F05 que señalan revisión mecánica pendiente del camión');
 
   // ── Formularios ──
   const formsHtml = Object.entries(d.formularios.detalle || {}).map(([n, c]) =>
