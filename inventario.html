@@ -183,6 +183,7 @@
     .mov-tipo.Salida     { background: #FADBD8; color: #C0392B; }
     .mov-tipo.Devolucion { background: #D5F5E3; color: #1E8449; }
     .mov-tipo.Consumo    { background: #EBF5FB; color: #1A5276; }
+    .mov-tipo.Compra     { background: #FEF9E7; color: #9A7D0A; }
     .mov-cod { font-family: monospace; font-size: .72rem; color: var(--texto-sub); }
     .mov-desc { font-weight: 600; }
     .mov-meta { font-size: .7rem; color: var(--texto-sub); margin-top: 2px; }
@@ -216,6 +217,122 @@
     .empty-state .icono { font-size: 2.5rem; margin-bottom: 10px; }
     .empty-state h3 { margin: 0 0 6px; color: var(--texto); font-size: 1rem; }
     .empty-state p { font-size: .82rem; line-height: 1.5; margin: 0; }
+
+    /* ── Botón flotante nueva compra ── */
+    .fab-compra {
+      position: fixed;
+      bottom: 20px;
+      right: 16px;
+      background: #27AE60;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 20px;
+      font-size: .9rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,.22);
+      cursor: pointer;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Modal compra ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+      align-items: flex-end;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 18px 18px 0 0;
+      padding: 20px 16px 32px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .modal-titulo {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--texto);
+    }
+    .btn-cerrar-modal {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--texto-sub);
+      padding: 0 4px;
+    }
+    .modal-box .campo { margin-bottom: 12px; }
+    .modal-box .campo label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--texto);
+    }
+    .modal-box .campo input,
+    .modal-box .campo select,
+    .modal-box .campo textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      font-size: .9rem;
+      box-sizing: border-box;
+    }
+    .modal-box .campo textarea { min-height: 60px; resize: vertical; }
+    .modal-box .campo input:focus,
+    .modal-box .campo select:focus,
+    .modal-box .campo textarea:focus {
+      outline: none;
+      border-color: var(--azul);
+    }
+    .modal-box .campo.error input,
+    .modal-box .campo.error select { border-color: var(--rojo); }
+    .campo-error-msg-m {
+      display: none;
+      font-size: .75rem;
+      color: var(--rojo);
+      margin-top: 3px;
+    }
+    .modal-box .campo.error .campo-error-msg-m { display: block; }
+    .btn-guardar-compra {
+      width: 100%;
+      padding: 13px;
+      background: #27AE60;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .btn-guardar-compra:disabled { opacity: .6; cursor: not-allowed; }
+    .item-seleccionado-preview {
+      display: none;
+      background: #D5F5E3;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: .8rem;
+      margin-top: 5px;
+      color: #1E8449;
+      font-weight: 600;
+    }
+    .item-seleccionado-preview.show { display: block; }
   </style>
 </head>
 <body>
@@ -281,6 +398,70 @@
       <div class="icono">📋</div>
       <h3>Cargando movimientos...</h3>
     </div>
+  </div>
+</div>
+
+<!-- Botón flotante -->
+<button class="fab-compra" onclick="abrirModalCompra()">＋ Nueva compra</button>
+
+<!-- Modal registro de compra -->
+<div class="modal-overlay" id="modal-compra" onclick="cerrarSiFondo(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-titulo">Registrar compra / ingreso</span>
+      <button class="btn-cerrar-modal" onclick="cerrarModalCompra()">✕</button>
+    </div>
+
+    <div class="campo" id="mc-campo-fecha">
+      <label>Fecha <span class="req">*</span></label>
+      <input type="date" id="mc-fecha">
+      <span class="campo-error-msg-m">Obligatorio</span>
+    </div>
+
+    <div class="campo" id="mc-campo-registrado">
+      <label>Registrado por <span class="req">*</span></label>
+      <select id="mc-registrado">
+        <option value="">— Seleccionar —</option>
+        <option value="PM / Administración">PM / Administración</option>
+      </select>
+      <span class="campo-error-msg-m">Obligatorio</span>
+    </div>
+
+    <div class="campo" id="mc-campo-item">
+      <label>Ítem <span class="req">*</span></label>
+      <div class="autocomplete-wrap" id="mc-ac-wrap">
+        <input class="autocomplete-input" type="text" placeholder="Buscar código o descripción..." autocomplete="off">
+        <input class="ac-hidden" type="hidden" id="mc-codigo">
+        <div class="autocomplete-dropdown"></div>
+      </div>
+      <div class="ac-selected item-seleccionado-preview" id="mc-item-preview"></div>
+      <span class="campo-error-msg-m">Seleccioná un ítem</span>
+    </div>
+
+    <div class="campo" id="mc-campo-qty">
+      <label>Cantidad ingresada <span class="req">*</span></label>
+      <input type="number" id="mc-cantidad" min="1" step="1" placeholder="0">
+      <span class="campo-error-msg-m">Ingresá una cantidad mayor a 0</span>
+    </div>
+
+    <div class="campo">
+      <label>Proveedor</label>
+      <input type="text" id="mc-proveedor" placeholder="Nombre del proveedor (opcional)">
+    </div>
+
+    <div class="campo">
+      <label>Número de factura</label>
+      <input type="text" id="mc-factura" placeholder="N° de factura o referencia (opcional)">
+    </div>
+
+    <div class="campo">
+      <label>Observaciones</label>
+      <textarea id="mc-observaciones" placeholder="Notas adicionales (opcional)"></textarea>
+    </div>
+
+    <button class="btn-guardar-compra" id="btn-guardar-compra" onclick="guardarCompra()">
+      ✓ Registrar ingreso
+    </button>
   </div>
 </div>
 
@@ -487,6 +668,120 @@ async function cargarInventarioDesdeGAS() {
   return false;
 }
 
+// ── Modal compra ─────────────────────────────────────────────────────
+
+// Catálogo adaptado para el autocomplete (descripcion → nombre)
+const CATALOGO_INV = INVENTARIO_INICIAL.map(it => ({
+  codigo:    it.codigo,
+  nombre:    it.descripcion,
+  categoria: it.categoria + ' · ' + it.ubicacion
+}));
+
+let _mcItemSeleccionado = null;
+
+function abrirModalCompra() {
+  document.getElementById('mc-fecha').value = fechaHoy();
+  document.getElementById('mc-cantidad').value = '';
+  document.getElementById('mc-proveedor').value = '';
+  document.getElementById('mc-factura').value = '';
+  document.getElementById('mc-observaciones').value = '';
+  document.getElementById('mc-codigo').value = '';
+  document.querySelector('#mc-ac-wrap .autocomplete-input').value = '';
+  document.getElementById('mc-item-preview').textContent = '';
+  document.getElementById('mc-item-preview').classList.remove('show');
+  _mcItemSeleccionado = null;
+  ['mc-campo-fecha','mc-campo-registrado','mc-campo-item','mc-campo-qty']
+    .forEach(id => document.getElementById(id).classList.remove('error'));
+  document.getElementById('modal-compra').classList.add('open');
+  document.querySelector('#mc-ac-wrap .autocomplete-input').focus();
+}
+
+function cerrarModalCompra() {
+  document.getElementById('modal-compra').classList.remove('open');
+}
+
+function cerrarSiFondo(e) {
+  if (e.target === document.getElementById('modal-compra')) cerrarModalCompra();
+}
+
+// Inicializar autocomplete del modal (se llama tras cargar utils.js)
+function iniciarAcModal() {
+  crearAutocomplete(
+    document.getElementById('mc-ac-wrap'),
+    CATALOGO_INV,
+    (it) => {
+      _mcItemSeleccionado = it;
+      const preview = document.getElementById('mc-item-preview');
+      preview.textContent = '✓ ' + it.nombre + '  (' + it.categoria + ')';
+      preview.classList.add('show');
+      document.getElementById('mc-campo-item').classList.remove('error');
+    }
+  );
+}
+
+async function guardarCompra() {
+  // Validar campos obligatorios
+  let ok = true;
+  const fecha     = document.getElementById('mc-fecha').value;
+  const registrado = document.getElementById('mc-registrado').value;
+  const codigo    = document.getElementById('mc-codigo').value;
+  const cantidad  = parseInt(document.getElementById('mc-cantidad').value) || 0;
+
+  if (!fecha)      { document.getElementById('mc-campo-fecha').classList.add('error');      ok = false; }
+  if (!registrado) { document.getElementById('mc-campo-registrado').classList.add('error'); ok = false; }
+  if (!codigo)     { document.getElementById('mc-campo-item').classList.add('error');        ok = false; }
+  if (cantidad < 1){ document.getElementById('mc-campo-qty').classList.add('error');         ok = false; }
+  if (!ok) return;
+
+  const btn = document.getElementById('btn-guardar-compra');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  const payload = {
+    form:          'INVENTARIO_COMPRA',
+    fecha,
+    registrado_por: registrado,
+    codigo,
+    descripcion:   _mcItemSeleccionado?.nombre || '',
+    cantidad,
+    proveedor:     document.getElementById('mc-proveedor').value.trim(),
+    factura:       document.getElementById('mc-factura').value.trim(),
+    observaciones: document.getElementById('mc-observaciones').value.trim(),
+    timestamp:     timestampCR()
+  };
+
+  try {
+    const res = await enviarAGAS(payload);
+    cerrarModalCompra();
+    showToast(`✓ Ingreso registrado — stock actualizado (+${cantidad})`, 'ok', 4000);
+
+    // Actualizar stock en memoria sin recargar todo
+    const nuevaExist = res.data?.nueva_existencia;
+    if (nuevaExist !== undefined) {
+      const it = _todosItems.find(i => (i['Código'] || i.codigo) === codigo);
+      if (it) {
+        if ('Existencia' in it) it['Existencia'] = nuevaExist;
+        else it.existencia = nuevaExist;
+      }
+      actualizarStats(_todosItems);
+      filtrar();
+    } else {
+      // Si GAS no devuelve el nuevo valor, recargamos desde servidor
+      await cargarInventarioDesdeGAS();
+      actualizarStats(_todosItems);
+      filtrar();
+    }
+
+    // Resetear movimientos para que se recarguen frescos
+    _movimientos = [];
+  } catch(e) {
+    showToast('Error al registrar: ' + e.message, 'error', 6000);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✓ Registrar ingreso';
+  }
+}
+
 // ── Init ─────────────────────────────────────────────────────────────
 async function init() {
   // Intentar cargar desde GAS
@@ -508,6 +803,17 @@ async function init() {
 
   actualizarStats(_todosItems);
   filtrar();
+
+  // Poblar selector de quién registra
+  const selReg = document.getElementById('mc-registrado');
+  CONFIG.EQUIPO.forEach(nombre => {
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = nombre;
+    selReg.appendChild(opt);
+  });
+
+  // Inicializar autocomplete del modal
+  iniciarAcModal();
 }
 
 init();

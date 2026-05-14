@@ -94,6 +94,7 @@ function doPost(e) {
       case 'OT_EDITAR':             resultado = manejarOTEditar(data);            break;
       case 'OT_CERRAR':             resultado = manejarOTCerrar(data);            break;
       case 'INVENTARIO_IMPORTAR':   resultado = manejarInventarioImportar(data);  break;
+      case 'INVENTARIO_COMPRA':    resultado = manejarInventarioCompra(data);    break;
       default:    throw new Error('Formulario desconocido: ' + formId);
     }
 
@@ -552,6 +553,73 @@ function manejarInventarioImportar(d) {
   });
 
   return { insertados, actualizados, total: items.length };
+}
+
+// ── Inventario — Compra / ingreso ────────────────────────────────────
+function manejarInventarioCompra(d) {
+  const sheetInv = getSheet('Inventario');
+  const sheetMov = getSheet('Movimientos');
+
+  if (sheetMov.getLastRow() === 0) {
+    sheetMov.appendRow([
+      'Timestamp', 'Fecha', 'OT', 'Técnico', 'Código', 'Descripción',
+      'Tipo', 'Cantidad', 'Stock Ant.', 'Stock Nuevo', 'Formulario', 'Observación'
+    ]);
+    formatearEncabezados(sheetMov);
+  }
+
+  const qty = Number(d.cantidad) || 0;
+  if (qty <= 0) throw new Error('Cantidad debe ser mayor a 0');
+  if (!d.codigo) throw new Error('Código de ítem requerido');
+
+  const ts = Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a');
+
+  // Buscar el ítem en Inventario y actualizar existencia
+  let stockAnt = 0, stockNuevo = qty, rowNum = -1;
+  if (sheetInv.getLastRow() > 1) {
+    const invData    = sheetInv.getDataRange().getValues();
+    const invHeaders = invData[0];
+    const codigoCol  = invHeaders.indexOf('Código');
+    const existCol   = invHeaders.indexOf('Existencia');
+
+    for (let i = 1; i < invData.length; i++) {
+      if (String(invData[i][codigoCol]) === d.codigo) {
+        stockAnt   = Number(invData[i][existCol]) || 0;
+        stockNuevo = stockAnt + qty;
+        rowNum     = i + 1;
+        sheetInv.getRange(rowNum, existCol + 1).setValue(stockNuevo);
+        // Actualizar última actualización si existe la columna
+        const ultimaCol = invHeaders.indexOf('Última Actualización');
+        if (ultimaCol >= 0) sheetInv.getRange(rowNum, ultimaCol + 1).setValue(ts);
+        break;
+      }
+    }
+  }
+
+  // Registrar en Movimientos
+  const obs = [d.proveedor, d.factura ? ('Factura: ' + d.factura) : '', d.observaciones]
+    .filter(x => x).join(' · ');
+
+  sheetMov.appendRow([
+    ts, d.fecha, '—', d.registrado_por || 'PM',
+    d.codigo, d.descripcion || '',
+    'Compra', qty, stockAnt, stockNuevo,
+    'COMPRA', obs
+  ]);
+
+  enviarEmail('Ingreso de compra — ' + d.codigo, [
+    'Fecha:       ' + d.fecha,
+    'Registrado:  ' + (d.registrado_por || 'PM'),
+    'Ítem:        ' + d.codigo + ' — ' + (d.descripcion || ''),
+    'Cantidad:    +' + qty,
+    'Stock ant.:  ' + stockAnt,
+    'Stock nuevo: ' + stockNuevo,
+    d.proveedor   ? ('Proveedor:   ' + d.proveedor)  : '',
+    d.factura     ? ('Factura:     ' + d.factura)     : '',
+    d.observaciones ? ('Obs:         ' + d.observaciones) : '',
+  ].filter(l => l !== ''));
+
+  return { codigo: d.codigo, cantidad: qty, stock_anterior: stockAnt, nueva_existencia: stockNuevo };
 }
 
 // ── Inventario — Registrar movimientos y actualizar stock ────────────
