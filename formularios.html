@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Formularios — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    .form-type-tabs {
+      display: flex;
+      gap: 5px;
+      padding: 10px 12px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .form-type-tabs::-webkit-scrollbar { display: none; }
+    .ftt-btn {
+      flex-shrink: 0;
+      padding: 6px 13px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 20px;
+      background: #fff;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--texto-sub);
+    }
+    .ftt-btn.activo {
+      background: var(--azul-dark);
+      border-color: var(--azul-dark);
+      color: #fff;
+    }
+    .form-type-desc {
+      padding: 8px 14px 2px;
+      font-size: .76rem;
+      color: var(--texto-sub);
+      font-style: italic;
+    }
+    .form-lista {
+      padding: 8px 12px 80px;
+    }
+    .rec-card {
+      background: #fff;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .rec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .rec-fecha {
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--azul-dark);
+    }
+    .rec-ts {
+      font-size: .62rem;
+      color: var(--texto-sub);
+      text-align: right;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+    .rec-chips {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .rec-chip {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: .7rem;
+      font-weight: 600;
+    }
+    .chip-tec { background: #D6EAF8; color: #1A5276; }
+    .chip-ot  { background: #FDEBD0; color: #7D4E00; }
+    .chip-cli { background: #D5F5E3; color: #1D6A39; }
+    .chip-monto { background: #FEF9E7; color: #9A7D0A; }
+    .rec-field {
+      display: flex;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid #F4F6F8;
+      font-size: .78rem;
+      align-items: flex-start;
+    }
+    .rec-field:last-child { border-bottom: none; }
+    .rec-field-label {
+      font-weight: 600;
+      color: var(--texto-sub);
+      min-width: 110px;
+      flex-shrink: 0;
+      font-size: .70rem;
+      padding-top: 1px;
+    }
+    .rec-field-val {
+      color: var(--texto);
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .rec-items-block {
+      background: #F8F9FA;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: .73rem;
+      font-family: monospace;
+      white-space: pre-wrap;
+      color: var(--texto);
+      margin-top: 2px;
+      flex: 1;
+    }
+    .val-ok  { color: #27AE60; font-weight: 700; }
+    .val-mal { color: var(--rojo); font-weight: 700; }
+    .val-warn { color: #E67E22; font-weight: 700; }
+    .form-empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--texto-sub);
+    }
+    .form-empty .icono { font-size: 2.2rem; margin-bottom: 8px; }
+    .form-spinner {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--texto-sub);
+    }
+    .form-spinner .spinner {
+      width: 28px; height: 28px;
+      border: 3px solid #E8ECF0;
+      border-top-color: var(--azul);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .fab-refresh {
+      position: fixed;
+      bottom: 20px; right: 16px;
+      background: var(--azul);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 11px 18px;
+      font-size: .85rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,.2);
+      cursor: pointer;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Registros de Formularios</h1>
+    <p>Vista supervisor — solo lectura</p>
+  </div>
+  <a href="index.html" style="margin-left:auto;font-size:.75rem;color:var(--azul);text-decoration:none;font-weight:600;">← Inicio</a>
+</div>
+
+<div class="form-type-tabs">
+  <button class="ftt-btn activo" onclick="cargarFormulario('F01',this)">📦 F01</button>
+  <button class="ftt-btn" onclick="cargarFormulario('F02',this)">🚛 F02</button>
+  <button class="ftt-btn" onclick="cargarFormulario('F03',this)">🔧 F03</button>
+  <button class="ftt-btn" onclick="cargarFormulario('F04',this)">↩️ F04</button>
+  <button class="ftt-btn" onclick="cargarFormulario('F05',this)">🔒 F05</button>
+  <button class="ftt-btn" onclick="cargarFormulario('F06',this)">💳 F06</button>
+</div>
+
+<div class="form-type-desc" id="form-desc">Despacho de materiales — salidas de bodega</div>
+
+<div class="form-lista" id="form-lista">
+  <div class="form-spinner"><div class="spinner"></div><p>Cargando...</p></div>
+</div>
+
+<button class="fab-refresh" onclick="recargar()">↺ Actualizar</button>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+
+const FORM_INFO = {
+  F01: { desc: 'Despacho de materiales — salidas de bodega' },
+  F02: { desc: 'Checklist de inicio — verificación del camión' },
+  F03: { desc: 'Reportes por OT — cierre de trabajo en sitio' },
+  F04: { desc: 'Devoluciones de sobrantes a bodega' },
+  F05: { desc: 'Checklist de cierre — fin de jornada' },
+  F06: { desc: 'Registro de gastos con tarjeta corporativa' },
+};
+
+// Campos que se muestran como chips en el encabezado
+const CHIP_FIELDS  = new Set(['Técnico','OT','OT Origen','Cliente']);
+// Campos con lista de ítems (se muestran en bloque monoespaciado)
+const ITEMS_FIELDS = new Set(['Ítems (código|nombre|cantidad)','Ítems Utilizados','Ítems Devueltos']);
+// Campos a omitir completamente
+const SKIP_FIELDS  = new Set(['Timestamp','Fecha','Fotos','Fotos Trabajo','Foto VoBo','Foto Recibo','Firma']);
+
+let _tipoActual = 'F01';
+
+function showToast(msg, type='default', dur=3500) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg; t.className = 'show ' + type;
+  clearTimeout(t._timer); t._timer = setTimeout(() => { t.className = ''; }, dur);
+}
+
+async function cargarFormulario(tipo, btn) {
+  _tipoActual = tipo;
+  document.querySelectorAll('.ftt-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  document.getElementById('form-desc').textContent = FORM_INFO[tipo]?.desc || tipo;
+
+  const lista = document.getElementById('form-lista');
+  lista.innerHTML = '<div class="form-spinner"><div class="spinner"></div><p>Cargando...</p></div>';
+
+  try {
+    const resp = await fetch(`${CONFIG.GAS_URL}?action=formularios&tipo=${tipo}&limit=100`, { cache: 'no-store' });
+    const json = await resp.json();
+    if (json.status !== 'ok') throw new Error(json.message || 'Error del servidor');
+    renderRegistros(json.data || [], tipo);
+  } catch(e) {
+    lista.innerHTML = `<div class="form-empty"><div class="icono">⚠️</div><p>${escHtml(e.message)}</p></div>`;
+    showToast('Error al cargar: ' + e.message, 'error');
+  }
+}
+
+function renderRegistros(rows, tipo) {
+  const lista = document.getElementById('form-lista');
+  if (!rows.length) {
+    lista.innerHTML = `<div class="form-empty"><div class="icono">📋</div><p>No hay registros de ${tipo} aún.</p></div>`;
+    return;
+  }
+  lista.innerHTML = rows.map(rec => renderCard(rec, tipo)).join('');
+}
+
+function renderCard(rec, tipo) {
+  const fecha = rec['Fecha'] || '';
+  const ts    = rec['Timestamp'] || '';
+
+  // Chips encabezado
+  let chips = '';
+  const tec    = rec['Técnico'];
+  const ot     = rec['OT'] || rec['OT Origen'];
+  const cli    = rec['Cliente'];
+  const monto  = tipo === 'F06' ? rec['Monto (₡)'] : '';
+  if (tec)   chips += `<span class="rec-chip chip-tec">👤 ${escHtml(tec)}</span>`;
+  if (ot && ot !== '—') chips += `<span class="rec-chip chip-ot">📋 ${escHtml(ot)}</span>`;
+  if (cli)   chips += `<span class="rec-chip chip-cli">${escHtml(cli)}</span>`;
+  if (monto) chips += `<span class="rec-chip chip-monto">₡${escHtml(monto)}</span>`;
+
+  // Campos de cuerpo (excluir chips, skip, vacíos)
+  const omitir = new Set([...CHIP_FIELDS, ...SKIP_FIELDS, 'Fecha', 'Timestamp', 'Monto (₡)']);
+  let bodyHtml = '';
+
+  Object.entries(rec).forEach(([k, v]) => {
+    if (omitir.has(k)) return;
+    const vv = (v || '').toString().trim();
+    if (!vv || vv === '—') return;
+
+    if (ITEMS_FIELDS.has(k)) {
+      bodyHtml += `<div class="rec-field">
+        <span class="rec-field-label">${escHtml(k.split('(')[0].trim())}</span>
+        <div class="rec-items-block">${escHtml(vv)}</div>
+      </div>`;
+      return;
+    }
+
+    let display = escHtml(vv);
+    if (['Sí','OK','Aprobado','Correcto'].includes(vv))      display = `<span class="val-ok">${escHtml(vv)}</span>`;
+    else if (['No','Con problema'].includes(vv))              display = `<span class="val-mal">${escHtml(vv)}</span>`;
+    else if (vv.startsWith('http'))                           display = `<a href="${escHtml(vv)}" target="_blank" style="color:var(--azul);">📷 Ver foto</a>`;
+    else if (vv === 'Pendiente')                              display = `<span class="val-warn">${escHtml(vv)}</span>`;
+
+    bodyHtml += `<div class="rec-field">
+      <span class="rec-field-label">${escHtml(k)}</span>
+      <span class="rec-field-val">${display}</span>
+    </div>`;
+  });
+
+  return `<div class="rec-card">
+    <div class="rec-header">
+      <span class="rec-fecha">${escHtml(fecha)}</span>
+      <span class="rec-ts">${escHtml(ts)}</span>
+    </div>
+    ${chips ? `<div class="rec-chips">${chips}</div>` : ''}
+    ${bodyHtml}
+  </div>`;
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function recargar() {
+  const btn = document.querySelector('.ftt-btn.activo');
+  if (btn) cargarFormulario(_tipoActual, btn);
+}
+
+// Carga inicial
+cargarFormulario('F01', document.querySelector('.ftt-btn.activo'));
+
+</script>
+</body>
+</html>

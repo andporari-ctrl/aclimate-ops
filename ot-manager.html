@@ -317,7 +317,10 @@
     <h1>Gestor de Órdenes de Trabajo</h1>
     <p>Solo para uso del PM</p>
   </div>
-  <span class="pm-badge">PM</span>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <a href="index.html" style="font-size:.75rem;color:var(--azul);text-decoration:none;font-weight:600;">← Inicio</a>
+    <span class="pm-badge">PM</span>
+  </div>
 </div>
 
 <div id="autosave-bar"></div>
@@ -688,21 +691,22 @@ function abrirModal(otId = null) {
     const ot  = ots.find(o => o.id === otId);
     if (!ot) { showToast('OT no encontrada', 'error'); return; }
 
-    document.getElementById('ot-numero').value         = ot.id;
-    document.getElementById('ot-cliente').value        = ot.cliente || '';
-    document.getElementById('ot-descripcion').value    = ot.descripcion || '';
-    document.getElementById('ot-fecha').value          = ot.fecha_asignacion || fechaHoy();
-    document.getElementById('ot-contacto-nombre').value = ot.contacto_nombre || '';
-    document.getElementById('ot-contacto-tel').value   = ot.contacto_tel    || '';
-    document.getElementById('ot-direccion').value      = ot.direccion       || '';
-    document.getElementById('ot-tecnico').value        = ot.tecnico || '';
+    document.getElementById('ot-numero').value          = ot.id;
+    document.getElementById('ot-cliente').value         = ot.cliente || '';
+    document.getElementById('ot-descripcion').value     = ot.descripcion || ot['descripción'] || '';
+    document.getElementById('ot-fecha').value           = ot.fecha_asignacion || ot['fecha_asignación'] || fechaHoy();
+    document.getElementById('ot-contacto-nombre').value = ot.contacto_nombre || ot.contacto || '';
+    document.getElementById('ot-contacto-tel').value    = ot.contacto_tel || ot['teléfono'] || '';
+    document.getElementById('ot-direccion').value       = ot.direccion || ot['dirección'] || '';
+    document.getElementById('ot-tecnico').value         = ot.tecnico || ot['técnico'] || '';
 
     // Restaurar trabajos
     document.getElementById('trabajos-container').innerHTML = '';
     _trabajoCounter = 0;
+    const desc = ot.descripcion || ot['descripción'] || '';
     const trabajos = Array.isArray(ot.trabajos) && ot.trabajos.length
       ? ot.trabajos
-      : [{ tipo: ot.tipo || '', descripcion: ot.descripcion || '', presupuesto: _normPresupuesto(ot.presupuesto) }];
+      : [{ tipo: ot.tipo || '', descripcion: desc, presupuesto: _normPresupuesto(ot.presupuesto) }];
     trabajos.forEach(t => agregarTrabajo(t));
   } else {
     document.getElementById('modal-titulo-texto').textContent = 'Nueva OT';

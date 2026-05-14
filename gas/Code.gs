@@ -81,6 +81,38 @@ function doGet(e) {
     }
   }
 
+  if (action === 'formularios') {
+    try {
+      const tipo = e?.parameter?.tipo || 'F01';
+      const limit = parseInt(e?.parameter?.limit || '100');
+      const sheetMap = {
+        F01: 'F01-Despacho', F02: 'F02-ChecklistInicio',
+        F03: 'F03-ReporteTrabajo', F04: 'F04-Devolucion',
+        F05: 'F05-ChecklistCierre', F06: 'F06-Viaticos'
+      };
+      const sheetName = sheetMap[tipo];
+      if (!sheetName) throw new Error('Tipo inválido: ' + tipo);
+      const sheet = getSheet(sheetName);
+      if (sheet.getLastRow() <= 1) return jsonOk([]);
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0];
+      const rows = data.slice(1).slice(-limit).reverse();
+      return jsonOk(rows.map(row => {
+        const obj = {};
+        headers.forEach((h, i) => {
+          let v = row[i];
+          if (v instanceof Date) {
+            v = Utilities.formatDate(v, 'America/Costa_Rica', 'dd/MM/yyyy HH:mm');
+          }
+          obj[String(h)] = (v !== null && v !== undefined) ? String(v) : '';
+        });
+        return obj;
+      }));
+    } catch(err) {
+      return jsonError(err.toString());
+    }
+  }
+
   // Ruta raíz: devuelve estado del sistema
   return jsonOk({ sistema: 'AClimate Forms v3', estado: 'activo' });
 }
@@ -102,8 +134,9 @@ function doPost(e) {
       case 'OT_EDITAR':             resultado = manejarOTEditar(data);            break;
       case 'OT_CERRAR':             resultado = manejarOTCerrar(data);            break;
       case 'OT_ELIMINAR':          resultado = manejarOTEliminar(data);          break;
-      case 'INVENTARIO_IMPORTAR':   resultado = manejarInventarioImportar(data);  break;
-      case 'INVENTARIO_COMPRA':    resultado = manejarInventarioCompra(data);    break;
+      case 'INVENTARIO_IMPORTAR':        resultado = manejarInventarioImportar(data);       break;
+      case 'INVENTARIO_COMPRA':         resultado = manejarInventarioCompra(data);          break;
+      case 'INVENTARIO_EDITAR_REORDEN': resultado = manejarInventarioEditarReorden(data);   break;
       default:    throw new Error('Formulario desconocido: ' + formId);
     }
 
@@ -749,7 +782,6 @@ function manejarInventarioCompra(d) {
         stockNuevo = stockAnt + qty;
         rowNum     = i + 1;
         sheetInv.getRange(rowNum, existCol + 1).setValue(stockNuevo);
-        // Actualizar última actualización si existe la columna
         const ultimaCol = invHeaders.indexOf('Última Actualización');
         if (ultimaCol >= 0) sheetInv.getRange(rowNum, ultimaCol + 1).setValue(ts);
         break;
@@ -757,8 +789,24 @@ function manejarInventarioCompra(d) {
     }
   }
 
+  // Si es ítem nuevo y no existe en inventario → crearlo
+  if (rowNum === -1 && d.es_nuevo) {
+    if (sheetInv.getLastRow() === 0) {
+      sheetInv.appendRow(['Código', 'Ubicación', 'Categoría', 'Descripción', 'Marca',
+        'Proveedor', 'Ubic. Camión', 'Stock Mín', 'Stock Máx',
+        'Existencia', 'Costo Unit (₡)', 'CTD Inicial', 'Estado', 'Última Actualización']);
+      formatearEncabezados(sheetInv);
+    }
+    stockNuevo = qty;
+    sheetInv.appendRow([
+      d.codigo, d.ubicacion || 'BODEGA', d.categoria || '', d.descripcion || '',
+      d.marca || '', d.proveedor || '', '',
+      0, 0, qty, 0, qty, 'OK', ts
+    ]);
+  }
+
   // Registrar en Movimientos
-  const obs = [d.proveedor, d.factura ? ('Factura: ' + d.factura) : '', d.observaciones]
+  const obs = [d.marca ? ('Marca: ' + d.marca) : '', d.proveedor, d.factura ? ('Factura: ' + d.factura) : '', d.observaciones]
     .filter(x => x).join(' · ');
 
   sheetMov.appendRow([
@@ -771,7 +819,9 @@ function manejarInventarioCompra(d) {
   enviarEmail('Ingreso de compra — ' + d.codigo, [
     'Fecha:       ' + d.fecha,
     'Registrado:  ' + (d.registrado_por || 'PM'),
+    d.es_nuevo ? '⭐ ÍTEM NUEVO creado en inventario' : '',
     'Ítem:        ' + d.codigo + ' — ' + (d.descripcion || ''),
+    d.marca       ? ('Marca:       ' + d.marca)       : '',
     'Cantidad:    +' + qty,
     'Stock ant.:  ' + stockAnt,
     'Stock nuevo: ' + stockNuevo,
@@ -781,6 +831,31 @@ function manejarInventarioCompra(d) {
   ].filter(l => l !== ''));
 
   return { codigo: d.codigo, cantidad: qty, stock_anterior: stockAnt, nueva_existencia: stockNuevo };
+}
+
+// ── Inventario — Editar punto de reorden ─────────────────────────────
+function manejarInventarioEditarReorden(d) {
+  if (!d.codigo) throw new Error('Código requerido');
+  const sheet = getSheet('Inventario');
+  if (sheet.getLastRow() <= 1) throw new Error('Inventario vacío');
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const codigoCol = headers.indexOf('Código');
+  const minCol    = headers.indexOf('Stock Mín');
+  const maxCol    = headers.indexOf('Stock Máx');
+  const ultimaCol = headers.indexOf('Última Actualización');
+  if (codigoCol < 0) throw new Error('Columna Código no encontrada');
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][codigoCol]) === String(d.codigo)) {
+      if (minCol >= 0) sheet.getRange(i + 1, minCol + 1).setValue(Number(d.stock_min) || 0);
+      if (maxCol >= 0) sheet.getRange(i + 1, maxCol + 1).setValue(Number(d.stock_max) || 0);
+      if (ultimaCol >= 0) sheet.getRange(i + 1, ultimaCol + 1).setValue(
+        Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a')
+      );
+      return { codigo: d.codigo, stock_min: Number(d.stock_min)||0, stock_max: Number(d.stock_max)||0 };
+    }
+  }
+  throw new Error('Ítem ' + d.codigo + ' no encontrado en inventario');
 }
 
 // ── Inventario — Registrar movimientos y actualizar stock ────────────

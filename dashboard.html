@@ -101,6 +101,7 @@
     }
     .kpi-box .kv { font-size: 1.4rem; font-weight: 900; color: var(--texto); }
     .kpi-box .kl { font-size: .68rem; color: var(--texto-sub); margin-top: 2px; }
+    .kpi-box .kd { font-size: .58rem; color: var(--texto-sub); margin-top: 3px; line-height: 1.3; opacity: .8; }
     .kpi-box.verde  { border-left: 3px solid #27AE60; }
     .kpi-box.amari  { border-left: 3px solid #E67E22; }
     .kpi-box.rojo   { border-left: 3px solid var(--rojo); }
@@ -204,9 +205,10 @@
       font-weight: 600;
       margin: 4px;
     }
-    .a-inventario { background: #D5F5E3; color: #1A5E2A; border: 1.5px solid #27AE60; }
-    .a-ots        { background: #FDEBD0; color: #7D4E00; border: 1.5px solid #E67E22; }
-    .a-inicio     { background: #EBF5FB; color: #1A5276; border: 1.5px solid var(--azul); }
+    .a-inventario  { background: #D5F5E3; color: #1A5E2A; border: 1.5px solid #27AE60; }
+    .a-ots         { background: #FDEBD0; color: #7D4E00; border: 1.5px solid #E67E22; }
+    .a-forms       { background: #F5EEF8; color: #4A235A; border: 1.5px solid #8E44AD; }
+    .a-inicio      { background: #EBF5FB; color: #1A5276; border: 1.5px solid var(--azul); }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -306,6 +308,7 @@
   <div class="dash-footer">
     <a href="inventario.html" class="a-inventario">📦 Inventario</a>
     <a href="ot-manager.html" class="a-ots">📋 Gestor OTs</a>
+    <a href="formularios.html" class="a-forms">📝 Formularios</a>
     <a href="index.html" class="a-inicio">← Inicio</a>
   </div>
 
@@ -318,10 +321,11 @@ function fmt(n) {
   return Number(n || 0).toLocaleString('es-CR');
 }
 
-function kpiBox(valor, label, color = '') {
+function kpiBox(valor, label, color = '', desc = '') {
   return `<div class="kpi-box ${color}">
     <div class="kv ${color}">${valor}</div>
     <div class="kl">${label}</div>
+    ${desc ? `<div class="kd">${desc}</div>` : ''}
   </div>`;
 }
 
@@ -340,9 +344,9 @@ function renderDashboard(d) {
 
   // ── OTs ──
   document.getElementById('kpi-ots').innerHTML =
-    kpiBox(d.ots.total,    'Total OTs',  'azul') +
-    kpiBox(d.ots.abiertas, 'Abiertas',   d.ots.abiertas > 0 ? 'amari' : 'verde') +
-    kpiBox(d.ots.cerradas, 'Cerradas',   'verde');
+    kpiBox(d.ots.total,    'Total OTs',  'azul',  'Historial completo') +
+    kpiBox(d.ots.abiertas, 'Abiertas',   d.ots.abiertas > 0 ? 'amari' : 'verde', 'En ejecución ahora') +
+    kpiBox(d.ots.cerradas, 'Cerradas',   'verde', 'Finalizadas');
 
   const tiposHtml = Object.entries(d.ots.tipos || {})
     .sort((a,b) => b[1]-a[1])
@@ -360,21 +364,21 @@ function renderDashboard(d) {
 
   // ── Inventario ──
   document.getElementById('kpi-inv').innerHTML =
-    kpiBox(fmt(d.inventario.total),     'Total ítems',  'azul') +
-    kpiBox(d.inventario.con_stock,      'Con stock',    'verde');
+    kpiBox(fmt(d.inventario.total),     'Total ítems',  'azul',  'Ítems en catálogo') +
+    kpiBox(d.inventario.con_stock,      'Con stock',    'verde', 'Existencia > 0');
   document.getElementById('kpi-inv2').innerHTML =
-    kpiBox(d.inventario.stock_bajo,     'Stock bajo',   d.inventario.stock_bajo > 0 ? 'amari' : 'verde') +
-    kpiBox(d.inventario.sin_stock,      'Sin stock',    d.inventario.sin_stock > 100 ? 'amari' : 'rojo') +
+    kpiBox(d.inventario.stock_bajo,     'Stock bajo',   d.inventario.stock_bajo > 0 ? 'amari' : 'verde', 'Bajo el mínimo') +
+    kpiBox(d.inventario.sin_stock,      'Sin stock',    d.inventario.sin_stock > 100 ? 'amari' : 'rojo', 'Existencia en cero') +
     (d.inventario.valor_estimado > 0
-      ? `<div class="kpi-box azul" style="grid-column:span 2"><div class="kv azul">₡${fmt(d.inventario.valor_estimado)}</div><div class="kl">Valor estimado en bodega</div></div>`
+      ? `<div class="kpi-box azul" style="grid-column:span 2"><div class="kv azul">₡${fmt(d.inventario.valor_estimado)}</div><div class="kl">Valor estimado en bodega</div><div class="kd">Existencia × costo unitario</div></div>`
       : '') ;
 
   // ── Movimientos ──
   document.getElementById('kpi-movs').innerHTML =
-    kpiBox(d.movimientos.salidas_30d,     'Salidas (F01)',     'rojo') +
-    kpiBox(d.movimientos.consumo_30d,     'Consumos (F03)',    'azul') +
-    kpiBox(d.movimientos.devoluciones_30d,'Devoluciones (F04)','verde') +
-    kpiBox(d.movimientos.compras_30d,     'Compras ingresadas','amari');
+    kpiBox(d.movimientos.salidas_30d,     'Salidas (F01)',     'rojo',  'Despachos de bodega') +
+    kpiBox(d.movimientos.consumo_30d,     'Consumos (F03)',    'azul',  'Usados en sitio') +
+    kpiBox(d.movimientos.devoluciones_30d,'Devoluciones (F04)','verde', 'Devueltos a bodega') +
+    kpiBox(d.movimientos.compras_30d,     'Compras ingresadas','amari', 'Ingresos registrados');
 
   // ── Control OT ──
   const ctrl = d.control_ot || {};
@@ -394,16 +398,16 @@ function renderDashboard(d) {
 
   // ── Viáticos ──
   document.getElementById('kpi-viat').innerHTML =
-    `<div class="kpi-box morado" style="border-left-color:#8E44AD;grid-column:span 2"><div class="kv" style="color:#8E44AD;">₡${fmt(d.viaticos.total_acumulado)}</div><div class="kl">Total gastado acumulado</div></div>` +
-    kpiBox(d.viaticos.registros,      'Registros totales',   'azul') +
-    kpiBox(d.viaticos.sin_aprobacion, 'Sin aprobación PM',   d.viaticos.sin_aprobacion > 0 ? 'rojo' : 'verde');
+    `<div class="kpi-box morado" style="border-left-color:#8E44AD;grid-column:span 2"><div class="kv" style="color:#8E44AD;">₡${fmt(d.viaticos.total_acumulado)}</div><div class="kl">Total gastado acumulado</div><div class="kd">Suma de todos los viáticos</div></div>` +
+    kpiBox(d.viaticos.registros,      'Registros totales',   'azul',  'Viáticos enviados') +
+    kpiBox(d.viaticos.sin_aprobacion, 'Sin aprobación PM',   d.viaticos.sin_aprobacion > 0 ? 'rojo' : 'verde', 'Gastos sin autorizar');
 
   // ── Incidencias ──
   document.getElementById('kpi-inc').innerHTML =
-    kpiBox(d.incidencias.trabajo,              'Problemas en trabajo',  d.incidencias.trabajo > 0 ? 'rojo' : 'verde') +
-    kpiBox(d.incidencias.camion,               'Incidentes camión',     d.incidencias.camion > 0 ? 'rojo' : 'verde') +
-    kpiBox(d.incidencias.vobo_negativo,        'VoBo negativo (cliente)',d.incidencias.vobo_negativo > 0 ? 'amari' : 'verde') +
-    kpiBox(d.incidencias.mantenimiento_pendiente,'Manto pendiente',      d.incidencias.mantenimiento_pendiente > 0 ? 'amari' : 'verde');
+    kpiBox(d.incidencias.trabajo,               'Problemas en trabajo',  d.incidencias.trabajo > 0 ? 'rojo' : 'verde',   'Incidencias en F03') +
+    kpiBox(d.incidencias.camion,                'Incidentes camión',     d.incidencias.camion > 0 ? 'rojo' : 'verde',    'Incidencias en F05') +
+    kpiBox(d.incidencias.vobo_negativo,         'VoBo negativo',         d.incidencias.vobo_negativo > 0 ? 'amari' : 'verde', 'Cliente no firmó') +
+    kpiBox(d.incidencias.mantenimiento_pendiente,'Manto pendiente',      d.incidencias.mantenimiento_pendiente > 0 ? 'amari' : 'verde', 'Camión requiere revisión');
 
   // ── Formularios ──
   const formsHtml = Object.entries(d.formularios.detalle || {}).map(([n, c]) =>

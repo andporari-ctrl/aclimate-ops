@@ -168,6 +168,41 @@
       font-size: .65rem;
       color: var(--texto-sub);
     }
+    .inv-reorden-badge {
+      font-size: .58rem;
+      color: var(--azul-dark);
+      font-family: monospace;
+      text-align: right;
+      margin-top: 2px;
+      opacity: .75;
+    }
+    .btn-edit-reorden {
+      background: none;
+      border: none;
+      font-size: .85rem;
+      cursor: pointer;
+      color: var(--texto-sub);
+      padding: 0;
+      margin-top: 2px;
+      display: block;
+      width: 100%;
+      text-align: right;
+      line-height: 1;
+      opacity: .55;
+    }
+    .btn-edit-reorden:hover { opacity: 1; color: var(--azul); }
+    .toggle-nuevo-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: .82rem;
+      color: var(--texto-sub);
+      padding: 4px 0;
+    }
+    .toggle-nuevo-label input[type="checkbox"] {
+      width: 16px; height: 16px; cursor: pointer;
+    }
 
     /* ── Movimientos ── */
     .mov-lista {
@@ -440,15 +475,57 @@
       <span class="campo-error-msg-m">Obligatorio</span>
     </div>
 
-    <div class="campo" id="mc-campo-item">
-      <label>Ítem <span class="req">*</span></label>
-      <div class="autocomplete-wrap" id="mc-ac-wrap">
-        <input class="autocomplete-input" type="text" placeholder="Buscar código o descripción..." autocomplete="off">
-        <input class="ac-hidden" type="hidden" id="mc-codigo">
-        <div class="autocomplete-dropdown"></div>
+    <!-- Toggle nuevo ítem -->
+    <div class="campo" style="margin-bottom:8px;">
+      <label class="toggle-nuevo-label">
+        <input type="checkbox" id="mc-es-nuevo" onchange="toggleNuevoItem(this)">
+        <span>📋 Ítem nuevo (no está en el catálogo)</span>
+      </label>
+    </div>
+
+    <!-- Sección ítem existente del catálogo -->
+    <div id="mc-seccion-existente">
+      <div class="campo" id="mc-campo-item">
+        <label>Ítem del catálogo <span class="req">*</span></label>
+        <div class="autocomplete-wrap" id="mc-ac-wrap">
+          <input class="autocomplete-input" type="text" placeholder="Buscar código o descripción..." autocomplete="off">
+          <input class="ac-hidden" type="hidden" id="mc-codigo">
+          <div class="autocomplete-dropdown"></div>
+        </div>
+        <div class="ac-selected item-seleccionado-preview" id="mc-item-preview"></div>
+        <span class="campo-error-msg-m">Seleccioná un ítem</span>
       </div>
-      <div class="ac-selected item-seleccionado-preview" id="mc-item-preview"></div>
-      <span class="campo-error-msg-m">Seleccioná un ítem</span>
+    </div>
+
+    <!-- Sección ítem nuevo -->
+    <div id="mc-seccion-nuevo" style="display:none">
+      <div class="campo" id="mc-campo-nuevo-codigo">
+        <label>Código del nuevo ítem <span class="req">*</span></label>
+        <input type="text" id="mc-nuevo-codigo" placeholder="Ej: REF-001, COMP-025..." style="text-transform:uppercase;">
+        <span class="campo-error-msg-m">Ingresá el código</span>
+      </div>
+      <div class="campo" id="mc-campo-nuevo-desc">
+        <label>Descripción <span class="req">*</span></label>
+        <input type="text" id="mc-nuevo-descripcion" placeholder="Descripción completa del ítem">
+        <span class="campo-error-msg-m">Ingresá la descripción</span>
+      </div>
+      <div class="campo">
+        <label>Categoría</label>
+        <input type="text" id="mc-nuevo-categoria" placeholder="Ej: Refrigerante, Herramienta...">
+      </div>
+      <div class="campo">
+        <label>Ubicación</label>
+        <select id="mc-nuevo-ubicacion">
+          <option value="BODEGA">Bodega</option>
+          <option value="CAMIÓN">Camión</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Marca / Modelo (opcional, aplica para ambos) -->
+    <div class="campo">
+      <label>Marca / Modelo <span style="font-weight:400;font-size:.78rem;color:var(--texto-sub);">(opcional)</span></label>
+      <input type="text" id="mc-marca" placeholder="Ej: Copeland, Carrier, Lennox...">
     </div>
 
     <div class="campo" id="mc-campo-qty">
@@ -474,6 +551,31 @@
 
     <button class="btn-guardar-compra" id="btn-guardar-compra" onclick="guardarCompra()">
       ✓ Registrar ingreso
+    </button>
+  </div>
+</div>
+
+<!-- Modal editar punto de reorden -->
+<div class="modal-overlay" id="modal-reorden" onclick="cerrarSiReordenFondo(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-titulo">⚙ Punto de reorden</span>
+      <button class="btn-cerrar-modal" onclick="cerrarModalReorden()">✕</button>
+    </div>
+    <input type="hidden" id="reorden-codigo">
+    <p id="reorden-desc" style="font-size:.8rem;color:var(--texto-sub);margin:0 0 14px;line-height:1.4;"></p>
+    <div class="campo">
+      <label>Punto de reorden (unidades mínimas)</label>
+      <input type="number" id="reorden-min" min="0" step="1" placeholder="0">
+      <p style="font-size:.72rem;color:var(--texto-sub);margin:4px 0 0;">Alerta cuando el stock llegue a este nivel. 0 = sin punto de reorden.</p>
+    </div>
+    <div class="campo">
+      <label>Cantidad a pedir (unidades)</label>
+      <input type="number" id="reorden-max" min="0" step="1" placeholder="0">
+      <p style="font-size:.72rem;color:var(--texto-sub);margin:4px 0 0;">Cuántas unidades comprar cuando el stock esté bajo.</p>
+    </div>
+    <button class="btn-guardar-compra" id="btn-guardar-reorden" onclick="guardarReorden()" style="background:var(--azul);">
+      ✓ Guardar
     </button>
   </div>
 </div>
@@ -533,6 +635,10 @@ function renderItems(items) {
     const nombre      = it['Descripción']  || it.descripcion   || '';
     const cat         = it['Categoría']    || it.categoria     || '';
     const ubicCamion  = it['Ubic. Camión'] || it.ubicacion_camion || '';
+    const stockMin    = Number(it['Stock Mín'] ?? it.stock_min ?? 0);
+    const stockMax    = Number(it['Stock Máx'] ?? it.stock_max ?? 0);
+    const codigoEsc   = codigo.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    const nombreEsc   = nombre.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     return `
     <div class="inv-item">
       <div class="semaforo ${s}"></div>
@@ -545,6 +651,8 @@ function renderItems(items) {
       <div class="inv-item-stock">
         <div class="qty ${s}">${existencia}</div>
         <div class="ubi">${ubicacion}</div>
+        ${stockMin > 0 ? `<div class="inv-reorden-badge">▼${stockMin}${stockMax > 0 ? ' ×' + stockMax : ''}</div>` : ''}
+        <button class="btn-edit-reorden" onclick="editarReorden('${codigoEsc}','${nombreEsc}',${stockMin},${stockMax})" title="Editar punto de reorden">⚙</button>
       </div>
     </div>`;
   }).join('');
@@ -700,15 +808,33 @@ function abrirModalCompra() {
   document.getElementById('mc-proveedor').value = '';
   document.getElementById('mc-factura').value = '';
   document.getElementById('mc-observaciones').value = '';
+  document.getElementById('mc-marca').value = '';
   document.getElementById('mc-codigo').value = '';
   document.querySelector('#mc-ac-wrap .autocomplete-input').value = '';
   document.getElementById('mc-item-preview').textContent = '';
   document.getElementById('mc-item-preview').classList.remove('show');
+  document.getElementById('mc-es-nuevo').checked = false;
+  document.getElementById('mc-nuevo-codigo').value = '';
+  document.getElementById('mc-nuevo-descripcion').value = '';
+  document.getElementById('mc-nuevo-categoria').value = '';
+  document.getElementById('mc-nuevo-ubicacion').value = 'BODEGA';
+  document.getElementById('mc-seccion-existente').style.display = 'block';
+  document.getElementById('mc-seccion-nuevo').style.display = 'none';
   _mcItemSeleccionado = null;
-  ['mc-campo-fecha','mc-campo-registrado','mc-campo-item','mc-campo-qty']
-    .forEach(id => document.getElementById(id).classList.remove('error'));
+  ['mc-campo-fecha','mc-campo-registrado','mc-campo-item','mc-campo-qty',
+   'mc-campo-nuevo-codigo','mc-campo-nuevo-desc']
+    .forEach(id => document.getElementById(id)?.classList.remove('error'));
   document.getElementById('modal-compra').classList.add('open');
   document.querySelector('#mc-ac-wrap .autocomplete-input').focus();
+}
+
+function toggleNuevoItem(chk) {
+  document.getElementById('mc-seccion-existente').style.display = chk.checked ? 'none' : 'block';
+  document.getElementById('mc-seccion-nuevo').style.display = chk.checked ? 'block' : 'none';
+  document.getElementById('mc-campo-item').classList.remove('error');
+  ['mc-campo-nuevo-codigo','mc-campo-nuevo-desc'].forEach(id =>
+    document.getElementById(id)?.classList.remove('error'));
+  if (chk.checked) document.getElementById('mc-nuevo-codigo').focus();
 }
 
 function cerrarModalCompra() {
@@ -735,16 +861,26 @@ function iniciarAcModal() {
 }
 
 async function guardarCompra() {
-  // Validar campos obligatorios
   let ok = true;
-  const fecha     = document.getElementById('mc-fecha').value;
+  const fecha      = document.getElementById('mc-fecha').value;
   const registrado = document.getElementById('mc-registrado').value;
-  const codigo    = document.getElementById('mc-codigo').value;
-  const cantidad  = parseInt(document.getElementById('mc-cantidad').value) || 0;
+  const cantidad   = parseInt(document.getElementById('mc-cantidad').value) || 0;
+  const esNuevo    = document.getElementById('mc-es-nuevo').checked;
+
+  let codigo, descripcion;
+  if (esNuevo) {
+    codigo      = document.getElementById('mc-nuevo-codigo').value.trim().toUpperCase();
+    descripcion = document.getElementById('mc-nuevo-descripcion').value.trim();
+    if (!codigo)      { document.getElementById('mc-campo-nuevo-codigo').classList.add('error'); ok = false; }
+    if (!descripcion) { document.getElementById('mc-campo-nuevo-desc').classList.add('error');   ok = false; }
+  } else {
+    codigo      = document.getElementById('mc-codigo').value;
+    descripcion = _mcItemSeleccionado?.nombre || '';
+    if (!codigo) { document.getElementById('mc-campo-item').classList.add('error'); ok = false; }
+  }
 
   if (!fecha)      { document.getElementById('mc-campo-fecha').classList.add('error');      ok = false; }
   if (!registrado) { document.getElementById('mc-campo-registrado').classList.add('error'); ok = false; }
-  if (!codigo)     { document.getElementById('mc-campo-item').classList.add('error');        ok = false; }
   if (cantidad < 1){ document.getElementById('mc-campo-qty').classList.add('error');         ok = false; }
   if (!ok) return;
 
@@ -753,47 +889,99 @@ async function guardarCompra() {
   btn.textContent = 'Enviando...';
 
   const payload = {
-    form:          'INVENTARIO_COMPRA',
+    form:           'INVENTARIO_COMPRA',
     fecha,
     registrado_por: registrado,
     codigo,
-    descripcion:   _mcItemSeleccionado?.nombre || '',
+    descripcion,
     cantidad,
-    proveedor:     document.getElementById('mc-proveedor').value.trim(),
-    factura:       document.getElementById('mc-factura').value.trim(),
-    observaciones: document.getElementById('mc-observaciones').value.trim(),
-    timestamp:     timestampCR()
+    es_nuevo:       esNuevo,
+    marca:          document.getElementById('mc-marca').value.trim(),
+    proveedor:      document.getElementById('mc-proveedor').value.trim(),
+    factura:        document.getElementById('mc-factura').value.trim(),
+    observaciones:  document.getElementById('mc-observaciones').value.trim(),
+    timestamp:      timestampCR()
   };
+  if (esNuevo) {
+    payload.categoria = document.getElementById('mc-nuevo-categoria').value.trim();
+    payload.ubicacion = document.getElementById('mc-nuevo-ubicacion').value;
+  }
 
   try {
     const res = await enviarAGAS(payload);
     cerrarModalCompra();
-    showToast(`✓ Ingreso registrado — stock actualizado (+${cantidad})`, 'ok', 4000);
+    showToast(`✓ ${esNuevo ? 'Ítem creado y registrado' : 'Ingreso registrado'} (+${cantidad})`, 'ok', 4000);
 
-    // Actualizar stock en memoria sin recargar todo
-    const nuevaExist = res.data?.nueva_existencia;
-    if (nuevaExist !== undefined) {
-      const it = _todosItems.find(i => (i['Código'] || i.codigo) === codigo);
-      if (it) {
-        if ('Existencia' in it) it['Existencia'] = nuevaExist;
-        else it.existencia = nuevaExist;
-      }
-      actualizarStats(_todosItems);
-      filtrar();
+    if (esNuevo) {
+      // Agregar nuevo ítem a la lista en memoria
+      _todosItems.push({
+        'Código': codigo, 'Descripción': descripcion,
+        'Categoría': payload.categoria || '', 'Ubicación': payload.ubicacion || 'BODEGA',
+        'Marca': payload.marca || '', 'Existencia': res.data?.nueva_existencia ?? cantidad,
+        'Stock Mín': 0, 'Stock Máx': 0
+      });
     } else {
-      // Si GAS no devuelve el nuevo valor, recargamos desde servidor
-      await cargarInventarioDesdeGAS();
-      actualizarStats(_todosItems);
-      filtrar();
+      const nuevaExist = res.data?.nueva_existencia;
+      if (nuevaExist !== undefined) {
+        const it = _todosItems.find(i => (i['Código'] || i.codigo) === codigo);
+        if (it) {
+          if ('Existencia' in it) it['Existencia'] = nuevaExist;
+          else it.existencia = nuevaExist;
+        }
+      } else {
+        await cargarInventarioDesdeGAS();
+      }
     }
-
-    // Resetear movimientos para que se recarguen frescos
+    actualizarStats(_todosItems);
+    filtrar();
     _movimientos = [];
   } catch(e) {
     showToast('Error al registrar: ' + e.message, 'error', 6000);
   } finally {
     btn.disabled = false;
     btn.textContent = '✓ Registrar ingreso';
+  }
+}
+
+// ── Editar puntos de reorden ──────────────────────────────────────────
+function editarReorden(codigo, nombre, stockMin, stockMax) {
+  document.getElementById('reorden-codigo').value = codigo;
+  document.getElementById('reorden-desc').textContent = nombre;
+  document.getElementById('reorden-min').value = stockMin || '';
+  document.getElementById('reorden-max').value = stockMax || '';
+  document.getElementById('modal-reorden').classList.add('open');
+  document.getElementById('reorden-min').focus();
+}
+
+function cerrarModalReorden() {
+  document.getElementById('modal-reorden').classList.remove('open');
+}
+
+function cerrarSiReordenFondo(e) {
+  if (e.target === document.getElementById('modal-reorden')) cerrarModalReorden();
+}
+
+async function guardarReorden() {
+  const codigo = document.getElementById('reorden-codigo').value;
+  const min = parseInt(document.getElementById('reorden-min').value) || 0;
+  const max = parseInt(document.getElementById('reorden-max').value) || 0;
+  const btn = document.getElementById('btn-guardar-reorden');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  try {
+    await enviarAGAS({ form: 'INVENTARIO_EDITAR_REORDEN', codigo, stock_min: min, stock_max: max });
+    const it = _todosItems.find(i => (i['Código'] || i.codigo) === codigo);
+    if (it) {
+      if ('Stock Mín' in it) { it['Stock Mín'] = min; it['Stock Máx'] = max; }
+      else { it.stock_min = min; it.stock_max = max; }
+    }
+    actualizarStats(_todosItems);
+    filtrar();
+    cerrarModalReorden();
+    showToast('✓ Punto de reorden actualizado', 'ok');
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error', 5000);
+  } finally {
+    btn.disabled = false; btn.textContent = '✓ Guardar';
   }
 }
 
