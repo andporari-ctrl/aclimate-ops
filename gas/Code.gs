@@ -1,6 +1,6 @@
 /**
- * AClímate — Google Apps Script Backend v2
- * Recibe los 6 formularios operativos y gestiona OTs.
+ * AClímate — Google Apps Script Backend v3
+ * Recibe los 6 formularios operativos, gestiona OTs e inventario.
  *
  * ── INSTRUCCIONES DE DESPLIEGUE ────────────────────────────────────────
  * 1. Abrí script.google.com → Nuevo proyecto → pegá este código.
@@ -22,7 +22,7 @@ const DRIVE_FOLDER_NAME = 'AClímate — Fotos Operativas';
 const EMAIL_DESTINATARIOS = 'aporras@avelectromecanica.com,aclimatecr@avelectromecanica.com,aalfaro@avelectromecanica.com';
 // ───────────────────────────────────────────────────────────────────────
 
-// ── GET: devuelve OTs abiertas para los formularios ──────────────────
+// ── GET: devuelve datos para los formularios ──────────────────────────
 function doGet(e) {
   const action = e?.parameter?.action || '';
 
@@ -36,8 +36,45 @@ function doGet(e) {
     }
   }
 
+  if (action === 'inventario') {
+    try {
+      const sheet = getSheet('Inventario');
+      if (sheet.getLastRow() <= 1) return jsonOk([]);
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0];
+      const items = data.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((h, i) => { obj[String(h)] = row[i]; });
+        return obj;
+      });
+      return jsonOk(items);
+    } catch(err) {
+      return jsonError(err.toString());
+    }
+  }
+
+  if (action === 'movimientos') {
+    try {
+      const sheet = getSheet('Movimientos');
+      if (sheet.getLastRow() <= 1) return jsonOk([]);
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0];
+      const limit = parseInt(e?.parameter?.limit || '300');
+      const rows = data.slice(1).slice(-limit);
+      const movs = rows.map(row => {
+        const obj = {};
+        headers.forEach((h, i) => { obj[String(h)] = row[i]; });
+        return obj;
+      });
+      movs.reverse(); // newest first
+      return jsonOk(movs);
+    } catch(err) {
+      return jsonError(err.toString());
+    }
+  }
+
   // Ruta raíz: devuelve estado del sistema
-  return jsonOk({ sistema: 'AClimate Forms v2', estado: 'activo' });
+  return jsonOk({ sistema: 'AClimate Forms v3', estado: 'activo' });
 }
 
 function doPost(e) {
@@ -53,9 +90,10 @@ function doPost(e) {
       case 'F04': resultado = manejarF04(data); break;
       case 'F05': resultado = manejarF05(data); break;
       case 'F06': resultado = manejarF06(data); break;
-      case 'OT_CREAR':  resultado = manejarOTCrear(data);  break;
-      case 'OT_EDITAR': resultado = manejarOTEditar(data); break;
-      case 'OT_CERRAR': resultado = manejarOTCerrar(data); break;
+      case 'OT_CREAR':              resultado = manejarOTCrear(data);             break;
+      case 'OT_EDITAR':             resultado = manejarOTEditar(data);            break;
+      case 'OT_CERRAR':             resultado = manejarOTCerrar(data);            break;
+      case 'INVENTARIO_IMPORTAR':   resultado = manejarInventarioImportar(data);  break;
       default:    throw new Error('Formulario desconocido: ' + formId);
     }
 
@@ -134,9 +172,9 @@ function manejarOTEditar(d) {
       sheet.getRange(i + 1, col('Técnico')).setValue(d.tecnico || '');
       sheet.getRange(i + 1, col('Descripción')).setValue(d.descripcion || '');
       sheet.getRange(i + 1, col('Fecha Asignación')).setValue(d.fecha_asignacion || '');
-      if (col('Contacto')   > 0) sheet.getRange(i + 1, col('Contacto')).setValue(d.contacto_nombre || '');
-      if (col('Teléfono')   > 0) sheet.getRange(i + 1, col('Teléfono')).setValue(d.contacto_tel    || '');
-      if (col('Dirección')  > 0) sheet.getRange(i + 1, col('Dirección')).setValue(d.direccion      || '');
+      if (col('Contacto')    > 0) sheet.getRange(i + 1, col('Contacto')).setValue(d.contacto_nombre || '');
+      if (col('Teléfono')    > 0) sheet.getRange(i + 1, col('Teléfono')).setValue(d.contacto_tel    || '');
+      if (col('Dirección')   > 0) sheet.getRange(i + 1, col('Dirección')).setValue(d.direccion      || '');
       if (col('Presupuesto') > 0) sheet.getRange(i + 1, col('Presupuesto')).setValue(d.presupuesto_str || '');
 
       enviarEmail('OT editada: ' + d.id, [
@@ -144,7 +182,7 @@ function manejarOTEditar(d) {
         'Cliente: ' + (d.cliente || ''),
         'Tipo:    ' + (d.tipo    || ''),
         'Técnico: ' + (d.tecnico || ''),
-        d.direccion ? ('📍 ' + d.direccion) : '',
+        d.direccion ? ('Dirección: ' + d.direccion) : '',
       ].filter(l => l !== ''));
 
       return { id: d.id, editada: true };
@@ -165,7 +203,7 @@ function manejarOTCerrar(d) {
       enviarEmail('OT cerrada: ' + d.id, [
         'OT:      ' + d.id,
         'Estado:  Cerrada',
-        'Cierre:  ' + new Date().toLocaleString('es-CR'),
+        'Cierre:  ' + Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a'),
       ]);
 
       return { id: d.id, estado: 'Cerrada' };
@@ -190,7 +228,6 @@ function leerOTs(sheet) {
 function manejarF01(d) {
   const sheet = getSheet('F01-Despacho');
 
-  // Encabezados si la hoja está vacía
   if (sheet.getLastRow() === 0) {
     sheet.appendRow([
       'Timestamp', 'Fecha', 'Técnico', 'OT', 'Cliente',
@@ -209,6 +246,9 @@ function manejarF01(d) {
     d.timestamp, d.fecha, d.tecnico, d.ot, d.cliente,
     itemsStr, d.observaciones || '', d.firma, fotos
   ]);
+
+  // Registrar salida en inventario
+  registrarMovimientos(d.items, 'Salida', d.ot, d.tecnico, d.fecha, 'F01');
 
   enviarEmail('F-01 Despacho — ' + d.ot + ' | ' + d.tecnico, [
     'Fecha:    ' + d.fecha,
@@ -252,7 +292,7 @@ function manejarF02(d) {
     d.materiales_verificados, d.problema || '', fotos
   ]);
 
-  const problemasF02 = d.problema ? ('⚠️ Problema: ' + d.problema) : 'Sin problemas';
+  const problemasF02 = d.problema ? ('Problema: ' + d.problema) : 'Sin problemas';
   enviarEmail('F-02 Checklist Inicio — ' + d.fecha + ' | ' + d.tecnico, [
     'Fecha:     ' + d.fecha,
     'Técnico:   ' + d.tecnico,
@@ -300,7 +340,10 @@ function manejarF03(d) {
     d.observaciones || '', fotosT, fotosV
   ]);
 
-  const problemasF03 = d.hubo_problema === 'Sí' ? ('⚠️ ' + (d.problema_detalle || 'Sin detalle')) : 'Sin problemas';
+  // Registrar consumo (informativo, sin cambio de stock)
+  registrarMovimientos(d.items, 'Consumo', d.ot, d.tecnico, d.fecha, 'F03');
+
+  const problemasF03 = d.hubo_problema === 'Sí' ? ('Problema: ' + (d.problema_detalle || 'Sin detalle')) : 'Sin problemas';
   enviarEmail('F-03 Reporte Trabajo — ' + d.ot + ' | ' + d.tecnico, [
     'Fecha:        ' + d.fecha,
     'OT:           ' + d.ot,
@@ -351,6 +394,9 @@ function manejarF04(d) {
     d.firma, fotos
   ]);
 
+  // Registrar devolución: suma stock de vuelta al inventario
+  registrarMovimientos(d.items, 'Devolución', d.ot, d.tecnico, d.fecha, 'F04');
+
   enviarEmail('F-04 Devolución — ' + d.ot + ' | ' + d.tecnico, [
     'Fecha:    ' + d.fecha,
     'OT:       ' + d.ot,
@@ -396,8 +442,8 @@ function manejarF05(d) {
     d.resumen_dia, fotos
   ]);
 
-  const incidenteF05 = d.incidente_camion === 'Sí' ? ('⚠️ Incidente: ' + (d.incidente_detalle || 'Sin detalle')) : 'Sin incidentes';
-  const mantoF05 = d.requiere_mantenimiento === 'Sí' ? ('🔧 Mantenimiento: ' + (d.mantenimiento_detalle || 'Sin detalle')) : 'No requiere mantenimiento';
+  const incidenteF05 = d.incidente_camion === 'Sí' ? ('Incidente: ' + (d.incidente_detalle || 'Sin detalle')) : 'Sin incidentes';
+  const mantoF05 = d.requiere_mantenimiento === 'Sí' ? ('Mantenimiento: ' + (d.mantenimiento_detalle || 'Sin detalle')) : 'No requiere mantenimiento';
   enviarEmail('F-05 Checklist Cierre — ' + d.fecha + ' | ' + d.tecnico, [
     'Fecha:              ' + d.fecha,
     'Técnico:            ' + d.tecnico,
@@ -442,7 +488,7 @@ function manejarF06(d) {
     d.observaciones || '', fotoR
   ]);
 
-  const aprobF06 = d.aprobado_pm === 'No' ? ('⚠️ Sin aprobación PM: ' + (d.justificacion_no_aprobado || '—')) : 'Aprobado por PM';
+  const aprobF06 = d.aprobado_pm === 'No' ? ('Sin aprobación PM: ' + (d.justificacion_no_aprobado || '—')) : 'Aprobado por PM';
   enviarEmail('F-06 Viático — ₡' + d.monto + ' | ' + d.tecnico, [
     'Fecha:      ' + d.fecha,
     'Técnico:    ' + d.tecnico,
@@ -458,6 +504,108 @@ function manejarF06(d) {
   ].filter(l => l !== ''));
 
   return { form: 'F06' };
+}
+
+// ── Inventario — Importar (seed inicial desde Excel Maestro) ─────────
+function manejarInventarioImportar(d) {
+  const sheet = getSheet('Inventario');
+  const INV_HEADERS = [
+    'Código', 'Ubicación', 'Categoría', 'Descripción', 'Marca',
+    'Proveedor', 'Ubic. Camión', 'Stock Mín', 'Stock Máx',
+    'Existencia', 'Costo Unit (₡)', 'Última Actualización'
+  ];
+
+  // Crear encabezados si la hoja está vacía
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(INV_HEADERS);
+    formatearEncabezados(sheet);
+  }
+
+  const items = d.items || [];
+  if (!items.length) return { insertados: 0, actualizados: 0 };
+
+  // Leer mapa existente para decidir insertar vs actualizar
+  let existingData = sheet.getLastRow() > 1 ? sheet.getDataRange().getValues() : [INV_HEADERS];
+  const codigoIdx = existingData[0].indexOf('Código');
+  const existMap = {};
+  for (let i = 1; i < existingData.length; i++) {
+    existMap[String(existingData[i][codigoIdx])] = i + 1; // 1-indexed row
+  }
+
+  const ts = Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a');
+  let insertados = 0, actualizados = 0;
+
+  items.forEach(it => {
+    const row = [
+      it.codigo, it.ubicacion, it.categoria, it.descripcion,
+      it.marca || '', it.proveedor || '', it.ubicacion_camion || '',
+      Number(it.stock_min) || 0, Number(it.stock_max) || 0,
+      Number(it.existencia) || 0, Number(it.costo_unit) || 0, ts
+    ];
+    if (existMap[it.codigo]) {
+      sheet.getRange(existMap[it.codigo], 1, 1, row.length).setValues([row]);
+      actualizados++;
+    } else {
+      sheet.appendRow(row);
+      insertados++;
+    }
+  });
+
+  return { insertados, actualizados, total: items.length };
+}
+
+// ── Inventario — Registrar movimientos y actualizar stock ────────────
+function registrarMovimientos(items, tipo, ot, tecnico, fecha, formId) {
+  if (!items || !items.length) return;
+
+  const sheetInv = getSheet('Inventario');
+  const sheetMov = getSheet('Movimientos');
+
+  if (sheetMov.getLastRow() === 0) {
+    sheetMov.appendRow([
+      'Timestamp', 'Fecha', 'OT', 'Técnico', 'Código', 'Descripción',
+      'Tipo', 'Cantidad', 'Stock Ant.', 'Stock Nuevo', 'Formulario', 'Observación'
+    ]);
+    formatearEncabezados(sheetMov);
+  }
+
+  const ts = Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a');
+
+  // Construir mapa de inventario: codigo → {rowNum, existencia, existColIdx}
+  const invData    = sheetInv.getLastRow() > 1 ? sheetInv.getDataRange().getValues() : null;
+  const invHeaders = invData ? invData[0] : [];
+  const codigoCol  = invHeaders.indexOf('Código');
+  const existCol   = invHeaders.indexOf('Existencia'); // 0-indexed
+
+  const invMap = {};
+  if (invData) {
+    for (let i = 1; i < invData.length; i++) {
+      const cod = String(invData[i][codigoCol]);
+      invMap[cod] = { rowNum: i + 1, existencia: Number(invData[i][existCol]) || 0 };
+    }
+  }
+
+  items.forEach(it => {
+    const qty = Number(it.cantidad) || 0;
+    let stockAnt = '—', stockNuevo = '—';
+
+    const inv = invMap[it.codigo];
+    // Solo Salida (F01) baja stock; Devolución (F04) sube; Consumo (F03) es informativo
+    if (inv && existCol >= 0 && (tipo === 'Salida' || tipo === 'Devolución')) {
+      stockAnt = inv.existencia;
+      const delta = tipo === 'Salida' ? -qty : qty;
+      stockNuevo = Math.max(0, inv.existencia + delta);
+      sheetInv.getRange(inv.rowNum, existCol + 1).setValue(stockNuevo); // 1-indexed col
+      inv.existencia = stockNuevo; // update local map in case same item appears twice
+    }
+
+    sheetMov.appendRow([
+      ts, fecha, ot || '—', tecnico,
+      it.codigo, it.nombre || it.descripcion || '',
+      tipo, qty, stockAnt, stockNuevo,
+      formId, ''
+    ]);
+  });
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────
@@ -483,11 +631,6 @@ function getDriveFolder() {
   return DriveApp.createFolder(DRIVE_FOLDER_NAME);
 }
 
-/**
- * Guarda fotos en Google Drive y devuelve los URLs separados por coma.
- * @param {Array} fotos - Array de {nombre, data} o strings base64
- * @param {string} prefix - Prefijo del nombre de archivo
- */
 function guardarFotos(fotos, prefix) {
   if (!fotos || !fotos.length) return '';
   const folder = getDriveFolder();
@@ -500,7 +643,6 @@ function guardarFotos(fotos, prefix) {
         ? foto.nombre
         : `${prefix}_${i + 1}.jpg`;
 
-      // Decodificar base64 (remover prefijo data:image/...;base64,)
       const clean = base64.replace(/^data:image\/\w+;base64,/, '');
       const decoded = Utilities.base64Decode(clean);
       const blob = Utilities.newBlob(decoded, 'image/jpeg', nombre);
@@ -526,4 +668,13 @@ function jsonError(msg) {
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'error', message: msg }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ── Test helper (ejecutar desde editor para autorizar MailApp) ───────
+function testEmail() {
+  MailApp.sendEmail({
+    to: EMAIL_DESTINATARIOS,
+    subject: '[AClímate] Test de configuración',
+    body: 'Si recibís este email, la configuración de notificaciones está correcta.'
+  });
 }

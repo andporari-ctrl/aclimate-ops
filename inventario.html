@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Inventario — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    /* ── Stats ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 12px 12px 0;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-card .lbl {
+      font-size: .65rem;
+      color: var(--texto-sub);
+      margin-top: 3px;
+      line-height: 1.2;
+    }
+    .stat-card.verde .num { color: #27AE60; }
+    .stat-card.amarillo .num { color: #E67E22; }
+    .stat-card.rojo .num { color: var(--rojo); }
+    .stat-card.total .num { color: var(--azul-dark); }
+
+    /* ── Toolbar ── */
+    .inv-toolbar {
+      padding: 10px 12px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .inv-toolbar input[type="text"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      font-size: .9rem;
+    }
+    .inv-toolbar input[type="text"]:focus {
+      outline: none;
+      border-color: var(--azul);
+    }
+    .filtros-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filtro-btn {
+      padding: 5px 12px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 20px;
+      background: #fff;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .filtro-btn.activo {
+      background: var(--azul);
+      border-color: var(--azul);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ── Tabs ── */
+    .inv-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--gris-borde);
+      margin: 0 12px;
+    }
+    .inv-tab {
+      flex: 1;
+      text-align: center;
+      padding: 9px 6px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--texto-sub);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    .inv-tab.activo {
+      color: var(--azul-dark);
+      border-bottom-color: var(--azul);
+    }
+    .inv-panel { display: none; }
+    .inv-panel.activo { display: block; }
+
+    /* ── Item list ── */
+    .inv-lista {
+      padding: 8px 12px 80px;
+    }
+    .inv-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      background: #fff;
+    }
+    .semaforo {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .semaforo.verde    { background: #27AE60; }
+    .semaforo.amarillo { background: #E67E22; }
+    .semaforo.rojo     { background: var(--rojo); }
+
+    .inv-item-info { flex: 1; min-width: 0; }
+    .inv-item-codigo {
+      font-size: .7rem;
+      color: var(--texto-sub);
+      font-family: monospace;
+    }
+    .inv-item-nombre {
+      font-size: .84rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .inv-item-cat {
+      font-size: .7rem;
+      color: var(--texto-sub);
+    }
+    .inv-item-stock {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .inv-item-stock .qty {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .inv-item-stock .qty.verde    { color: #27AE60; }
+    .inv-item-stock .qty.amarillo { color: #E67E22; }
+    .inv-item-stock .qty.rojo     { color: var(--rojo); }
+    .inv-item-stock .ubi {
+      font-size: .65rem;
+      color: var(--texto-sub);
+    }
+
+    /* ── Movimientos ── */
+    .mov-lista {
+      padding: 8px 12px 80px;
+    }
+    .mov-item {
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      background: #fff;
+      font-size: .8rem;
+    }
+    .mov-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    .mov-tipo {
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .mov-tipo.Salida     { background: #FADBD8; color: #C0392B; }
+    .mov-tipo.Devolucion { background: #D5F5E3; color: #1E8449; }
+    .mov-tipo.Consumo    { background: #EBF5FB; color: #1A5276; }
+    .mov-cod { font-family: monospace; font-size: .72rem; color: var(--texto-sub); }
+    .mov-desc { font-weight: 600; }
+    .mov-meta { font-size: .7rem; color: var(--texto-sub); margin-top: 2px; }
+
+    /* ── Import button ── */
+    .btn-importar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: calc(100% - 24px);
+      margin: 8px 12px 0;
+      padding: 11px;
+      background: var(--azul);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-importar:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--texto-sub);
+    }
+    .empty-state .icono { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-state h3 { margin: 0 0 6px; color: var(--texto); font-size: 1rem; }
+    .empty-state p { font-size: .82rem; line-height: 1.5; margin: 0; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1>Inventario</h1>
+    <p>Stock bodega y camión en tiempo real</p>
+  </div>
+  <a href="index.html" style="margin-left:auto;font-size:.75rem;color:var(--azul);text-decoration:none;font-weight:600;">← Inicio</a>
+</div>
+
+<!-- Stats -->
+<div class="stats-row" id="stats-row">
+  <div class="stat-card total"><div class="num" id="st-total">—</div><div class="lbl">Total ítems</div></div>
+  <div class="stat-card verde"><div class="num" id="st-ok">—</div><div class="lbl">En stock</div></div>
+  <div class="stat-card amarillo"><div class="num" id="st-bajo">—</div><div class="lbl">Stock bajo</div></div>
+  <div class="stat-card rojo"><div class="num" id="st-cero">—</div><div class="lbl">Sin stock</div></div>
+</div>
+
+<!-- Import button (oculto si ya hay datos) -->
+<button class="btn-importar" id="btn-importar" onclick="importarDesdeExcel()">
+  ☁️ Importar stock inicial desde Excel Maestro
+</button>
+
+<!-- Toolbar -->
+<div class="inv-toolbar">
+  <input type="text" id="buscador" placeholder="Buscar por código, nombre o categoría..." oninput="filtrar()">
+  <div class="filtros-row" id="filtros-ubicacion">
+    <button class="filtro-btn activo" onclick="setUbicacion(null, this)">Todos</button>
+    <button class="filtro-btn" onclick="setUbicacion('BODEGA', this)">Bodega</button>
+    <button class="filtro-btn" onclick="setUbicacion('CAMIÓN', this)">Camión</button>
+  </div>
+  <div class="filtros-row" id="filtros-semaforo">
+    <button class="filtro-btn activo" onclick="setSemaforo(null, this)">Todo</button>
+    <button class="filtro-btn" onclick="setSemaforo('verde', this)">En stock</button>
+    <button class="filtro-btn" onclick="setSemaforo('amarillo', this)">Stock bajo</button>
+    <button class="filtro-btn" onclick="setSemaforo('rojo', this)">Sin stock</button>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="inv-tabs">
+  <div class="inv-tab activo" onclick="setTab('stock', this)">Stock (645)</div>
+  <div class="inv-tab" onclick="setTab('movimientos', this)">Movimientos</div>
+</div>
+
+<!-- Panel stock -->
+<div class="inv-panel activo" id="panel-stock">
+  <div class="inv-lista" id="lista-items">
+    <div class="empty-state">
+      <div class="icono">📦</div>
+      <h3>Cargando inventario...</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Panel movimientos -->
+<div class="inv-panel" id="panel-movimientos">
+  <div class="mov-lista" id="lista-movimientos">
+    <div class="empty-state">
+      <div class="icono">📋</div>
+      <h3>Cargando movimientos...</h3>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay"><div class="spinner"></div><p>Cargando...</p></div>
+
+<script src="config.js"></script>
+<script src="inventario_inicial.js"></script>
+<script src="utils.js"></script>
+<script>
+
+let _todosItems   = [];   // datos en memoria (GAS o fallback local)
+let _movimientos  = [];
+let _filtroUbic   = null;
+let _filtroSemaf  = null;
+let _gasConDatos  = false;
+
+// ── Semáforo ─────────────────────────────────────────────────────────
+function semaforo(it) {
+  const e = Number(it['Existencia'] ?? it.existencia ?? 0);
+  const m = Number(it['Stock Mín']  ?? it.stock_min   ?? 0);
+  if (e <= 0)        return 'rojo';
+  if (m > 0 && e < m) return 'amarillo';
+  return 'verde';
+}
+
+// ── Stats ────────────────────────────────────────────────────────────
+function actualizarStats(items) {
+  const total     = items.length;
+  const verdes    = items.filter(it => semaforo(it) === 'verde').length;
+  const amarillos = items.filter(it => semaforo(it) === 'amarillo').length;
+  const rojos     = items.filter(it => semaforo(it) === 'rojo').length;
+
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-ok').textContent    = verdes;
+  document.getElementById('st-bajo').textContent  = amarillos;
+  document.getElementById('st-cero').textContent  = rojos;
+
+  // Actualizar tab label
+  document.querySelector('.inv-tab').textContent = `Stock (${total})`;
+}
+
+// ── Render items ─────────────────────────────────────────────────────
+function renderItems(items) {
+  const lista = document.getElementById('lista-items');
+  if (!items.length) {
+    lista.innerHTML = '<div class="empty-state"><div class="icono">🔍</div><h3>Sin resultados</h3><p>Probá con otro filtro.</p></div>';
+    return;
+  }
+
+  lista.innerHTML = items.map(it => {
+    const s = semaforo(it);
+    const existencia = Number(it['Existencia'] ?? it.existencia ?? 0);
+    const ubicacion  = it['Ubicación'] || it.ubicacion || '';
+    const codigo     = it['Código']    || it.codigo    || '';
+    const nombre     = it['Descripción'] || it.descripcion || '';
+    const cat        = it['Categoría'] || it.categoria || '';
+    return `
+    <div class="inv-item">
+      <div class="semaforo ${s}"></div>
+      <div class="inv-item-info">
+        <div class="inv-item-codigo">${codigo}</div>
+        <div class="inv-item-nombre" title="${nombre}">${nombre}</div>
+        <div class="inv-item-cat">${cat}</div>
+      </div>
+      <div class="inv-item-stock">
+        <div class="qty ${s}">${existencia}</div>
+        <div class="ubi">${ubicacion}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Filtrar ────────────────────────────────────────────────────────
+function filtrar() {
+  const q = document.getElementById('buscador').value.toLowerCase().trim();
+  let res = _todosItems;
+
+  if (_filtroUbic)  res = res.filter(it => (it['Ubicación'] || it.ubicacion) === _filtroUbic);
+  if (_filtroSemaf) res = res.filter(it => semaforo(it) === _filtroSemaf);
+  if (q) res = res.filter(it => {
+    const cod  = (it['Código']      || it.codigo      || '').toLowerCase();
+    const nom  = (it['Descripción'] || it.descripcion || '').toLowerCase();
+    const cat  = (it['Categoría']   || it.categoria   || '').toLowerCase();
+    return cod.includes(q) || nom.includes(q) || cat.includes(q);
+  });
+
+  renderItems(res);
+}
+
+function setUbicacion(ubic, btn) {
+  _filtroUbic = ubic;
+  document.querySelectorAll('#filtros-ubicacion .filtro-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  filtrar();
+}
+
+function setSemaforo(s, btn) {
+  _filtroSemaf = s;
+  document.querySelectorAll('#filtros-semaforo .filtro-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  filtrar();
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────
+function setTab(nombre, btn) {
+  document.querySelectorAll('.inv-tab').forEach(b => b.classList.remove('activo'));
+  document.querySelectorAll('.inv-panel').forEach(p => p.classList.remove('activo'));
+  btn.classList.add('activo');
+  document.getElementById('panel-' + nombre).classList.add('activo');
+  if (nombre === 'movimientos' && !_movimientos.length) cargarMovimientos();
+}
+
+// ── Render movimientos ───────────────────────────────────────────────
+function renderMovimientos(movs) {
+  const lista = document.getElementById('lista-movimientos');
+  if (!movs.length) {
+    lista.innerHTML = '<div class="empty-state"><div class="icono">📋</div><h3>Sin movimientos</h3><p>Los movimientos aparecen aquí a medida que se envían formularios.</p></div>';
+    return;
+  }
+  lista.innerHTML = movs.map(m => {
+    const tipo   = m['Tipo']        || m.tipo       || '';
+    const cod    = m['Código']      || m.codigo     || '';
+    const desc   = m['Descripción'] || m.descripcion || '';
+    const qty    = m['Cantidad']    || m.cantidad   || 0;
+    const sAnt   = m['Stock Ant.']  ?? '—';
+    const sNuevo = m['Stock Nuevo'] ?? '—';
+    const ot     = m['OT']         || m.ot         || '—';
+    const tec    = m['Técnico']    || m.tecnico    || '';
+    const ts     = m['Timestamp']  || m.timestamp  || '';
+    const tipoKey = tipo === 'Devolución' ? 'Devolucion' : tipo;
+    return `
+    <div class="mov-item">
+      <div class="mov-item-header">
+        <div>
+          <span class="mov-cod">${cod}</span>
+          <span class="mov-desc"> ${desc}</span>
+        </div>
+        <span class="mov-tipo ${tipoKey}">${tipo}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:700;font-size:.88rem;">Cant: ${qty}</span>
+        ${sAnt !== '—' ? `<span style="font-size:.75rem;color:var(--texto-sub);">${sAnt} → ${sNuevo}</span>` : ''}
+      </div>
+      <div class="mov-meta">${ot} · ${tec} · ${ts}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Cargar movimientos desde GAS ─────────────────────────────────────
+async function cargarMovimientos() {
+  const lista = document.getElementById('lista-movimientos');
+  lista.innerHTML = '<div class="empty-state"><div class="icono">⏳</div><h3>Cargando...</h3></div>';
+  try {
+    const resp = await fetch(CONFIG.GAS_URL + '?action=movimientos&limit=300', { cache: 'no-store' });
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      _movimientos = json.data || [];
+      renderMovimientos(_movimientos);
+    } else {
+      throw new Error(json.message);
+    }
+  } catch(e) {
+    lista.innerHTML = '<div class="empty-state"><div class="icono">⚠️</div><h3>Error</h3><p>' + e.message + '</p></div>';
+  }
+}
+
+// ── Importar desde Excel Maestro (solo si la hoja está vacía) ────────
+async function importarDesdeExcel() {
+  const confirmado = confirm(
+    '¿Importar los ' + INVENTARIO_INICIAL.length + ' ítems del Excel Maestro a Google Sheets?\n\n' +
+    'Esto sobrescribirá el stock actual con los datos del Excel original.'
+  );
+  if (!confirmado) return;
+
+  showLoading('Importando ' + INVENTARIO_INICIAL.length + ' ítems a Google Sheets...');
+
+  try {
+    const resp = await enviarAGAS({ form: 'INVENTARIO_IMPORTAR', items: INVENTARIO_INICIAL });
+    hideLoading();
+    showToast(`✓ Importados: ${resp.data.insertados} nuevos, ${resp.data.actualizados} actualizados`, 'ok', 5000);
+    _gasConDatos = true;
+    document.getElementById('btn-importar').style.display = 'none';
+    // Recargar desde GAS
+    await cargarInventarioDesdeGAS();
+  } catch(e) {
+    hideLoading();
+    showToast('Error al importar: ' + e.message, 'error', 6000);
+  }
+}
+
+// ── Cargar inventario desde GAS ──────────────────────────────────────
+async function cargarInventarioDesdeGAS() {
+  try {
+    const resp = await fetch(CONFIG.GAS_URL + '?action=inventario', { cache: 'no-store' });
+    const json = await resp.json();
+    if (json.status === 'ok' && Array.isArray(json.data) && json.data.length) {
+      _todosItems  = json.data;
+      _gasConDatos = true;
+      document.getElementById('btn-importar').style.display = 'none';
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// ── Init ─────────────────────────────────────────────────────────────
+async function init() {
+  // Intentar cargar desde GAS
+  const gasOk = navigator.onLine ? await cargarInventarioDesdeGAS() : false;
+
+  if (!gasOk) {
+    // Fallback al JS local
+    _todosItems = INVENTARIO_INICIAL;
+    // Mostrar botón de importar si hay GAS URL
+    if (!CONFIG.GAS_URL.includes('TU_SCRIPT_ID')) {
+      document.getElementById('btn-importar').style.display = 'flex';
+    }
+    if (!navigator.onLine) {
+      showToast('Sin conexión — mostrando datos del Excel', 'warn');
+    } else {
+      showToast('Mostrando datos locales. Importá a GAS para sincronización en tiempo real.', 'warn', 5000);
+    }
+  }
+
+  actualizarStats(_todosItems);
+  filtrar();
+}
+
+init();
+
+</script>
+</body>
+</html>
