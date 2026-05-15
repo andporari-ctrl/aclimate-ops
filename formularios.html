@@ -201,7 +201,9 @@ const CHIP_FIELDS  = new Set(['Técnico','OT','OT Origen','Cliente']);
 // Campos con lista de ítems (se muestran en bloque monoespaciado)
 const ITEMS_FIELDS = new Set(['Ítems (código|nombre|cantidad)','Ítems Utilizados','Ítems Devueltos']);
 // Campos a omitir completamente
-const SKIP_FIELDS  = new Set(['Timestamp','Fecha','Fotos','Fotos Trabajo','Foto VoBo','Foto Recibo','Firma']);
+const SKIP_FIELDS  = new Set(['Timestamp','Fecha','Firma']);
+// Campos de fotos (se muestran como links clicables)
+const PHOTO_FIELDS = new Set(['Fotos','Fotos Trabajo','Foto VoBo','Foto Recibo']);
 
 let _tipoActual = 'F01';
 
@@ -264,6 +266,19 @@ function renderCard(rec, tipo) {
     if (omitir.has(k)) return;
     const vv = (v || '').toString().trim();
     if (!vv || vv === '—') return;
+
+    if (PHOTO_FIELDS.has(k)) {
+      const urls = vv.split('\n').map(u => u.trim()).filter(u => u.startsWith('http'));
+      if (!urls.length) return;
+      const links = urls.map((u, i) =>
+        `<a href="${escHtml(u)}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;color:var(--azul);text-decoration:none;font-weight:600;font-size:.75rem;padding:3px 8px;background:#EBF5FB;border-radius:6px;margin:2px 2px 2px 0;">📷 Foto${urls.length > 1 ? ' ' + (i+1) : ''}</a>`
+      ).join('');
+      bodyHtml += `<div class="rec-field" style="align-items:center;">
+        <span class="rec-field-label">${escHtml(k)}</span>
+        <div style="flex:1;display:flex;flex-wrap:wrap;">${links}</div>
+      </div>`;
+      return;
+    }
 
     if (ITEMS_FIELDS.has(k)) {
       bodyHtml += `<div class="rec-field">
