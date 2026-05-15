@@ -1,0 +1,646 @@
+Código,Ubicación,Categoría,Descripción,Marca,Proveedor,Ubicación Camión,Stock Mín,Stock Máx,Existencia,Costo Unit (₡)
+ACL-BOD-133,BODEGA,Cintas y Sellado,"Cinta aluminio 3""",—,Ac Depot,,0.0,0.0,0.0,7400.0
+ACL-BOD-135,BODEGA,Cintas y Sellado,"Cinta de aluminio 2""",ND,Ac Depot,,0.0,4.0,2.0,4800.0
+ACL-BOD-136,BODEGA,Cintas y Sellado,Cinta de peligro roja,ND,Ferreton,,0.0,1.0,2.0,0.0
+ACL-BOD-137,BODEGA,Cintas y Sellado,"Cinta ducto 2""",—,Ferreton,,0.0,4.0,0.0,4195.0
+ACL-BOD-141,BODEGA,Cintas y Sellado,Cinta precaucion amarilla,ND,Ferreton,,0.0,1.0,1.0,0.0
+ACL-BOD-142,BODEGA,Cintas y Sellado,Cinta PVC para AC (Momia),—,—,,0.0,4.0,0.0,1200.0
+ACL-BOD-223,BODEGA,Cintas y Sellado,Espuma de poliuretano,—,—,,0.0,2.0,1.0,16995.0
+ACL-BOD-311,BODEGA,Cintas y Sellado,Sellador de fugas refrigeracion,Voltec,Leaho,,0.0,0.0,0.0,0.0
+ACL-BOD-314,BODEGA,Cintas y Sellado,Silicon BLANCO ACRILICO,GE,—,,0.0,0.0,0.0,0.0
+ACL-BOD-434,BODEGA,Cintas y Sellado,Varsol litro,—,Ferreton,,0.0,0.0,0.0,1814.0
+ACL-BOD-057,BODEGA,Consumibles,Bateria alcalina AA,—,Ferreton,,0.0,10.0,40.0,0.0
+ACL-BOD-058,BODEGA,Consumibles,Bateria alcalina AAA,ND,Ferreton,,0.0,10.0,0.0,0.0
+ACL-BOD-059,BODEGA,Consumibles,Bateria cuadrada 9v,ND,Ferreton,,0.0,2.0,0.0,0.0
+ACL-BOD-080,BODEGA,Consumibles,"Brocha 2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-211,BODEGA,Consumibles,"Disco corte metal 14""",3M,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-212,BODEGA,Consumibles,"Disco corte metal 4 1/2"" X1,2mm ingco",INGCO,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-263,BODEGA,Consumibles,Jabon liquido manos  Nit intensaclean,Sur,Ferreton,,0.0,0.0,0.0,6536.0
+ACL-BOD-268,BODEGA,Consumibles,Lampara led hermetica Sylvania 40W,Sylvania,—,,0.0,0.0,0.0,0.0
+ACL-BOD-269,BODEGA,Consumibles,Lampara solar GBP-0160,GreenPal,—,,0.0,0.0,0.0,0.0
+ACL-BOD-270,BODEGA,Consumibles,Lampara solar GBP-0260,GreenPal,—,,0.0,0.0,0.0,0.0
+ACL-BOD-271,BODEGA,Consumibles,Lampara solar GPW-01,GreenPal,—,,0.0,0.0,0.0,0.0
+ACL-BOD-272,BODEGA,Consumibles,Lampara solar GPW-02,GreenPal,—,,0.0,0.0,0.0,0.0
+ACL-BOD-275,BODEGA,Consumibles,Limpiador de serpentin,—,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-276,BODEGA,Consumibles,Limpiador de tuberia AC Flush 1 litro,ND,Ac Depot,,0.0,2.0,3.0,0.0
+ACL-BOD-293,BODEGA,Consumibles,Paños microfibra 12 paño de 40X40cm,—,El Lagar,,0.0,0.0,0.0,0.0
+ACL-BOD-065,BODEGA,EPP y Seguridad,Bloqueo cangrejo multiple,Brady,—,,0.0,0.0,0.0,0.0
+ACL-BOD-066,BODEGA,EPP y Seguridad,Bloqueo de tablero principal,Brady,—,,0.0,0.0,0.0,0.0
+ACL-BOD-122,BODEGA,EPP y Seguridad,Candado Loto,Brady,—,,0.0,0.0,0.0,0.0
+ACL-BOD-131,BODEGA,EPP y Seguridad,Casco con careta dielectrico,ERB,—,,0.0,0.0,0.0,0.0
+ACL-BOD-227,BODEGA,EPP y Seguridad,Etiqueta LoTo,Brady,—,,0.0,0.0,0.0,0.0
+ACL-BOD-242,BODEGA,EPP y Seguridad,Filtro media cara para particulas,—,El Lagar,,0.0,0.0,0.0,0.0
+ACL-BOD-258,BODEGA,EPP y Seguridad,Guante antideslizante del tela,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-259,BODEGA,EPP y Seguridad,Guante cuero,Guard,El Lagar,,0.0,0.0,0.0,0.0
+ACL-BOD-260,BODEGA,EPP y Seguridad,Guantes desechables nitrilo L 6080HR,ND,Prosisa,,0.0,0.0,0.0,2203.0
+ACL-BOD-261,BODEGA,EPP y Seguridad,Guantes dielectricos talla 10,Enespro,—,,0.0,0.0,0.0,0.0
+ACL-BOD-338,BODEGA,EPP y Seguridad,Tapones para oido desechables,ND,Esosa,,0.0,0.0,0.0,0.0
+ACL-BOD-046,BODEGA,Eléctrico,Apagador plastico parche luz piloto,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-050,BODEGA,Eléctrico,Aro de repello doble para caja cuadrada EMT,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-051,BODEGA,Eléctrico,Aro de repello sencillo para caja cuadrada EMT,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-063,BODEGA,Eléctrico,Bloque de terminal in line,HONEYWELL,—,,0.0,0.0,0.0,0.0
+ACL-BOD-064,BODEGA,Eléctrico,Bloque de terminal in line,HONEYWELL,—,,0.0,0.0,0.0,0.0
+ACL-BOD-072,BODEGA,Eléctrico,Breaker CH 2x20 CHF220,Cuttler Hammer,Grupo Diez,,0.0,5.0,7.0,13995.0
+ACL-BOD-073,BODEGA,Eléctrico,Breaker Eaton 2x125,Eaton,—,,0.0,0.0,2.0,0.0
+ACL-BOD-074,BODEGA,Eléctrico,Breaker Eaton 3x90 Tornillo,—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-075,BODEGA,Eléctrico,Breaker GE 2x20,General Electric,—,,0.0,0.0,2.0,0.0
+ACL-BOD-076,BODEGA,Eléctrico,Breaker GE 2x30,General Electric,—,,0.0,0.0,2.0,0.0
+ACL-BOD-077,BODEGA,Eléctrico,Breaker SD 1x20  SD QO 220,Square D,Grupo Diez,,0.0,0.0,3.0,0.0
+ACL-BOD-078,BODEGA,Eléctrico,Breaker SD 2x20  SD QO 220,Square D,Grupo Diez,,0.0,5.0,10.0,13895.0
+ACL-BOD-079,BODEGA,Eléctrico,Breaker SD 2x50 Tornillo,Square D,Grupo Diez,,0.0,0.0,1.0,0.0
+ACL-BOD-081,BODEGA,Eléctrico,Cable blindado 2 hilos 16AWG,—,Elvatron,,0.0,0.0,0.0,1000.0
+ACL-BOD-082,BODEGA,Eléctrico,Cable TGP 3x12,ND,Grupo Diez,,0.0,0.0,0.0,1214.0
+ACL-BOD-083,BODEGA,Eléctrico,Cable TGP 4x14,—,Grupo Diez,,0.0,0.0,0.0,1137.0
+ACL-BOD-084,BODEGA,Eléctrico,Cable THHN 10AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,462.0
+ACL-BOD-085,BODEGA,Eléctrico,Cable THHN 12AWG Blanco (caja),ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-086,BODEGA,Eléctrico,Cable THHN 12AWG Negro (caja),ND,Grupo Diez,,0.0,2.0,2.0,0.0
+ACL-BOD-087,BODEGA,Eléctrico,Cable THHN 12AWG Rojo (caja),ND,Grupo Diez,,0.0,2.0,2.0,189.0
+ACL-BOD-088,BODEGA,Eléctrico,Cable THHN 12AWG Verde (caja),ND,Grupo Diez,,0.0,2.0,1.0,0.0
+ACL-BOD-089,BODEGA,Eléctrico,Cable THHN 2AWG Blanco,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-090,BODEGA,Eléctrico,Cable THHN 2AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-091,BODEGA,Eléctrico,Cable THHN 4AWG Azul,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-092,BODEGA,Eléctrico,Cable THHN 4AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-093,BODEGA,Eléctrico,Cable THHN 4AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-094,BODEGA,Eléctrico,Cable THHN 6AWG,ND,Grupo Diez,,0.0,0.0,0.0,1595.0
+ACL-BOD-095,BODEGA,Eléctrico,Cable THHN 6AWG Verde,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-096,BODEGA,Eléctrico,Cable THHN 8AWG azul,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-097,BODEGA,Eléctrico,Cable THHN 8AWG azul,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-098,BODEGA,Eléctrico,Cable THHN 8AWG azul,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-099,BODEGA,Eléctrico,Cable THHN 8AWG Blanco,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-100,BODEGA,Eléctrico,Cable THHN 8AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-101,BODEGA,Eléctrico,Cable THHN 8AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-102,BODEGA,Eléctrico,Cable THHN 8AWG Rojo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-103,BODEGA,Eléctrico,Cable triple THHN 8 AWG,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-104,BODEGA,Eléctrico,Cable TSJ 2x16,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-105,BODEGA,Eléctrico,Cable TSJ 2x16,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-106,BODEGA,Eléctrico,Caja cuadrada EMT 1/2-3/4,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-107,BODEGA,Eléctrico,Caja EMT Doblefondo 1/2-3/4,Topaz,Grupo Diez,,0.0,0.0,0.0,550.0
+ACL-BOD-111,BODEGA,Eléctrico,Caja octagonal 1/2-3/4,ToUni,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-112,BODEGA,Eléctrico,"Caja octagonal conduit 1/2-3/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-114,BODEGA,Eléctrico,Caja rectangular canaleta,Legrand,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-120,BODEGA,Eléctrico,Canaleta plastica 100x45 blanca,ND,Beirute,,0.0,0.0,0.0,0.0
+ACL-BOD-128,BODEGA,Eléctrico,Carrucha cable para incendio 2x18AWG,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-129,BODEGA,Eléctrico,Carrucha cable para incendio 2x18AWG,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-177,BODEGA,Eléctrico,"Conector conduit 1 1/2"" SCH40",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-178,BODEGA,Eléctrico,"Conector conduit 1 1/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-179,BODEGA,Eléctrico,"Conector conduit 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,210.0
+ACL-BOD-180,BODEGA,Eléctrico,"Conector conduit 2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-182,BODEGA,Eléctrico,"Conector EMT 1 1/2"" Compresion",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-183,BODEGA,Eléctrico,"Conector EMT 1 1/4"" Compresion",—,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-184,BODEGA,Eléctrico,"Conector EMT 1/2"" compresion",ND,Grupo Diez,,0.0,0.0,0.0,118.0
+ACL-BOD-185,BODEGA,Eléctrico,"Conector EMT 3/4"" compresion",ND,Grupo Diez,,0.0,0.0,0.0,295.0
+ACL-BOD-186,BODEGA,Eléctrico,"Conector EMT cable armado 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-187,BODEGA,Eléctrico,"Conector EMT compresion 1""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-188,BODEGA,Eléctrico,"Conector EMT compresion 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-189,BODEGA,Eléctrico,"Conector EMT compresion 3/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-201,BODEGA,Eléctrico,"Curva conduit 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,720.0
+ACL-BOD-202,BODEGA,Eléctrico,"Curva conduit tipo A 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,720.0
+ACL-BOD-203,BODEGA,Eléctrico,"Curva EMT 1 1/2""",Topaz,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-204,BODEGA,Eléctrico,"Curva EMT 1 1/4""",Topaz,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-205,BODEGA,Eléctrico,"Curva EMT 1""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-206,BODEGA,Eléctrico,"Curva EMT 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-207,BODEGA,Eléctrico,"Curva EMT 2 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-208,BODEGA,Eléctrico,"Curva EMT 3/4""",—,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-224,BODEGA,Eléctrico,Esquinero escuadra EMT 1 ojo,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-225,BODEGA,Eléctrico,Esquinero escuadra EMT 2 ojo,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-228,BODEGA,Eléctrico,Etiquetas para cable,Panduit,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-246,BODEGA,Eléctrico,"Gasa EMT 1""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-250,BODEGA,Eléctrico,"Gaza EMT 1 1/2"" 1 ojo",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-251,BODEGA,Eléctrico,"Gaza EMT 1 ojo 1 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-252,BODEGA,Eléctrico,"Gaza EMT 1 ojo 1 1/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-253,BODEGA,Eléctrico,"GAZA EMT 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-254,BODEGA,Eléctrico,"Gaza EMT 3/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-255,BODEGA,Eléctrico,"Gaza rigida EMT 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-264,BODEGA,Eléctrico,Juego terminales desnudas,Foliv,—,,0.0,0.0,0.0,0.0
+ACL-BOD-265,BODEGA,Eléctrico,"Kit de terminales de ojo cerrado cobre 6,4 y 2 AWG",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-280,BODEGA,Eléctrico,Lubricante para cable Gardner,Gerdner,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-283,BODEGA,Eléctrico,Marcador de cable del 0 al 9 Amarillo,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-294,BODEGA,Eléctrico,Pata siega cuadrada EMT,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-301,BODEGA,Eléctrico,"Prensa EMT 1 1/4"" doble ojo",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-309,BODEGA,Eléctrico,Rubber tape 130C 3M,3M,Ferreton,,0.0,0.0,0.0,17676.0
+ACL-BOD-321,BODEGA,Eléctrico,Tapa conduit redonda,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-322,BODEGA,Eléctrico,Tapa de canaleta 100x45 blanca,ND,Beirute,,0.0,0.0,0.0,0.0
+ACL-BOD-323,BODEGA,Eléctrico,Tapa final de canaleta,ND,Beirute,,0.0,0.0,0.0,0.0
+ACL-BOD-326,BODEGA,Eléctrico,Tapa plastica para tomacorriente doble,Aguila,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-332,BODEGA,Eléctrico,Tape super 33+,3M,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-347,BODEGA,Eléctrico,Terminal doblo ojo desnoda KIT PIESA,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-348,BODEGA,Eléctrico,Terminal orquilla aislada amarilla (caja),—,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-349,BODEGA,Eléctrico,Terminal orquilla aislada azul 14-16 awg (caja),ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-350,BODEGA,Eléctrico,Terminal plana hembra amarilla,3M,—,,0.0,0.0,0.0,0.0
+ACL-BOD-351,BODEGA,Eléctrico,Terminal plana hembra azul,3M,—,,0.0,0.0,0.0,0.0
+ACL-BOD-352,BODEGA,Eléctrico,Terminal plana macho amarilla,3M,—,,0.0,0.0,0.0,0.0
+ACL-BOD-353,BODEGA,Eléctrico,Terminal plana macho azul,3M,—,,0.0,0.0,0.0,0.0
+ACL-BOD-354,BODEGA,Eléctrico,Terminales de Punta Azul (caja),3M,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-355,BODEGA,Eléctrico,Tomacorriente 50a para clabija de 3,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-356,BODEGA,Eléctrico,Tomacorriente doble para empotrar AguIla 270,Aguila,—,,0.0,0.0,0.0,0.0
+ACL-BOD-357,BODEGA,Eléctrico,Tomacorriente plastico parche,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-379,BODEGA,Eléctrico,Tubo conduit 1 1/2 SCH40,Kraloy,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-380,BODEGA,Eléctrico,Tubo conduit 1 1/2 Tipo A,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-381,BODEGA,Eléctrico,Tubo conduit 1 SCH40,Conducen,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-382,BODEGA,Eléctrico,Tubo conduit 3/4 SCH40,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-383,BODEGA,Eléctrico,"Tubo conduit SCH40 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,1879.0
+ACL-BOD-384,BODEGA,Eléctrico,"Tubo conduit tipo A 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,1435.0
+ACL-BOD-389,BODEGA,Eléctrico,"Tubo EMT 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,2410.0
+ACL-BOD-390,BODEGA,Eléctrico,"Tubo EMT 2 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-391,BODEGA,Eléctrico,"Tubo EMT 3/4""",ND,Grupo Diez,,0.0,0.0,0.0,4995.0
+ACL-BOD-397,BODEGA,Eléctrico,"Union compresion EMT 1 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-398,BODEGA,Eléctrico,"Union compresion EMT 2 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-399,BODEGA,Eléctrico,"Union conduit  1/2"" tipo A",ND,Grupo Diez,,0.0,0.0,0.0,200.0
+ACL-BOD-400,BODEGA,Eléctrico,"Union conduit 1 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-401,BODEGA,Eléctrico,"Union conduit 1 1/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-402,BODEGA,Eléctrico,"Union Conduit 1/2"" SCH40",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-403,BODEGA,Eléctrico,"Union Conduit 1/2"" SCH40",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-404,BODEGA,Eléctrico,Union conduit 3/4 SCH40,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-405,BODEGA,Eléctrico,"Union Conduit 3/4"" SCH40",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-406,BODEGA,Eléctrico,"Union conduit SCH40 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-409,BODEGA,Eléctrico,"Union de compresion EMT 2 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-412,BODEGA,Eléctrico,"Union EMT compresion  3/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-413,BODEGA,Eléctrico,"Union EMT compresion 1 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-414,BODEGA,Eléctrico,"Union EMT compresion 1 1/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-415,BODEGA,Eléctrico,"Union EMT Compresion 1""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-416,BODEGA,Eléctrico,"Union EMT Compresion 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-417,BODEGA,Eléctrico,"Union EMT compresion 3/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-440,BODEGA,Eléctrico,"Conector conduit 3/4"" SCH40",—,Grupo diez,,0.0,30.0,0.0,0.0
+ACL-BOD-001,BODEGA,Equipos AC,AC 12KBTU/HR E Cold Convensional R410,E Cold,Extralum,,0.0,0.0,0.0,0.0
+ACL-BOD-002,BODEGA,Equipos AC,AC 12KBTU/HR E Cold Inverter SEER21 R410,E Cold,Extralum,,0.0,0.0,0.0,261820.0
+ACL-BOD-003,BODEGA,Equipos AC,AC 12KBTU/HR E Cold SEER17 R32,E Cold,Extralum,,0.0,0.0,0.0,154621.0
+ACL-BOD-004,BODEGA,Equipos AC,AC 12KBTU/HR E Cold SEER21 R32,—,—,,0.0,0.0,0.0,177570.0
+ACL-BOD-005,BODEGA,Equipos AC,AC 12KBTU/HR G Air Convensional R410,G Air,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-006,BODEGA,Equipos AC,AC 12KBTU/HR G Air Inverter R410,G Air,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-007,BODEGA,Equipos AC,AC 18KBTU/HR E Cold Convensional R410,E Cold,Extralum,,0.0,0.0,0.0,0.0
+ACL-BOD-008,BODEGA,Equipos AC,AC 18KBTU/HR E Cold Inverter SEER21 R410,E Cold,Extralum,,0.0,0.0,0.0,237725.0
+ACL-BOD-009,BODEGA,Equipos AC,AC 18KBTU/HR E Cold SEER17 R32,E Cold,Extralum,,0.0,0.0,0.0,224253.0
+ACL-BOD-010,BODEGA,Equipos AC,AC 18KBTU/HR E Cold SEER21 R32,E Cold,Extralum,,0.0,0.0,0.0,246409.0
+ACL-BOD-011,BODEGA,Equipos AC,AC 18KBTU/HR G Air Convensional R410,G Air,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-012,BODEGA,Equipos AC,AC 18KBTU/HR G Air Inverter R410,G Air,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-013,BODEGA,Equipos AC,AC 24KBTU/HR E Cold Convensional R410,E Cold,Extralum,,0.0,0.0,0.0,0.0
+ACL-BOD-014,BODEGA,Equipos AC,AC 24KBTU/HR E Cold Inverter SEER20 R410,E Cold,Extralum,,0.0,0.0,0.0,300851.0
+ACL-BOD-015,BODEGA,Equipos AC,AC 24KBTU/HR E Cold SEER17 R32,E Cold,Extralum,,0.0,0.0,0.0,298408.0
+ACL-BOD-016,BODEGA,Equipos AC,AC 24KBTU/HR E Cold SEER20 R32,E Cold,Extralum,,0.0,0.0,0.0,322334.0
+ACL-BOD-017,BODEGA,Equipos AC,AC 24KBTU/HR G Air Convensional R410,G Air,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-018,BODEGA,Equipos AC,AC 24KBTU/HR G Air Inverter R410,G Air,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-019,BODEGA,Equipos AC,AC 36KBTU/HR E Cold Inverter SEER18 R410,E Cold,Extralum,,0.0,0.0,0.0,600625.0
+ACL-BOD-020,BODEGA,Equipos AC,AC 36KBTU/HR G Air Inverter R410,G Air,AC Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-021,BODEGA,Equipos AC,AC 60KBTU/HR Ecold Piso Cielo,E Cold,Extralum,,0.0,0.0,0.0,0.0
+ACL-BOD-022,BODEGA,Equipos AC,AC Cassette 60KBTU Inverter Ecold,E Cold,Extralum,,0.0,0.0,0.0,201176.0
+ACL-BOD-023,BODEGA,Equipos AC,AC Central (Manejadora) 60KBTU Inverter E Cold,E Cold,Extralum,,0.0,0.0,0.0,229700.0
+ACL-BOD-054,BODEGA,Equipos AC,Base condensador 36+,—,Grupo Diez,,0.0,2.0,3.0,0.0
+ACL-BOD-055,BODEGA,Equipos AC,Base condensador mini Split (24),ND,Ac Depot,,0.0,5.0,12.0,6240.0
+ACL-BOD-156,BODEGA,Equipos AC,Condensador AC 36BTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,599820.0
+ACL-BOD-157,BODEGA,Equipos AC,Condensador AC 60BTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,715545.0
+ACL-BOD-158,BODEGA,Equipos AC,Condensador multispli 48KBTU SEER 22.4,E Cold,Extralum,,0.0,0.0,0.0,936450.0
+ACL-BOD-229,BODEGA,Equipos AC,Evaporador Cassette 60KBTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,208576.0
+ACL-BOD-230,BODEGA,Equipos AC,Evaporador multisplit 12KBTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,101720.0
+ACL-BOD-231,BODEGA,Equipos AC,Evaporador multisplit 18KBTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,131100.0
+ACL-BOD-232,BODEGA,Equipos AC,Evaporador multisplit 24KBTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,0.0
+ACL-BOD-233,BODEGA,Equipos AC,Evaporador piso cielo 36KBTU Inverter,E Cold,Extralum,,0.0,0.0,0.0,200610.0
+ACL-BOD-234,BODEGA,Equipos AC,Evaporador piso cielo 60KBTU,E Cold,Extralum,,0.0,0.0,0.0,195705.0
+ACL-BOD-037,BODEGA,Fijación,"Amarra plastica 12""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-038,BODEGA,Fijación,"Amarra plastica 12"" (pqt 50)",Voltec,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-039,BODEGA,Fijación,"Amarra plastica 16""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-040,BODEGA,Fijación,"Amarra plastica 16"" (pqt 50)",Voltec,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-041,BODEGA,Fijación,"Amarra plastica 21""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-042,BODEGA,Fijación,"Amarra plastica 8""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-043,BODEGA,Fijación,"Amarra plastica 8"" (pqt 50)",Voltec,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-045,BODEGA,Fijación,Antisismico 1 ojo,ND,Tecnofijacion,,0.0,0.0,0.0,0.0
+ACL-BOD-047,BODEGA,Fijación,"Arandela plana 3/8""",ND,Ferreton,,0.0,0.0,0.0,60.0
+ACL-BOD-048,BODEGA,Fijación,"Arandela plana 3/8""",—,Ferreton,,0.0,0.0,0.0,60.0
+ACL-BOD-049,BODEGA,Fijación,Arandela plana Cuadrada 3/8,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-143,BODEGA,Fijación,"Clavo 2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-235,BODEGA,Fijación,Expander cuña 3/8 concreto,—,—,,0.0,50.0,62.0,0.0
+ACL-BOD-236,BODEGA,Fijación,Expander mariposa plastico MN10,Fischer,Ferreton,,0.0,0.0,170.0,0.0
+ACL-BOD-237,BODEGA,Fijación,Expander metalico Barill 3/8,ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-238,BODEGA,Fijación,"Expander plastico #10x50""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-239,BODEGA,Fijación,Expander plastico #8 Plastilang (pqt 15),ND,El Lagar,,0.0,0.0,0.0,0.0
+ACL-BOD-266,BODEGA,Fijación,L acero 2 ojo para riel Unistrud,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-307,BODEGA,Fijación,Riel B Line perfi alto HG,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-308,BODEGA,Fijación,Riel unicanal Unistrud perfil bajo 3/16X5/8,—,Ferreton,,0.0,0.0,0.0,5504.0
+ACL-BOD-318,BODEGA,Fijación,Spring Nut (compresor de resorte),ND,Tecnofijacion,,0.0,0.0,0.0,0.0
+ACL-BOD-339,BODEGA,Fijación,Tee acero 4 ojo Riel Unistru,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-358,BODEGA,Fijación,"Tornillo 3/8 cabeza octagonal 2""",ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-359,BODEGA,Fijación,"Tornillo anclaje para transformador (para pluma) 1/2x3""",ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-360,BODEGA,Fijación,"Tornillo autorroscante #10x1"" (pqt 25)",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-361,BODEGA,Fijación,"Tornillo autorroscante #10x1/2""  (pqt 25)",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-362,BODEGA,Fijación,"Tornillo autorroscante #8x1""   (pqt 25)",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-363,BODEGA,Fijación,"Tornillo autorroscante #8x1/2""  (pqt 50)",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-364,BODEGA,Fijación,"Tornillo estufa #8 x 1 1/2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-365,BODEGA,Fijación,"Tornillo para techo 1 1/2"" PB (pqt 100)",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-366,BODEGA,Fijación,"tornillo para techo 1"" PB",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-367,BODEGA,Fijación,"Tornillo para techo 2"" PF",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-368,BODEGA,Fijación,"Tornillo para techo 3"" PB",ND,Ferreton,,0.0,100.0,130.0,0.0
+ACL-BOD-369,BODEGA,Fijación,"tornillo para techo 3"" PB",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-370,BODEGA,Fijación,"Tornillo Torlak 1"" PB (pqt 100)",ND,Ferreton,,0.0,4.0,2.0,0.0
+ACL-BOD-371,BODEGA,Fijación,"Tornillo Torlak 1/2"" PB  (pqt 100)",ND,Ferreton,,0.0,4.0,1.0,0.0
+ACL-BOD-372,BODEGA,Fijación,"Tornillo Torlak PB 3/4"" (pqt 100)",ND,Ferreton,,0.0,4.0,0.0,0.0
+ACL-BOD-373,BODEGA,Fijación,"Tornillo vertigo 3/8"" punta fina",ND,Ferreton,,0.0,0.0,0.0,1100.0
+ACL-BOD-394,BODEGA,Fijación,Tuerca 3/8 HG exagonal,ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-395,BODEGA,Fijación,Tuerca 3/8 HG exagonal,ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-396,BODEGA,Fijación,"Tuerca exagonal HG 3/8""",—,Ferreton,,0.0,0.0,0.0,60.0
+ACL-BOD-421,BODEGA,Fijación,Union para canasta aluminio C/ tornillo,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-425,BODEGA,Fijación,Union tornillo sin fin 3/8,ND,Tecnofijacion,,0.0,0.0,0.0,0.0
+ACL-BOD-433,BODEGA,Fijación,Varilla roscada 3/8x3m,—,Ferreton,,0.0,0.0,0.0,3280.0
+ACL-BOD-025,BODEGA,General,"Acople rapido macho 1/4"" Neumatico",Milton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-026,BODEGA,General,"Adaptador CPVC hembra con inserto 3/4""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-027,BODEGA,General,"Adaptador hembra neumatico NPT-Rapido 1/4""",Milton,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-028,BODEGA,General,Adaptador PVC hembra con inserto 1/2,—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-029,BODEGA,General,"Adaptador PVC macho 1/2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-030,BODEGA,General,"Adaptador PVC macho 3/4""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-031,BODEGA,General,Adaptador PVC macho con inserto 1/2,—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-032,BODEGA,General,"Aislador ceramica 2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-033,BODEGA,General,Alambre HG,ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-044,BODEGA,General,"Angular 1 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-052,BODEGA,General,Aros GANG,Street city,—,,0.0,0.0,0.0,0.0
+ACL-BOD-053,BODEGA,General,Bandeja retractil para rack,Nexxt,—,,0.0,0.0,0.0,0.0
+ACL-BOD-060,BODEGA,General,Benjamin 15a sin tierra,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-061,BODEGA,General,"Biex con forro 3/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-062,BODEGA,General,"Bisagra Gijos 03   2x2 1/2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-067,BODEGA,General,"Bomba centrifuga 0,8 hp",KSB,—,,0.0,0.0,0.0,0.0
+ACL-BOD-071,BODEGA,General,Botonera antixploción,Killark,—,,0.0,0.0,0.0,0.0
+ACL-BOD-108,BODEGA,General,Caja equipo dielectrico,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-109,BODEGA,General,Caja estanca de 175x110x66,ND,Grupo Diez,,0.0,10.0,0.0,5407.0
+ACL-BOD-110,BODEGA,General,Caja FS 3/4 Cuadrada,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-113,BODEGA,General,Caja plexo 160x120x80 (ESTANCA),Aguila,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-115,BODEGA,General,"Caja rectangular Explotion proof 1/2""",Killark,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-116,BODEGA,General,"Caja rectangular Explotion proof 1/2""",Killark,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-117,BODEGA,General,Caja registro redonda explotion proof 2 salidas,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-118,BODEGA,General,Caja registro redonda explotion proof 3 salidas,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-119,BODEGA,General,"Caja uso FS pesado 3x1/2""",Rawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-121,BODEGA,General,Canatas  aluminio 40cm,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-130,BODEGA,General,"Casa de uso pesado 1/2"" x  3 huecos",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-132,BODEGA,General,Cenetor RJ11 mocho,MIYAKO,—,,0.0,0.0,0.0,0.0
+ACL-BOD-138,BODEGA,General,Cinta etiquetadora M21750499,Brady,Elvatron,,0.0,0.0,0.0,0.0
+ACL-BOD-139,BODEGA,General,"Cinta para empaque transparente 2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-140,BODEGA,General,Cinta para etiquetadora brady,Brady,Elvatron,,0.0,0.0,0.0,0.0
+ACL-BOD-144,BODEGA,General,"Codo cobre 1/2""",—,Ac Depot,,0.0,0.0,0.0,230.0
+ACL-BOD-145,BODEGA,General,"Codo cobre 1/4""",—,Ac Depot,,0.0,0.0,0.0,150.0
+ACL-BOD-146,BODEGA,General,"Codo cobre 3/4""",—,Ac Depot,,0.0,0.0,0.0,490.0
+ACL-BOD-147,BODEGA,General,"Codo cobre 3/8""",—,Ac Depot,,0.0,0.0,0.0,185.0
+ACL-BOD-148,BODEGA,General,"Codo cobre 5/8""",—,Ac Depot,,0.0,0.0,0.0,335.0
+ACL-BOD-149,BODEGA,General,"Codo cobre 7/8""",—,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-150,BODEGA,General,"Codo HG 1/2"" 90°",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-159,BODEGA,General,Conduleta C 1/2,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-160,BODEGA,General,Conduleta C 3/4,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-161,BODEGA,General,Conduleta LB 1,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-162,BODEGA,General,"Conduleta LB 1 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-163,BODEGA,General,Conduleta LB 1/2,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-164,BODEGA,General,Conduleta Lb 3/4,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-165,BODEGA,General,Conduleta LR 2 1/2,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-166,BODEGA,General,Conduleta tipo C 1 1/4,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-167,BODEGA,General,"Conduleta tipo C 1 1/4""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-168,BODEGA,General,Conduleta tipo LB 1 1/2,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-169,BODEGA,General,Conduleta tipo Ll 1 1/4,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-170,BODEGA,General,Conduleta tipo LR 1 1/4,hawelt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-171,BODEGA,General,"Conector  Biex curvo 2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-172,BODEGA,General,Conector Barrilito #2 AWG,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-173,BODEGA,General,"Conector biex 1/2"" con forro",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-174,BODEGA,General,"Conector biex C forro 1""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-175,BODEGA,General,"Conector Biex sin forro 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-176,BODEGA,General,Conector Biex sin Forro 3/4,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-181,BODEGA,General,Conector de compresion 6-2 AWG,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-190,BODEGA,General,Conector hembra RJ45,NexXt,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-191,BODEGA,General,"Conector prensastopa (manguito) Pg13,5 21mm",ND,Grupo Diez,,10.0,50.0,20.0,1017.69911504425
+ACL-BOD-192,BODEGA,General,Conector RJ45 Macho,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-193,BODEGA,General,Conector T/R+ 3m (pqt 100) Beige,3M,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-195,BODEGA,General,Cuerda carpintero,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-196,BODEGA,General,"Curva 1 1/2"" TIPO A",Amanco,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-197,BODEGA,General,"Curva 1 1/4"" SCH40",Amanco,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-198,BODEGA,General,"Curva 1"" SCH40",Amanco,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-199,BODEGA,General,"Curva 1/2"" SCH40",Kraloy,Grupo Diez,,0.0,0.0,0.0,556.0
+ACL-BOD-200,BODEGA,General,Curva 3/4 SCH40,Kraloy,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-209,BODEGA,General,Curva interna de canasta 40cm,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-213,BODEGA,General,Disco mil hojas grado 80,INGCO,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-214,BODEGA,General,"Ducto rectangular HG 4 1/4x35""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-215,BODEGA,General,"Ducto redondo HG 16""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-216,BODEGA,General,Duretan Blanco #2,Duretan,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-217,BODEGA,General,Duretn Verde,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-218,BODEGA,General,Empaque interno para tubos de Vació,—,Rilesa,,0.0,0.0,0.0,0.0
+ACL-BOD-219,BODEGA,General,Empaque para manguera de (pqt 10),—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-220,BODEGA,General,Enchufe para extension 240v de seguridad,Aguila,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-221,BODEGA,General,"Escuadra ducto 2""",Eaton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-222,BODEGA,General,"Escuadra ducto 3""",Eaton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-226,BODEGA,General,Etiqueta adhesiva riesgo electrico,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-240,BODEGA,General,Filtro conbustuble,john deere,—,,0.0,0.0,0.0,0.0
+ACL-BOD-243,BODEGA,General,"Filtro particulas pelo chancho 24"" (m)",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-244,BODEGA,General,Fitting,Milton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-247,BODEGA,General,"Gaza B line 2 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,765.0
+ACL-BOD-248,BODEGA,General,"Gaza B Linea 1/2""",ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-249,BODEGA,General,"Gaza B Linea 5/8""",Hydra Zorb,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-256,BODEGA,General,Gaza sin fin 76-100mm,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-257,BODEGA,General,Grapa plastica para TGP #10  (pqt 20),ND,Grupo Diez,,0.0,5.0,8.0,0.0
+ACL-BOD-267,BODEGA,General,Lamina preaislada para ducto AC,Pir Alpha,Ac Depot,,0.0,0.0,0.0,38500.0
+ACL-BOD-273,BODEGA,General,Libreta etiquetas electricas,3M,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-274,BODEGA,General,Libreta etiquetas electricas,3M,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-277,BODEGA,General,"Llave de chorro bronce 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-278,BODEGA,General,llave para filtro carro,Uyustool,—,,0.0,0.0,0.0,0.0
+ACL-BOD-279,BODEGA,General,LONA AV-ELECTROMACAMICA,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-282,BODEGA,General,"Manguera transparente 1/4""",—,Ferreton,,0.0,50.0,0.0,209.0
+ACL-BOD-284,BODEGA,General,Marcascara arkflash,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-285,BODEGA,General,Modulo de aislaminto,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-286,BODEGA,General,Modulo de contro relley,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-287,BODEGA,General,"Niple HG 1/2x2""",—,Ferreton,,0.0,0.0,0.0,194.0
+ACL-BOD-288,BODEGA,General,"Niple HG 1/2x4""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-289,BODEGA,General,"Niple HG 1/2x6""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-290,BODEGA,General,"Niple HG 3/4x4""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-291,BODEGA,General,"Niple HG 3/4xTR""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-292,BODEGA,General,"Niple HG 4x1""",ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-296,BODEGA,General,Penetrante WD40 5.5 Oz,—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-297,BODEGA,General,Pintura lata Spray gris claro,Bosny,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-298,BODEGA,General,Pistola de seguridad  Neumatico,Milton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-299,BODEGA,General,PLACA metalica para toma 50a,Aguila,—,,0.0,0.0,0.0,0.0
+ACL-BOD-300,BODEGA,General,"Plastico termoencogible 4"" 700pies  (para paletizar)",ND,Ferreton,,0.0,4.0,0.0,0.0
+ACL-BOD-302,BODEGA,General,"Reduccion bushing HG 3/4x1/2""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-303,BODEGA,General,"Reduccion campana HG 3/4x1/2""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-304,BODEGA,General,"Reduccion CPVC 3/4x1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-316,BODEGA,General,"Soldadura 6013 3/32"" (infra)",Hilco,Ferreton,,0.0,100.0,26.0,6172.0
+ACL-BOD-319,BODEGA,General,Supresor de picos 60A,—,Grupo Diez,,0.0,0.0,0.0,12000.0
+ACL-BOD-320,BODEGA,General,Supresores de picos 30A,—,Grupo Diez,,0.0,10.0,7.0,10500.0
+ACL-BOD-324,BODEGA,General,Tapa para espasio de centr de carga CH,Varias,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-325,BODEGA,General,Tapa para espasio de centr de carga GE,Varias,—,,0.0,0.0,0.0,0.0
+ACL-BOD-327,BODEGA,General,Tapa RJ45 1 salida,NEXXT,—,,0.0,0.0,0.0,0.0
+ACL-BOD-328,BODEGA,General,Tapa RJ45 2 salida,NEXXT,—,,0.0,0.0,0.0,0.0
+ACL-BOD-329,BODEGA,General,Tapa SIEGA octagonal,ND,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-330,BODEGA,General,Tapagotera en lata,—,—,,0.0,2.0,1.0,0.0
+ACL-BOD-331,BODEGA,General,Tape ByP,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-333,BODEGA,General,tapon hembre 1/4 Neumatico,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-334,BODEGA,General,"Tapon HN 1""",ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-335,BODEGA,General,"Tapon liso CPVC 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-336,BODEGA,General,"Tapon macho 1/4""  Neumatico",Milton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-337,BODEGA,General,"Tapon roscado HG 1/2"" hembra",—,Ferreton,,0.0,0.0,0.0,358.0
+ACL-BOD-340,BODEGA,General,"Tee ducto 2""",Eaton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-341,BODEGA,General,"Tee ducto 3""",Eaton,—,,0.0,0.0,0.0,0.0
+ACL-BOD-342,BODEGA,General,"Tee hg 1/2""",—,Ferreton,,0.0,0.0,0.0,805.0
+ACL-BOD-343,BODEGA,General,"Tee HG 3/4""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-346,BODEGA,General,"Teflon Loctite 1/2"" en cinta",—,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-387,BODEGA,General,"Tubo cuadrado HG 1 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-388,BODEGA,General,"Tubo cuadrado HG 1""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-407,BODEGA,General,"Union CPVC 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-408,BODEGA,General,"Union CPVC 3/4""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-410,BODEGA,General,Union de fibra optica,—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-411,BODEGA,General,"Union de tope HG 3/4""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-418,BODEGA,General,"Union HG 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-419,BODEGA,General,"Union IMG 1/2"" INOS",ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-420,BODEGA,General,"Union lisa PVC 1 1/2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-423,BODEGA,General,"Union tope 1/2"" HG",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-424,BODEGA,General,"Union tope PVC 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-435,BODEGA,General,"Ventilador de techo 52"" 3 aspas 120v",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-436,BODEGA,General,Viaticos por colaborador,—,—,,0.0,0.0,0.0,39000.0
+ACL-BOD-438,BODEGA,General,Yave de panel de alrma,—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-439,BODEGA,General,"Cilindro Oxigeno 1,4 Oz Para Mapp",—,Beirute,,0.0,0.0,0.0,8300.0
+ACL-BOD-441,BODEGA,General,UL,UL,UL,,0.0,0.0,0.0,0.0
+ACL-BOD-151,BODEGA,Plomería y Drenaje,"Codo PVC 1/2"" 45°",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-152,BODEGA,Plomería y Drenaje,"Codo PVC 1/2"" 90°",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-153,BODEGA,Plomería y Drenaje,"Codo PVC 3/4"" 90°",—,Ferreton,,0.0,0.0,0.0,350.0
+ACL-BOD-154,BODEGA,Plomería y Drenaje,"Codo PVC drenaje 1 1/2""x90°",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-155,BODEGA,Plomería y Drenaje,"Codo PVC Liso 1 1/2""x90°",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-295,BODEGA,Plomería y Drenaje,Pegamento PVC Lanco Medium bodied blue 4 oz(1/32),—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-305,BODEGA,Plomería y Drenaje,"Reduccion PVC 2x1 1/2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-313,BODEGA,Plomería y Drenaje,Sifon flexible PVC,ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-344,BODEGA,Plomería y Drenaje,"Tee PVC 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-345,BODEGA,Plomería y Drenaje,"Tee PVC 3/4""",—,Ferreton,,0.0,0.0,0.0,450.0
+ACL-BOD-385,BODEGA,Plomería y Drenaje,"Tubo CPVC 1/2"" (piezas de 6 m)",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-386,BODEGA,Plomería y Drenaje,"Tubo CPVC 3/4""(piezas de 6 m)",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-392,BODEGA,Plomería y Drenaje,"Tubo PVC 1/2"" SCH40 (piezas 6m)",—,Grupo Diez,,0.0,0.0,0.0,0.0
+ACL-BOD-393,BODEGA,Plomería y Drenaje,"Tubo PVC 3/4"" SDR 26",ND,Ferreton,,0.0,0.0,0.0,8350.0
+ACL-BOD-422,BODEGA,Plomería y Drenaje,"Union PVC 1/2""",ND,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-426,BODEGA,Plomería y Drenaje,"Valvula check bronce c/ filtro 1 1/4""",ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-427,BODEGA,Plomería y Drenaje,"Valvula Check compuertal bronce 3/4""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-428,BODEGA,Plomería y Drenaje,"Valvula Check universal 1/2""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-429,BODEGA,Plomería y Drenaje,"Valvula de paso 1/2"" Bronce",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-430,BODEGA,Plomería y Drenaje,"Valvula de paso PVC 1/2""",—,Ferreton,,0.0,0.0,0.0,0.0
+ACL-BOD-431,BODEGA,Plomería y Drenaje,"Valvula mezcladora termostatica 3/4""",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-432,BODEGA,Plomería y Drenaje,"Valvula paso bronce 3/4"" bola",—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-034,BODEGA,Protección contra Incendio,Alarma contra incendios,HONEYWELL,—,,0.0,0.0,0.0,0.0
+ACL-BOD-035,BODEGA,Protección contra Incendio,Alarma contra incendios (modulo rilley),HONEYWELL,—,,0.0,0.0,0.0,0.0
+ACL-BOD-036,BODEGA,Protección contra Incendio,Alarma contra incendios (modulo rilley),HONEYWELL,—,,0.0,0.0,0.0,0.0
+ACL-BOD-056,BODEGA,Protección contra Incendio,Base de detector de humo,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-194,BODEGA,Protección contra Incendio,Cortafuego,Speed Seal,—,,0.0,0.0,0.0,0.0
+ACL-BOD-210,BODEGA,Protección contra Incendio,Detector de humo,ND,—,,0.0,0.0,0.0,0.0
+ACL-BOD-262,BODEGA,Protección contra Incendio,Hongo de emergencia (paro),Killark,—,,0.0,0.0,0.0,0.0
+ACL-BOD-281,BODEGA,Protección contra Incendio,Luz estroboscopica,System Sensor,—,,0.0,0.0,0.0,0.0
+ACL-BOD-312,BODEGA,Protección contra Incendio,Sello cortafuego 3 salidas explotio proof 1/2,hawelt,—,,0.0,0.0,0.0,0.0
+ACL-BOD-315,BODEGA,Protección contra Incendio,Sirena emergencia,Kidde,—,,0.0,0.0,0.0,0.0
+ACL-BOD-024,BODEGA,Refrigeración,Aceite bomba de vacio,—,—,,0.0,0.0,0.0,0.0
+ACL-BOD-068,BODEGA,Refrigeración,Bomba condensados exterior mini,Smart,Ac Depot,,1.0,5.0,1.0,25000.0
+ACL-BOD-069,BODEGA,Refrigeración,Bomba condensados interior micro,—,Ac Depot,,1.0,5.0,0.0,23500.0
+ACL-BOD-070,BODEGA,Refrigeración,Bomba condensados exterior grande,E Cold,Extralum,,0.0,2.0,1.0,22100.0
+ACL-BOD-123,BODEGA,Refrigeración,"Cañuela 1/2x12""",ND,Ac Depot,,10.0,30.0,9.0,440.0
+ACL-BOD-124,BODEGA,Refrigeración,"Cañuela 1/4x1/2""",—,Ac Depot,,0.0,30.0,0.0,800.0
+ACL-BOD-125,BODEGA,Refrigeración,"Cañuela 3/4x1/2""",—,Ac Depot,,0.0,0.0,0.0,1200.0
+ACL-BOD-126,BODEGA,Refrigeración,"Cañuela 3/8x1/2""",ND,Ac Depot,,10.0,30.0,15.0,360.0
+ACL-BOD-127,BODEGA,Refrigeración,"Cañuela 5/81/2""",ND,Ac Depot,,5.0,15.0,4.0,540.0
+ACL-BOD-134,BODEGA,Refrigeración,Cinta cañuela (rubatex),ND,Ac Depot,,0.0,4.0,1.0,0.0
+ACL-BOD-241,BODEGA,Refrigeración,"Filtro liquido 3/8"" Soldable",—,Ac Depot,,0.0,0.0,0.0,10037.0
+ACL-BOD-245,BODEGA,Refrigeración,Gas mapp 3600°F,ND,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-306,BODEGA,Refrigeración,Refrigerante R410a,—,Ac Depot,,0.0,0.0,0.0,0.0
+ACL-BOD-310,BODEGA,Refrigeración,Seccionador AC NEMA 3R 60A (Desconectador),—,Grupo Diez,,0.0,0.0,0.0,14268.0
+ACL-BOD-317,BODEGA,Refrigeración,Soldadura acero plata (cobre) 15%,ND,Ac Depot,,0.0,10.0,0.0,0.0
+ACL-BOD-374,BODEGA,Refrigeración,"Tubo cobre 1/2""  rollo de 15 m",ND,Ac Depot,,15.0,60.0,24.0,27000.0
+ACL-BOD-375,BODEGA,Refrigeración,"Tubo cobre 1/4""  rollo de 15 m",ND,Ac Depot,,15.0,90.0,15.0,11500.0
+ACL-BOD-376,BODEGA,Refrigeración,"Tubo cobre 3/4""  rollo de 15 m",—,Ac Depot,,0.0,0.0,12.0,47000.0
+ACL-BOD-377,BODEGA,Refrigeración,"Tubo cobre 3/8"" rollo de 15 m",ND,Ac Depot,,25.0,60.0,18.0,17500.0
+ACL-BOD-378,BODEGA,Refrigeración,"Tubo cobre 5/8""  rollo de 15 m",ND,Ac Depot,,15.0,90.0,15.0,36500.0
+ACL-BOD-437,BODEGA,Refrigeración,"Visor liquido 3/8"" Soldable",—,Ac Depot,,0.0,0.0,0.0,22603.0
+ACL-CAM-043,CAMIÓN,EPP,Caja EPP,,,F31,0,0,1.0,0
+ACL-CAM-099,CAMIÓN,EPP,Extintor ABC,,,X06,0,0,1.0,0
+ACL-CAM-101,CAMIÓN,EPP,Guantes cabrito,,,Kit Basico,0,0,3.0,0
+ACL-CAM-102,CAMIÓN,EPP,Guantes desechables,,,A23,0,0,1.0,0
+ACL-CAM-103,CAMIÓN,EPP,Guantes soldadrua,,,Caja soldadura,0,0,1.0,0
+ACL-CAM-008,CAMIÓN,Fijación y Cintas,"Amarras plasticas 12""",,,B31,0,0,3.0,0
+ACL-CAM-009,CAMIÓN,Fijación y Cintas,"Amarras plasticas 16""",,,B41,0,0,3.0,0
+ACL-CAM-010,CAMIÓN,Fijación y Cintas,"Amarras plasticas 8""",,,B21,0,0,3.0,0
+ACL-CAM-021,CAMIÓN,Fijación y Cintas,Breaker CH 2x20,,,B11,0,0,2.0,0
+ACL-CAM-022,CAMIÓN,Fijación y Cintas,Breaker SD 2x20,,,B11,0,0,2.0,0
+ACL-CAM-034,CAMIÓN,Fijación y Cintas,Caja de cintas,,,D31,0,0,1.0,0
+ACL-CAM-037,CAMIÓN,Fijación y Cintas,Caja de gypsum metalicos,,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-041,CAMIÓN,Fijación y Cintas,Caja de tornillos autorroscante #10,,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-042,CAMIÓN,Fijación y Cintas,Caja de tornillos autorroscante #8,,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-044,CAMIÓN,Fijación y Cintas,Caja expander mariposa,,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-045,CAMIÓN,Fijación y Cintas,"Caja expander metalico 3/8x3""",,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-046,CAMIÓN,Fijación y Cintas,Caja expander plastico 12x60,,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-047,CAMIÓN,Fijación y Cintas,Caja expander plastilang #8,,,Caja de fijacion,0,0,1.0,0
+ACL-CAM-062,CAMIÓN,Fijación y Cintas,Cinta (PVC) mommia,,,Caja de cintas,0,0,2.0,0
+ACL-CAM-063,CAMIÓN,Fijación y Cintas,Cinta antideslizante,,,Caja de cintas,0,0,1.0,0
+ACL-CAM-064,CAMIÓN,Fijación y Cintas,Cinta cañuela,,,B04,0,0,1.0,0
+ACL-CAM-065,CAMIÓN,Fijación y Cintas,Cinta cañuela (en uso),,,Caja de cintas,0,0,1.0,0
+ACL-CAM-066,CAMIÓN,Fijación y Cintas,Cinta cañuela (nueva),,,B04,0,0,2.0,0
+ACL-CAM-067,CAMIÓN,Fijación y Cintas,Cinta de aluminio,,,Caja de cintas,0,0,2.0,0
+ACL-CAM-068,CAMIÓN,Fijación y Cintas,Cinta metrica 20m,,,Caja medicion,0,0,1.0,0
+ACL-CAM-069,CAMIÓN,Fijación y Cintas,Cinta metrica 5m,,,Caja medicion,0,0,1.0,0
+ACL-CAM-070,CAMIÓN,Fijación y Cintas,Cinta paletizar,,,Caja de cintas,0,0,2.0,0
+ACL-CAM-071,CAMIÓN,Fijación y Cintas,Cinta peligro,,,Caja de cintas,0,0,1.0,0
+ACL-CAM-072,CAMIÓN,Fijación y Cintas,Cinta precaucion,,,Caja de cintas,0,0,1.0,0
+ACL-CAM-198,CAMIÓN,Fijación y Cintas,Tape super 33+,,,Caja de cintas,0,0,2.0,0
+ACL-CAM-202,CAMIÓN,Fijación y Cintas,"Tornillo carroceria 3/8x3""",,,Caja de fijacion,0,0,30.0,0
+ACL-CAM-002,CAMIÓN,General,Alambre galvanizado,,,Y03,0,0,1.0,0
+ACL-CAM-013,CAMIÓN,General,Avellanador pequeño,,,Caja de perforacion,0,0,3.0,0
+ACL-CAM-014,CAMIÓN,General,Balanza electronica,,,B91,0,0,1.0,0
+ACL-CAM-017,CAMIÓN,General,Bolso de quimicos,,,A21,0,0,1.0,0
+ACL-CAM-023,CAMIÓN,General,Broca concreto,,,Caja de perforacion,0,0,16.0,0
+ACL-CAM-024,CAMIÓN,General,Broca escalonada metal,,,Caja de perforacion,0,0,1.0,0
+ACL-CAM-025,CAMIÓN,General,Broca metalica,,,Caja de perforacion,0,0,9.0,0
+ACL-CAM-026,CAMIÓN,General,"Broca paleta 1""",,,Caja de perforacion,0,0,1.0,0
+ACL-CAM-027,CAMIÓN,General,"Broca paleta 3/4""",,,Caja de perforacion,0,0,1.0,0
+ACL-CAM-031,CAMIÓN,General,Caja cubos Craftsman,,,A16,0,0,1.0,0
+ACL-CAM-032,CAMIÓN,General,Caja cubos pequeños,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-033,CAMIÓN,General,Caja de brocas Milwaukee,,,Caja de perforacion,0,0,1.0,0
+ACL-CAM-035,CAMIÓN,General,Caja de fijacion,,,A31,0,0,1.0,0
+ACL-CAM-036,CAMIÓN,General,Caja de fijacion 2,,,B51,0,0,1.0,0
+ACL-CAM-039,CAMIÓN,General,Caja de materiales,,,F21,0,0,1.0,0
+ACL-CAM-048,CAMIÓN,General,Caja herramienta electrica (verde),,,E31,0,0,1.0,0
+ACL-CAM-050,CAMIÓN,General,Caja material electrico,,,B61,0,0,1.0,0
+ACL-CAM-051,CAMIÓN,General,Caja medicion,,,C41,0,0,1.0,0
+ACL-CAM-052,CAMIÓN,General,Caja perforacion,,,A15,0,0,1.0,0
+ACL-CAM-053,CAMIÓN,General,Caja pesados,,,D51,0,0,1.0,0
+ACL-CAM-054,CAMIÓN,General,Caja sacabocados,,,A51,0,0,1.0,0
+ACL-CAM-055,CAMIÓN,General,Caja soldadura,,,E41,0,0,1.0,0
+ACL-CAM-056,CAMIÓN,General,Caja transito,,,F11,0,0,1.0,0
+ACL-CAM-059,CAMIÓN,General,Cierra de mano,,,D51,0,0,1.0,0
+ACL-CAM-060,CAMIÓN,General,Cilindro CO2,,,X05,0,0,1.0,0
+ACL-CAM-073,CAMIÓN,General,Cortadora de tubo,,,Caja pesados,0,0,1.0,0
+ACL-CAM-076,CAMIÓN,General,Cubo de agua,,,F32,0,0,1.0,0
+ACL-CAM-081,CAMIÓN,General,"Discos de corte metal 4 1/2""",,,C81,0,0,10.0,0
+ACL-CAM-083,CAMIÓN,General,"Dobladora de tubo 3/4-1/2""",,,X07,0,0,1.0,0
+ACL-CAM-087,CAMIÓN,General,Escuadra multiuso,,,D51,0,0,1.0,0
+ACL-CAM-088,CAMIÓN,General,Eslabones HG,,,D51,0,0,6.0,0
+ACL-CAM-089,CAMIÓN,General,Eslinga,,,D51,0,0,1.0,0
+ACL-CAM-095,CAMIÓN,General,Etiquetadora Brady,,,C61,0,0,1.0,0
+ACL-CAM-097,CAMIÓN,General,Extension electrica,,,X01,0,0,1.0,0
+ACL-CAM-098,CAMIÓN,General,Extension electrica,,,X02,0,0,1.0,0
+ACL-CAM-107,CAMIÓN,General,Juego centro punto (3pz),,,D51,0,0,1.0,0
+ACL-CAM-110,CAMIÓN,General,Juego sacabocados,,,D51,0,0,1.0,0
+ACL-CAM-111,CAMIÓN,General,Kit Basico,,,D11,0,0,1.0,0
+ACL-CAM-118,CAMIÓN,General,Lima triangular,,,D51,0,0,1.0,0
+ACL-CAM-147,CAMIÓN,General,Lubricante 3m WL-QT,,,Bolso quimicos,0,0,1.0,0
+ACL-CAM-148,CAMIÓN,General,Lubricante multiuso WD-40,,,Bolso quimicos,0,0,1.0,0
+ACL-CAM-149,CAMIÓN,General,Maletin de cuerdas,,,A41,0,0,1.0,0
+ACL-CAM-150,CAMIÓN,General,Mandril pequeño,,,Caja de perforacion,0,0,1.0,0
+ACL-CAM-157,CAMIÓN,General,Marco de segueta,,,A22,0,0,1.0,0
+ACL-CAM-161,CAMIÓN,General,Microhondas,,,B01,0,0,1.0,0
+ACL-CAM-167,CAMIÓN,General,Pata chancho,,,Y01,0,0,1.0,0
+ACL-CAM-168,CAMIÓN,General,Pata de chancho,,,Y02,0,0,1.0,0
+ACL-CAM-169,CAMIÓN,General,Pegamento PVC,,,Bolso quimicos,0,0,2.0,0
+ACL-CAM-171,CAMIÓN,General,Pintura en lata,,,Bolso quimicos,0,0,1.0,0
+ACL-CAM-175,CAMIÓN,General,Poliuretano en lata,,,Bolso quimicos,0,0,2.0,0
+ACL-CAM-181,CAMIÓN,General,Recuperadora de gas,,,F36,0,0,1.0,0
+ACL-CAM-191,CAMIÓN,General,Sonda electrica,,,X04,0,0,1.0,0
+ACL-CAM-197,CAMIÓN,General,Tapagoteras en lata,,,Bolso quimicos,0,0,2.0,0
+ACL-CAM-199,CAMIÓN,General,Tecle,,,Y01,0,0,1.0,0
+ACL-CAM-015,CAMIÓN,Herramienta Eléctrica,Bateria cuadrada,,,Kit Basico,0,0,1.0,0
+ACL-CAM-016,CAMIÓN,Herramienta Eléctrica,Baterias INGCO 20V,,,Caja herramienta electrica (verde),0,0,7.0,0
+ACL-CAM-028,CAMIÓN,Herramienta Eléctrica,"Brocasierra concreto 1""",,,Caja de perforacion,0,0,2.0,0
+ACL-CAM-029,CAMIÓN,Herramienta Eléctrica,"Brocasierra concreto 2""",,,Caja de perforacion,0,0,1.0,0
+ACL-CAM-082,CAMIÓN,Herramienta Eléctrica,"Discos de esmerilar metal 4 1/2""",,,C81,0,0,2.0,0
+ACL-CAM-090,CAMIÓN,Herramienta Eléctrica,"Esmeriladora 4 1/2""",,,Caja herramienta electrica (verde),0,0,2.0,0
+ACL-CAM-091,CAMIÓN,Herramienta Eléctrica,"Esmeriladora 9""",,,C62,0,0,1.0,0
+ACL-CAM-113,CAMIÓN,Herramienta Eléctrica,Lampara de mano,,,Caja herramienta electrica (verde),0,0,1.0,0
+ACL-CAM-141,CAMIÓN,Herramienta Eléctrica,Llave esmeriladora,,,Caja de llaves,0,0,3.0,0
+ACL-CAM-145,CAMIÓN,Herramienta Eléctrica,Llave para taladro,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-146,CAMIÓN,Herramienta Eléctrica,Llave sierra electrica,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-173,CAMIÓN,Herramienta Eléctrica,Pistola de aire caliente,,,Caja herramienta electrica (verde),0,0,1.0,0
+ACL-CAM-179,CAMIÓN,Herramienta Eléctrica,Puntas phillip taladro,,,Kit Basico,0,0,4.0,0
+ACL-CAM-189,CAMIÓN,Herramienta Eléctrica,Sierra electrica,,,C21,0,0,1.0,0
+ACL-CAM-192,CAMIÓN,Herramienta Eléctrica,Sopladora,,,Caja herramienta electrica (verde),0,0,1.0,0
+ACL-CAM-194,CAMIÓN,Herramienta Eléctrica,Taladro alambrado,,,Caja herramienta electrica (verde),0,0,1.0,0
+ACL-CAM-195,CAMIÓN,Herramienta Eléctrica,taladro INGCO bateria,,,Caja herramienta electrica (verde),0,0,1.0,0
+ACL-CAM-196,CAMIÓN,Herramienta Eléctrica,Taladro percutor INGCO bateria,,,Caja herramienta electrica (verde),0,0,2.0,0
+ACL-CAM-001,CAMIÓN,Herramienta Manual,Adaptador cubo 3/8,,,Kit Basico,0,0,1.0,0
+ACL-CAM-004,CAMIÓN,Herramienta Manual,Alicate de presion,,,Caja de llaves,0,0,3.0,0
+ACL-CAM-005,CAMIÓN,Herramienta Manual,Alicate de puntas,,,Kit Basico,0,0,1.0,0
+ACL-CAM-006,CAMIÓN,Herramienta Manual,"Alicate universal 12""",,,Kit Basico,0,0,1.0,0
+ACL-CAM-007,CAMIÓN,Herramienta Manual,"Alicate universal 8""",,,Kit Basico,0,0,1.0,0
+ACL-CAM-038,CAMIÓN,Herramienta Manual,Caja de llaves,,,D21,0,0,1.0,0
+ACL-CAM-061,CAMIÓN,Herramienta Manual,Cincel,,,D51,0,0,2.0,0
+ACL-CAM-074,CAMIÓN,Herramienta Manual,Cortadora diagonal,,,Kit Basico,0,0,1.0,0
+ACL-CAM-077,CAMIÓN,Herramienta Manual,Cutter,,,Kit Basico,0,0,1.0,0
+ACL-CAM-078,CAMIÓN,Herramienta Manual,Destornillador Phillip 2,,,Kit Basico,0,0,1.0,0
+ACL-CAM-079,CAMIÓN,Herramienta Manual,Destornillador Phillip 3,,,Kit Basico,0,0,1.0,0
+ACL-CAM-080,CAMIÓN,Herramienta Manual,Destornillador plano mediano,,,Kit Basico,0,0,1.0,0
+ACL-CAM-086,CAMIÓN,Herramienta Manual,Escuadra falsa,,,Kit Basico,0,0,1.0,0
+ACL-CAM-092,CAMIÓN,Herramienta Manual,"Espatula 2""",,,Kit Basico,0,0,1.0,0
+ACL-CAM-108,CAMIÓN,Herramienta Manual,Juego de llaves allen,,,Caja de llaves,0,0,3.0,0
+ACL-CAM-109,CAMIÓN,Herramienta Manual,Juego relojero (9 pz),,,Kit Basico,0,0,1.0,0
+ACL-CAM-112,CAMIÓN,Herramienta Manual,Lampara de cabeza,,,Kit Basico,0,0,2.0,0
+ACL-CAM-114,CAMIÓN,Herramienta Manual,Lapiz carpintero,,,Kit Basico,0,0,1.0,0
+ACL-CAM-116,CAMIÓN,Herramienta Manual,Lima semiredonda,,,Kit Basico,0,0,1.0,0
+ACL-CAM-117,CAMIÓN,Herramienta Manual,Lima triangular,,,Kit Basico,0,0,1.0,0
+ACL-CAM-121,CAMIÓN,Herramienta Manual,"Llave cañeria 12""",,,Caja de llaves,0,0,1.0,0
+ACL-CAM-122,CAMIÓN,Herramienta Manual,"Llave cañeria 18""",,,Caja de llaves,0,0,1.0,0
+ACL-CAM-123,CAMIÓN,Herramienta Manual,"Llave corofija 1/2""",,,Caja de llaves,0,0,2.0,0
+ACL-CAM-124,CAMIÓN,Herramienta Manual,Llave corofija 10mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-125,CAMIÓN,Herramienta Manual,Llave corofija 11mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-126,CAMIÓN,Herramienta Manual,Llave corofija 12mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-127,CAMIÓN,Herramienta Manual,Llave corofija 13mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-128,CAMIÓN,Herramienta Manual,Llave corofija 14mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-129,CAMIÓN,Herramienta Manual,Llave corofija 14mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-130,CAMIÓN,Herramienta Manual,Llave corofija 15mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-131,CAMIÓN,Herramienta Manual,Llave corofija 17mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-132,CAMIÓN,Herramienta Manual,Llave corofija 19mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-133,CAMIÓN,Herramienta Manual,Llave corofija 22mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-134,CAMIÓN,Herramienta Manual,Llave corofija 24mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-135,CAMIÓN,Herramienta Manual,Llave corofija 27mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-136,CAMIÓN,Herramienta Manual,"Llave corofija 3/8""",,,Caja de llaves,0,0,2.0,0
+ACL-CAM-137,CAMIÓN,Herramienta Manual,Llave corofija 30mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-138,CAMIÓN,Herramienta Manual,Llave corofija 32mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-139,CAMIÓN,Herramienta Manual,Llave corofija 6mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-140,CAMIÓN,Herramienta Manual,Llave corofija 8mm,,,Caja de llaves,0,0,1.0,0
+ACL-CAM-142,CAMIÓN,Herramienta Manual,"Llave francesa 10""",,,Caja de llaves,0,0,1.0,0
+ACL-CAM-143,CAMIÓN,Herramienta Manual,"Llave francesa 12""",,,Caja de llaves,0,0,1.0,0
+ACL-CAM-144,CAMIÓN,Herramienta Manual,"Llave francesa 6""",,,Caja de llaves,0,0,1.0,0
+ACL-CAM-156,CAMIÓN,Herramienta Manual,Marcadores,,,Kit Basico,0,0,4.0,0
+ACL-CAM-158,CAMIÓN,Herramienta Manual,Martillo,,,D51,0,0,2.0,0
+ACL-CAM-160,CAMIÓN,Herramienta Manual,Mazo de hule,,,D51,0,0,1.0,0
+ACL-CAM-170,CAMIÓN,Herramienta Manual,Peladora de cable,,,Kit Basico,0,0,1.0,0
+ACL-CAM-176,CAMIÓN,Herramienta Manual,"Prensa C 4""",,,D51,0,0,4.0,0
+ACL-CAM-177,CAMIÓN,Herramienta Manual,"Prensa C 6""",,,D51,0,0,2.0,0
+ACL-CAM-178,CAMIÓN,Herramienta Manual,Puntas para techo,,,Kit Basico,0,0,4.0,0
+ACL-CAM-185,CAMIÓN,Herramienta Manual,Remachadora,,,D51,0,0,1.0,0
+ACL-CAM-186,CAMIÓN,Herramienta Manual,Roldana,,,D51,0,0,3.0,0
+ACL-CAM-187,CAMIÓN,Herramienta Manual,Rotomartillo,,,A61,0,0,1.0,0
+ACL-CAM-188,CAMIÓN,Herramienta Manual,Seguetas de repuesto,,,Kit Basico,0,0,3.0,0
+ACL-CAM-201,CAMIÓN,Herramienta Manual,Tiejar metal,,,Kit Basico,0,0,1.0,0
+ACL-CAM-203,CAMIÓN,Herramienta Manual,Zapita Phillip,,,Kit Basico,0,0,1.0,0
+ACL-CAM-204,CAMIÓN,Herramienta Manual,Zapita plana,,,Kit Basico,0,0,1.0,0
+ACL-CAM-003,CAMIÓN,Limpieza,Alcohol isopropilico (AC Flush),,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-018,CAMIÓN,Limpieza,Bomba de mano,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-020,CAMIÓN,Limpieza,Brasso,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-030,CAMIÓN,Limpieza,"Brocha 2""",,,Caja Limpieza,0,0,2.0,0
+ACL-CAM-049,CAMIÓN,Limpieza,Caja Limpieza,,,E21,0,0,1.0,0
+ACL-CAM-085,CAMIÓN,Limpieza,Escobilla,,,Caja Limpieza,0,0,2.0,0
+ACL-CAM-094,CAMIÓN,Limpieza,Esponja abrasiva,,,Caja Limpieza,0,0,4.0,0
+ACL-CAM-104,CAMIÓN,Limpieza,Insecticida,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-105,CAMIÓN,Limpieza,Jabon liquido,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-115,CAMIÓN,Limpieza,Lija en rollo,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-119,CAMIÓN,Limpieza,Limpiador de vidrios,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-120,CAMIÓN,Limpieza,Limpiones,,,Caja Limpieza,0,0,6.0,0
+ACL-CAM-174,CAMIÓN,Limpieza,Pistola para manguera,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-180,CAMIÓN,Limpieza,Quimico limpieza serpentin,,,Caja Limpieza,0,0,1.0,0
+ACL-CAM-193,CAMIÓN,Limpieza,Sprayadora,,,Caja Limpieza,0,0,2.0,0
+ACL-CAM-011,CAMIÓN,Medición,Amperimetro INGCO,,,Kit Basico,0,0,1.0,0
+ACL-CAM-151,CAMIÓN,Medición,"Manguera nivel 1/4""",,,Caja de materiales,0,0,1.0,0
+ACL-CAM-152,CAMIÓN,Medición,"Manguera nivel 3/8""",,,Caja de materiales,0,0,1.0,0
+ACL-CAM-154,CAMIÓN,Medición,Manometro,,,C51,0,0,1.0,0
+ACL-CAM-162,CAMIÓN,Medición,Nivel grande,,,C31,0,0,1.0,0
+ACL-CAM-163,CAMIÓN,Medición,Nivel laser,,,B03,0,0,1.0,0
+ACL-CAM-164,CAMIÓN,Medición,Nivel laser,,,B03,0,0,1.0,0
+ACL-CAM-165,CAMIÓN,Medición,Nivel torpedo,,,Caja medicion,0,0,1.0,0
+ACL-CAM-184,CAMIÓN,Medición,Regla metalica,,,Caja medicion,0,0,1.0,0
+ACL-CAM-200,CAMIÓN,Medición,Termometro laser,,,Caja medicion,0,0,1.0,0
+ACL-CAM-012,CAMIÓN,Refrigeración,Antorcha,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-019,CAMIÓN,Refrigeración,Bomba de vacio,,,D61,0,0,1.0,0
+ACL-CAM-040,CAMIÓN,Refrigeración,Caja de refrigeracion,,,D41,0,0,1.0,0
+ACL-CAM-057,CAMIÓN,Refrigeración,Cargador de aceite,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-075,CAMIÓN,Refrigeración,Costadora tubo refrigeracion pequeño,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-084,CAMIÓN,Refrigeración,Dobladora tubo refrigeracion,,,B71,0,0,1.0,0
+ACL-CAM-093,CAMIÓN,Refrigeración,Espejuelo,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-096,CAMIÓN,Refrigeración,Expansor de tubo,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-100,CAMIÓN,Refrigeración,Gas mapp,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-106,CAMIÓN,Refrigeración,Juego abocinador,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-153,CAMIÓN,Refrigeración,Mangueras de refrigeracion,,,Caja de refrigeracion,0,0,2.0,0
+ACL-CAM-166,CAMIÓN,Refrigeración,Pasta corta fuego,,,Caja de refrigeracion,0,0,1.0,0
+ACL-CAM-182,CAMIÓN,Refrigeración,Refrigerante R32,,,F34,0,0,1.0,0
+ACL-CAM-183,CAMIÓN,Refrigeración,Refrigerante R410a,,,F33,0,0,1.0,0
+ACL-CAM-190,CAMIÓN,Refrigeración,Soldadura acero plata,,,Caja de refrigeracion,0,0,5.0,0
+ACL-CAM-058,CAMIÓN,Soldadura,Chaqueta soldadura,,,Caja soldadura,0,0,1.0,0
+ACL-CAM-155,CAMIÓN,Soldadura,Maquina de soldar,,,Caja soldadura,0,0,1.0,0
+ACL-CAM-159,CAMIÓN,Soldadura,Mascara de soldar,,,Caja soldadura,0,0,1.0,0
+ACL-CAM-172,CAMIÓN,Soldadura,Piqueta,,,Caja soldadura,0,0,1.0,0
