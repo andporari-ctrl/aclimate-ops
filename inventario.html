@@ -168,27 +168,36 @@
       font-size: .65rem;
       color: var(--texto-sub);
     }
-    .inv-reorden-badge {
-      font-size: .58rem;
-      color: var(--azul-dark);
-      font-family: monospace;
-      text-align: right;
-      margin-top: 2px;
-      opacity: .75;
+    .inv-reorden-info {
+      margin-top: 4px;
+      padding: 3px 6px;
+      background: #EBF5FB;
+      border: 1px solid #AED6F1;
+      border-radius: 5px;
     }
+    .inv-reorden-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: .6rem;
+      line-height: 1.55;
+      white-space: nowrap;
+    }
+    .reo-lbl { color: #1A5276; opacity: .8; }
+    .reo-val { font-weight: 700; color: #1A5276; }
     .btn-edit-reorden {
       background: none;
       border: none;
-      font-size: .85rem;
+      font-size: .78rem;
       cursor: pointer;
       color: var(--texto-sub);
       padding: 0;
-      margin-top: 2px;
+      margin-top: 3px;
       display: block;
       width: 100%;
       text-align: right;
       line-height: 1;
-      opacity: .55;
+      opacity: .45;
     }
     .btn-edit-reorden:hover { opacity: 1; color: var(--azul); }
     .toggle-nuevo-label {
@@ -651,8 +660,12 @@ function renderItems(items) {
       <div class="inv-item-stock">
         <div class="qty ${s}">${existencia}</div>
         <div class="ubi">${ubicacion}</div>
-        ${stockMin > 0 ? `<div class="inv-reorden-badge">▼${stockMin}${stockMax > 0 ? ' ×' + stockMax : ''}</div>` : ''}
-        <button class="btn-edit-reorden" onclick="editarReorden('${codigoEsc}','${nombreEsc}',${stockMin},${stockMax})" title="Editar punto de reorden">⚙</button>
+        ${stockMin > 0 ? `
+        <div class="inv-reorden-info">
+          <div class="inv-reorden-row"><span class="reo-lbl">🔔 Reorden</span><span class="reo-val">≤ ${stockMin}</span></div>
+          ${stockMax > 0 ? `<div class="inv-reorden-row"><span class="reo-lbl">🛒 Pedir</span><span class="reo-val">× ${stockMax}</span></div>` : ''}
+        </div>` : ''}
+        <button class="btn-edit-reorden" onclick="editarReorden('${codigoEsc}','${nombreEsc}',${stockMin},${stockMax})" title="Editar punto de reorden">⚙ reorden</button>
       </div>
     </div>`;
   }).join('');
