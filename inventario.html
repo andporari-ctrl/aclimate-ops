@@ -592,10 +592,12 @@
 <div id="toast"></div>
 <div id="loading-overlay"><div class="spinner"></div><p>Cargando...</p></div>
 
+<script src="auth.js"></script>
 <script src="config.js"></script>
 <script src="inventario_inicial.js"></script>
 <script src="utils.js"></script>
 <script>
+checkAuth(); inyectarBadge();
 
 let _todosItems   = [];   // datos en memoria (GAS o fallback local)
 let _movimientos  = [];

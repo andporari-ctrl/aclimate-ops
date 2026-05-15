@@ -146,7 +146,11 @@
   Despachado (F-01) = Usado (F-03) + Devuelto (F-04)
 </div>
 
+<script src="auth.js"></script>
 <script>
+  checkAuth();
+  inyectarBadge();
+
   document.getElementById('fecha-hoy').textContent =
     new Date().toLocaleDateString('es-CR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 

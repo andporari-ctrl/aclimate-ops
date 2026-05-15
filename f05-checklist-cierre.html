@@ -177,9 +177,11 @@
   <button class="btn-nuevo" onclick="location.href='index.html'">← Volver al inicio</button>
 </div>
 
+<script src="auth.js"></script>
 <script src="config.js"></script>
 <script src="utils.js"></script>
 <script>
+checkAuth(); inyectarBadge();
 const FORM_ID = 'F05';
 const formEl  = document.getElementById('form-f05');
 
@@ -188,7 +190,7 @@ CONFIG.EQUIPO.forEach(nombre => {
   opt.value = opt.textContent = nombre;
   formEl.querySelector('[name="tecnico"]').appendChild(opt);
 });
-
+autoSeleccionarTecnico();
 formEl.querySelector('[name="fecha"]').value = fechaHoy();
 
 // Condicionales

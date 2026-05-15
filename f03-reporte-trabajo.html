@@ -230,10 +230,12 @@
   <button class="btn-nuevo" onclick="location.href='index.html'">← Inicio</button>
 </div>
 
+<script src="auth.js"></script>
 <script src="config.js"></script>
 <script src="catalogo.js"></script>
 <script src="utils.js"></script>
 <script>
+checkAuth(); inyectarBadge();
 const FORM_ID  = 'F03';
 const formEl   = document.getElementById('form-f03');
 const itemsCnt = document.getElementById('items-container');
@@ -245,6 +247,7 @@ CONFIG.EQUIPO.forEach(nombre => {
   opt.value = opt.textContent = nombre;
   selTecnico.appendChild(opt);
 });
+autoSeleccionarTecnico();
 formEl.querySelector('[name="fecha"]').value = fechaHoy();
 formEl.querySelector('[name="hora_llegada"]').value = horaAhora();
 

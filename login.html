@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>AClímate — Acceso</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    body { background: #F4F6F8; min-height: 100vh; }
+
+    .login-hero {
+      background: var(--azul-dark);
+      color: #fff;
+      text-align: center;
+      padding: 24px 16px 20px;
+    }
+    .login-hero img { height: 48px; border-radius: 6px; margin-bottom: 10px; }
+    .login-hero h1  { font-size: 1.15rem; font-weight: 800; margin-bottom: 2px; }
+    .login-hero p   { font-size: .78rem; opacity: .75; }
+
+    .login-body { padding: 20px 16px 40px; max-width: 420px; margin: 0 auto; }
+
+    .login-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--texto-sub);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 10px;
+    }
+
+    .user-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .user-card {
+      background: #fff;
+      border: 2px solid var(--gris-borde);
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .user-card:active { background: #EBF5FB; }
+    .user-card.seleccionado {
+      border-color: var(--azul);
+      background: #EBF5FB;
+    }
+    .user-avatar {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .user-nombre {
+      font-weight: 700;
+      font-size: .82rem;
+      color: var(--texto);
+      line-height: 1.2;
+    }
+    .user-rol {
+      font-size: .65rem;
+      color: var(--texto-sub);
+      margin-top: 3px;
+      text-transform: capitalize;
+    }
+
+    .pin-section {
+      background: #fff;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 14px;
+      padding: 20px 16px;
+      animation: slideIn .2s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .pin-label {
+      text-align: center;
+      font-size: .85rem;
+      color: var(--texto-sub);
+      margin-bottom: 18px;
+    }
+    .pin-label strong { color: var(--texto); }
+
+    .pin-dots {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+    .pin-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--gris-borde);
+      background: #fff;
+      transition: background .1s, border-color .1s, transform .1s;
+    }
+    .pin-dot.lleno {
+      background: var(--azul);
+      border-color: var(--azul);
+      transform: scale(1.15);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%  { transform: translateX(-7px); }
+      40%  { transform: translateX(7px); }
+      60%  { transform: translateX(-5px); }
+      80%  { transform: translateX(5px); }
+    }
+    .shake { animation: shake .35s ease; }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .np-btn {
+      height: 56px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--texto);
+      cursor: pointer;
+      transition: background .1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .np-btn:active { background: #EBF5FB; border-color: var(--azul); }
+    .np-del { font-size: 1.05rem; color: var(--texto-sub); }
+    .np-empty { border: none !important; background: none !important; cursor: default; }
+
+    .pin-error {
+      text-align: center;
+      color: var(--rojo);
+      font-size: .82rem;
+      font-weight: 700;
+      margin-top: 14px;
+      min-height: 22px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-hero">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <h1>AClímate</h1>
+  <p>AV Electromecánica S.A.</p>
+</div>
+
+<div class="login-body">
+  <div class="login-label">¿Quién sos?</div>
+
+  <div class="user-grid" id="user-grid"></div>
+
+  <div class="pin-section" id="pin-section" style="display:none;">
+    <div class="pin-label">PIN de <strong id="pin-nombre"></strong></div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+    </div>
+    <div class="numpad" id="numpad"></div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+// Si ya hay sesión activa → ir directo al inicio
+if (getSession()) window.location.href = 'index.html';
+
+const ROL_LABEL = { tecnico: 'Técnico', supervisor: 'Supervisor', pm: 'PM' };
+const ROL_AVATAR = { tecnico: '🔧', supervisor: '🛡️', pm: '📋' };
+
+let _selectedIdx = null;
+let _pin = '';
+
+// Renderizar tarjetas de usuario
+document.getElementById('user-grid').innerHTML = USUARIOS.map((u, i) =>
+  `<div class="user-card" id="ucard-${i}" onclick="seleccionarUsuario(${i})">
+    <div class="user-avatar">${ROL_AVATAR[u.rol] || '👤'}</div>
+    <div class="user-nombre">${u.nombre.split(' ').slice(0,2).join(' ')}</div>
+    <div class="user-rol">${ROL_LABEL[u.rol] || u.rol}</div>
+  </div>`
+).join('');
+
+// Renderizar numpad
+const numpadEl = document.getElementById('numpad');
+[1,2,3,4,5,6,7,8,9,'⌫',0,''].forEach(v => {
+  const btn = document.createElement('button');
+  btn.className = 'np-btn' + (v === '' ? ' np-empty' : v === '⌫' ? ' np-del' : '');
+  btn.textContent = v;
+  if (v !== '') {
+    btn.onclick = v === '⌫' ? borrar : () => ingresarDigito(String(v));
+  }
+  numpadEl.appendChild(btn);
+});
+
+function seleccionarUsuario(idx) {
+  _selectedIdx = idx;
+  _pin = '';
+  actualizarDots();
+  document.getElementById('pin-nombre').textContent = USUARIOS[idx].nombre.split(' ')[0];
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-section').style.display = 'block';
+  document.querySelectorAll('.user-card').forEach((c, i) => {
+    c.classList.toggle('seleccionado', i === idx);
+  });
+  document.getElementById('pin-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function ingresarDigito(d) {
+  if (_selectedIdx === null || _pin.length >= 4) return;
+  _pin += d;
+  actualizarDots();
+  if (_pin.length === 4) setTimeout(verificar, 180);
+}
+
+function borrar() {
+  _pin = _pin.slice(0, -1);
+  actualizarDots();
+  document.getElementById('pin-error').textContent = '';
+}
+
+function actualizarDots() {
+  document.querySelectorAll('.pin-dot').forEach((d, i) => {
+    d.classList.toggle('lleno', i < _pin.length);
+  });
+}
+
+function verificar() {
+  const usuario = USUARIOS[_selectedIdx];
+  if (_pin === usuario.pin) {
+    localStorage.setItem('aclimate_session', JSON.stringify({
+      nombre: usuario.nombre,
+      rol:    usuario.rol,
+      expiry: Date.now() + 24 * 60 * 60 * 1000
+    }));
+    window.location.href = 'index.html';
+  } else {
+    _pin = '';
+    actualizarDots();
+    document.getElementById('pin-error').textContent = '⚠️ PIN incorrecto. Intentá de nuevo.';
+    const dots = document.getElementById('pin-dots');
+    dots.classList.remove('shake');
+    void dots.offsetWidth; // forzar reflow para reiniciar animación
+    dots.classList.add('shake');
+    setTimeout(() => dots.classList.remove('shake'), 400);
+  }
+}
+</script>
+</body>
+</html>

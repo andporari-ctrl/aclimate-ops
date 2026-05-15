@@ -161,10 +161,12 @@
   <button class="btn-nuevo" onclick="reiniciar()">Registrar otro gasto</button>
 </div>
 
+<script src="auth.js"></script>
 <script src="config.js"></script>
 <script src="catalogo.js"></script>
 <script src="utils.js"></script>
 <script>
+checkAuth(); inyectarBadge();
 const FORM_ID = 'F06';
 const formEl  = document.getElementById('form-f06');
 
@@ -173,7 +175,7 @@ CONFIG.EQUIPO.forEach(nombre => {
   opt.value = opt.textContent = nombre;
   formEl.querySelector('[name="tecnico"]').appendChild(opt);
 });
-
+autoSeleccionarTecnico();
 formEl.querySelector('[name="fecha"]').value = fechaHoy();
 
 // OT dropdown con opción "Gasto general"
