@@ -2,10 +2,10 @@
 // ¡IMPORTANTE! Cambiá los PINs antes de entregar a los usuarios.
 
 const USUARIOS = [
-  { nombre: 'Ericsen Aguirre',  rol: 'tecnico',    pin: '1111' },
-  { nombre: 'Javier Quesada',   rol: 'tecnico',    pin: '2222' },
-  { nombre: 'Alexander Alfaro', rol: 'supervisor', pin: '3333' },
-  { nombre: 'Andrés Porras',    rol: 'pm',         pin: '4444' },
+  { nombre: 'Ericsen Aguirre',  rol: 'tecnico',    pin: '4909' },
+  { nombre: 'Javier Quesada',   rol: 'tecnico',    pin: '2917' },
+  { nombre: 'Alexander Alfaro', rol: 'supervisor', pin: '7278' },
+  { nombre: 'Andrés Porras',    rol: 'pm',         pin: '4064' },
 ];
 
 const _SK  = 'aclimate_session';
