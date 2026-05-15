@@ -228,28 +228,52 @@ function comprimirFoto(file, maxDim, quality) {
 function setupFotoField(inputEl, previewContainer) {
   inputEl._hasFile = false;
   inputEl._fotos = [];
+
+  function actualizarContador() {
+    const n = inputEl._fotos.length;
+    const txt = inputEl.closest('.foto-zona')?.querySelector('.nombre-archivo');
+    if (txt) txt.textContent = n === 0 ? '' : n === 1 ? '1 foto agregada' : n + ' fotos agregadas';
+    inputEl._hasFile = n > 0;
+    inputEl.closest('.campo')?.classList.remove('error');
+  }
+
+  function renderPreviews() {
+    if (!previewContainer) return;
+    previewContainer.innerHTML = '';
+    inputEl._fotos.forEach((foto, idx) => {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;margin:2px;';
+      const img = document.createElement('img');
+      img.src = foto.data;
+      img.style.cssText = 'display:block;border-radius:4px;';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = '✕';
+      btn.style.cssText = 'position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:.65rem;cursor:pointer;line-height:1;padding:0;';
+      btn.onclick = () => {
+        inputEl._fotos.splice(idx, 1);
+        renderPreviews();
+        actualizarContador();
+      };
+      wrap.appendChild(img);
+      wrap.appendChild(btn);
+      previewContainer.appendChild(wrap);
+    });
+  }
+
   inputEl.addEventListener('change', async () => {
     const files = Array.from(inputEl.files);
     if (!files.length) return;
-    if (previewContainer) previewContainer.innerHTML = '';
-    inputEl._fotos = [];
     for (const file of files) {
       try {
         const b64 = await comprimirFoto(file, CONFIG.FOTO_MAX_DIM, CONFIG.FOTO_QUALITY);
         inputEl._fotos.push({ nombre: file.name, data: b64 });
-        if (previewContainer) {
-          const img = document.createElement('img');
-          img.src = b64;
-          previewContainer.appendChild(img);
-        }
-        const txt = inputEl.closest('.foto-zona')?.querySelector('.nombre-archivo');
-        if (txt) txt.textContent = files.length > 1
-          ? files.length + ' fotos seleccionadas'
-          : file.name;
       } catch(e) {}
     }
-    inputEl._hasFile = inputEl._fotos.length > 0;
-    inputEl.closest('.campo')?.classList.remove('error');
+    renderPreviews();
+    actualizarContador();
+    // Limpiar el input para permitir seleccionar el mismo archivo de nuevo
+    inputEl.value = '';
   });
 }
 
