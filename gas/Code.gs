@@ -165,12 +165,12 @@ function enviarEmail(asunto, lineas) {
 function manejarOTCrear(d) {
   const sheet = getSheet('OTs');
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['ID', 'Cliente', 'Tipo', 'Técnico', 'Descripción', 'Fecha Asignación', 'Estado', 'Timestamp Creación', 'Timestamp Cierre', 'Contacto', 'Teléfono', 'Dirección', 'Presupuesto', 'Trabajos']);
+    sheet.appendRow(['ID', 'Cliente', 'Tipo', 'Técnico', 'Descripción', 'Fecha Asignación', 'Estado', 'Timestamp Creación', 'Timestamp Cierre', 'Contacto', 'Teléfono', 'Dirección', 'Presupuesto', 'Trabajos', 'Fecha Inicio', 'Hora Inicio', 'Duración (h)']);
     formatearEncabezados(sheet);
   } else {
     const hdrs = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    ['Contacto', 'Teléfono', 'Dirección', 'Presupuesto', 'Trabajos'].forEach(h => {
-      if (!hdrs.includes(h)) { hdrs.push(h); sheet.getRange(1, hdrs.length).setValue(h); }
+    ['Contacto', 'Teléfono', 'Dirección', 'Presupuesto', 'Trabajos', 'Fecha Inicio', 'Hora Inicio', 'Duración (h)'].forEach(h => {
+      if (!hdrs.includes(h)) { sheet.getRange(1, hdrs.length + 1).setValue(h); hdrs.push(h); }
     });
     formatearEncabezados(sheet);
   }
@@ -188,18 +188,27 @@ function manejarOTCrear(d) {
     d.id, d.cliente, tipoStr, d.tecnico, d.descripcion || '',
     d.fecha_asignacion, 'Abierta', d.timestamp, '',
     d.contacto_nombre || '', d.contacto_tel || '', d.direccion || '',
-    presStr, trabajos.length ? JSON.stringify(trabajos) : ''
+    presStr, trabajos.length ? JSON.stringify(trabajos) : '',
+    d.fecha_inicio || '', d.hora_inicio || '', d.duracion_horas || ''
   ]);
 
-  enviarEmail('Nueva OT creada: ' + d.id, [
+  const lineas = [
     'OT:          ' + d.id,
     'Cliente:     ' + d.cliente,
     'Tipo:        ' + tipoStr,
     'Técnico:     ' + d.tecnico,
     'Fecha:       ' + d.fecha_asignacion,
+    d.fecha_inicio ? ('Inicio prog.: ' + d.fecha_inicio + (d.hora_inicio ? ' ' + d.hora_inicio : '')) : '',
+    d.duracion_horas ? ('Duración:    ' + d.duracion_horas + 'h') : '',
     'Descripción: ' + (d.descripcion || '—'),
-    trabajos.length > 1 ? ('Trabajos:    ' + trabajos.length) : '',
-  ].filter(Boolean));
+  ].filter(Boolean);
+
+  if (d.fecha_inicio && d.hora_inicio) {
+    const ics = generarICS(d);
+    enviarEmailConICS('Nueva OT creada: ' + d.id, lineas, ics, d.id);
+  } else {
+    enviarEmail('Nueva OT creada: ' + d.id, lineas);
+  }
 
   return { id: d.id };
 }
@@ -224,19 +233,30 @@ function manejarOTEditar(d) {
       sheet.getRange(i + 1, col('Técnico')).setValue(d.tecnico || '');
       sheet.getRange(i + 1, col('Descripción')).setValue(d.descripcion || '');
       sheet.getRange(i + 1, col('Fecha Asignación')).setValue(d.fecha_asignacion || '');
-      if (col('Contacto')    > 0) sheet.getRange(i + 1, col('Contacto')).setValue(d.contacto_nombre || '');
-      if (col('Teléfono')    > 0) sheet.getRange(i + 1, col('Teléfono')).setValue(d.contacto_tel    || '');
-      if (col('Dirección')   > 0) sheet.getRange(i + 1, col('Dirección')).setValue(d.direccion      || '');
-      if (col('Presupuesto') > 0) sheet.getRange(i + 1, col('Presupuesto')).setValue(presStr);
-      if (col('Trabajos')    > 0) sheet.getRange(i + 1, col('Trabajos')).setValue(trabajos.length ? JSON.stringify(trabajos) : '');
+      if (col('Contacto')      > 0) sheet.getRange(i + 1, col('Contacto')).setValue(d.contacto_nombre || '');
+      if (col('Teléfono')      > 0) sheet.getRange(i + 1, col('Teléfono')).setValue(d.contacto_tel    || '');
+      if (col('Dirección')     > 0) sheet.getRange(i + 1, col('Dirección')).setValue(d.direccion      || '');
+      if (col('Presupuesto')   > 0) sheet.getRange(i + 1, col('Presupuesto')).setValue(presStr);
+      if (col('Trabajos')      > 0) sheet.getRange(i + 1, col('Trabajos')).setValue(trabajos.length ? JSON.stringify(trabajos) : '');
+      if (col('Fecha Inicio')  > 0) sheet.getRange(i + 1, col('Fecha Inicio')).setValue(d.fecha_inicio  || '');
+      if (col('Hora Inicio')   > 0) sheet.getRange(i + 1, col('Hora Inicio')).setValue(d.hora_inicio    || '');
+      if (col('Duración (h)')  > 0) sheet.getRange(i + 1, col('Duración (h)')).setValue(d.duracion_horas || '');
 
-      enviarEmail('OT editada: ' + d.id, [
+      const lineasEdit = [
         'OT:      ' + d.id,
         'Cliente: ' + (d.cliente || ''),
         'Tipo:    ' + tipoStr,
         'Técnico: ' + (d.tecnico || ''),
+        d.fecha_inicio ? ('Inicio:  ' + d.fecha_inicio + (d.hora_inicio ? ' ' + d.hora_inicio : '')) : '',
+        d.duracion_horas ? ('Duración: ' + d.duracion_horas + 'h') : '',
         d.direccion ? ('Dirección: ' + d.direccion) : '',
-      ].filter(l => l !== ''));
+      ].filter(l => l !== '');
+
+      if (d.fecha_inicio && d.hora_inicio) {
+        enviarEmailConICS('OT editada: ' + d.id, lineasEdit, generarICS(d), d.id);
+      } else {
+        enviarEmail('OT editada: ' + d.id, lineasEdit);
+      }
 
       return { id: d.id, editada: true };
     }
@@ -960,6 +980,54 @@ function guardarFotos(fotos, prefix) {
   });
 
   return urls.join('\n');
+}
+
+// ── ICS — Generar invitación de calendario ───────────────────────────
+function generarICS(ot) {
+  // fecha_inicio: 'YYYY-MM-DD', hora_inicio: 'HH:MM', duracion_horas: número
+  const [y, m, d]   = (ot.fecha_inicio || '').split('-').map(Number);
+  const [h, min]    = (ot.hora_inicio  || '00:00').split(':').map(Number);
+  const durMin       = Math.round((Number(ot.duracion_horas) || 1) * 60);
+
+  // Convertir hora CR (UTC-6) a UTC sumando 6h
+  const start = new Date(Date.UTC(y, m - 1, d, h + 6, min));
+  const end   = new Date(start.getTime() + durMin * 60 * 1000);
+
+  const fmt = dt => dt.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+  const now  = fmt(new Date());
+
+  const desc = [ot.descripcion || '', ot.tecnico ? 'Técnico: ' + ot.tecnico : ''].filter(Boolean).join('\\n');
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//AClimate//AV Electromecanica//ES',
+    'METHOD:REQUEST',
+    'BEGIN:VEVENT',
+    'UID:OT-' + ot.id + '@aclimate-av',
+    'DTSTAMP:' + now,
+    'DTSTART:' + fmt(start),
+    'DTEND:'   + fmt(end),
+    'SUMMARY:OT ' + ot.id + ' — ' + (ot.cliente || ''),
+    'DESCRIPTION:' + desc,
+    ot.direccion ? ('LOCATION:' + ot.direccion.replace(/\n/g, '\\n')) : '',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].filter(l => l !== '').join('\r\n');
+}
+
+function enviarEmailConICS(asunto, lineas, ics, otId) {
+  try {
+    const blob = Utilities.newBlob(ics, 'text/calendar', 'OT-' + otId + '.ics');
+    MailApp.sendEmail({
+      to: EMAIL_DESTINATARIOS,
+      subject: '[AClímate] ' + asunto,
+      body: lineas.join('\n') + '\n\nAbrí el archivo adjunto (.ics) para agregar este evento a tu calendario de Outlook.\n\n—\nEnviado automáticamente por AClímate Forms',
+      attachments: [blob]
+    });
+  } catch(e) {
+    Logger.log('Email ICS error: ' + e.toString());
+  }
 }
 
 function jsonOk(data) {

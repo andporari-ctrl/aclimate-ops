@@ -333,6 +333,14 @@
   <div class="tab" id="btn-tab-cerradas" onclick="mostrarTab('cerradas')">
     Cerradas
   </div>
+  <div class="tab" id="btn-tab-agenda" onclick="mostrarTab('agenda')">
+    📅 Agenda
+  </div>
+</div>
+
+<!-- Vista Agenda del día -->
+<div class="ot-list" id="tab-agenda" style="display:none;">
+  <div id="agenda-contenido"></div>
 </div>
 
 <!-- Lista OTs abiertas -->
@@ -387,6 +395,35 @@
     <div class="campo">
       <label>Fecha de asignación</label>
       <input type="date" id="ot-fecha">
+    </div>
+
+    <!-- Programación de la visita -->
+    <div class="seccion-modal" style="margin-top:10px;">
+      <div class="seccion-modal-titulo">📅 Programación de la visita</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="campo">
+          <label>Fecha de inicio</label>
+          <input type="date" id="ot-fecha-inicio">
+        </div>
+        <div class="campo">
+          <label>Hora de inicio</label>
+          <input type="time" id="ot-hora-inicio">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Duración estimada</label>
+        <select id="ot-duracion">
+          <option value="">— Sin definir —</option>
+          <option value="0.5">30 minutos</option>
+          <option value="1">1 hora</option>
+          <option value="1.5">1 h 30 min</option>
+          <option value="2">2 horas</option>
+          <option value="3">3 horas</option>
+          <option value="4">4 horas</option>
+          <option value="6">6 horas</option>
+          <option value="8">Día completo (8h)</option>
+        </select>
+      </div>
     </div>
 
     <!-- Contacto en sitio -->
@@ -537,6 +574,7 @@ function crearCardOT(ot, esAbierta) {
       <span>👤 ${tech}</span>
       <span>📅 ${fecha}</span>
     </div>
+    ${ot.hora_inicio ? `<div style="font-size:.76rem;font-weight:700;color:#1A5276;background:#EBF5FB;border-radius:6px;padding:3px 8px;margin-top:4px;display:inline-block;">🕐 ${ot.hora_inicio}${ot.duracion_horas ? ' · ' + _fmtDur(ot.duracion_horas) : ''}</div>` : ''}
     ${creado    ? `<div style="font-size:.72rem;color:var(--texto-sub);margin-top:2px;">🕐 Creada: ${creado}</div>` : ''}
     ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">📍 ${dir}</div>` : ''}
     ${(contacto||tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel?' — '+tel:''}</div>` : ''}
@@ -553,11 +591,56 @@ function crearCardOT(ot, esAbierta) {
 }
 
 // ── Tabs ─────────────────────────────────────────────────────────────
+function renderAgenda() {
+  const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
+  const hoy = fechaHoy();
+  const conHora = ots
+    .filter(o => o.estado !== 'Cerrada' && o.fecha_inicio && o.hora_inicio)
+    .sort((a, b) => {
+      const da = a.fecha_inicio + 'T' + a.hora_inicio;
+      const db = b.fecha_inicio + 'T' + b.hora_inicio;
+      return da.localeCompare(db);
+    });
+
+  if (!conHora.length) {
+    document.getElementById('agenda-contenido').innerHTML =
+      `<div class="empty-state"><div class="icon">📅</div><p>No hay OTs con hora programada.<br>Editá una OT y completá la sección "Programación".</p></div>`;
+    return;
+  }
+
+  let html = '';
+  let lastFecha = null;
+  conHora.forEach(ot => {
+    const fi = ot.fecha_inicio; // YYYY-MM-DD
+    const [y, m, d] = fi.split('-');
+    const fechaLabel = `${d}/${m}/${y}`;
+    const esHoy = fi === hoy;
+    if (fi !== lastFecha) {
+      html += `<div style="padding:10px 12px 4px;font-size:.78rem;font-weight:800;color:var(--azul-dark);text-transform:uppercase;letter-spacing:.5px;">${esHoy ? '📌 HOY — ' : ''}${fechaLabel}</div>`;
+      lastFecha = fi;
+    }
+    const dur = ot.duracion_horas ? _fmtDur(ot.duracion_horas) : '';
+    html += `<div style="display:flex;gap:10px;padding:8px 12px;border-bottom:1px solid #F0F2F4;align-items:flex-start;">
+      <div style="min-width:44px;text-align:right;font-size:.9rem;font-weight:900;color:var(--azul-dark);padding-top:1px;">${ot.hora_inicio}</div>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:.85rem;">${ot.id} <span style="font-weight:400;color:var(--texto-sub);">— ${ot.cliente || ''}</span></div>
+        <div style="font-size:.72rem;color:var(--texto-sub);">👤 ${ot.tecnico || ''}${dur ? ' · ⏱ ' + dur : ''}</div>
+        ${ot.direccion ? `<div style="font-size:.72rem;color:var(--texto-sub);">📍 ${ot.direccion}</div>` : ''}
+      </div>
+      <button onclick="abrirModal('${ot.id}')" style="background:none;border:1px solid var(--gris-borde);border-radius:6px;padding:3px 8px;font-size:.7rem;cursor:pointer;flex-shrink:0;">✏️</button>
+    </div>`;
+  });
+  document.getElementById('agenda-contenido').innerHTML = html;
+}
+
 function mostrarTab(tab) {
   document.getElementById('tab-abiertas').style.display = tab === 'abiertas' ? 'block' : 'none';
   document.getElementById('tab-cerradas').style.display = tab === 'cerradas' ? 'block' : 'none';
+  document.getElementById('tab-agenda').style.display   = tab === 'agenda'   ? 'block' : 'none';
   document.getElementById('btn-tab-abiertas').className = 'tab' + (tab === 'abiertas' ? ' active' : '');
   document.getElementById('btn-tab-cerradas').className = 'tab' + (tab === 'cerradas' ? ' active' : '');
+  document.getElementById('btn-tab-agenda').className   = 'tab' + (tab === 'agenda'   ? ' active' : '');
+  if (tab === 'agenda') renderAgenda();
   document.getElementById('btn-nueva-ot').style.display = tab === 'abiertas' ? '' : 'none';
 }
 
@@ -669,16 +752,27 @@ function recogerTrabajos() {
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────
+function _fmtDur(h) {
+  const n = Number(h);
+  if (!n) return '';
+  if (n < 1) return Math.round(n * 60) + ' min';
+  if (n === Math.floor(n)) return n + 'h';
+  return Math.floor(n) + 'h ' + Math.round((n % 1) * 60) + 'min';
+}
+
 function _limpiarModal() {
   document.getElementById('ot-cliente').value          = '';
   document.getElementById('ot-descripcion').value      = '';
   document.getElementById('ot-fecha').value             = fechaHoy();
+  document.getElementById('ot-fecha-inicio').value     = '';
+  document.getElementById('ot-hora-inicio').value      = '';
+  document.getElementById('ot-duracion').value         = '';
   document.getElementById('ot-contacto-nombre').value  = '';
   document.getElementById('ot-contacto-tel').value     = '';
   document.getElementById('ot-direccion').value         = '';
   document.getElementById('trabajos-container').innerHTML = '';
   _trabajoCounter = 0;
-  agregarTrabajo(); // empezar con un trabajo vacío
+  agregarTrabajo();
 }
 
 function abrirModal(otId = null) {
@@ -697,6 +791,9 @@ function abrirModal(otId = null) {
     document.getElementById('ot-cliente').value         = ot.cliente || '';
     document.getElementById('ot-descripcion').value     = ot.descripcion || ot['descripción'] || '';
     document.getElementById('ot-fecha').value           = ot.fecha_asignacion || ot['fecha_asignación'] || fechaHoy();
+    document.getElementById('ot-fecha-inicio').value   = ot.fecha_inicio || '';
+    document.getElementById('ot-hora-inicio').value    = ot.hora_inicio  || '';
+    document.getElementById('ot-duracion').value       = ot.duracion_horas || '';
     document.getElementById('ot-contacto-nombre').value = ot.contacto_nombre || ot.contacto || '';
     document.getElementById('ot-contacto-tel').value    = ot.contacto_tel || ot['teléfono'] || '';
     document.getElementById('ot-direccion').value       = ot.direccion || ot['dirección'] || '';
@@ -750,15 +847,18 @@ async function guardarNuevaOT() {
   const ot = {
     id:               document.getElementById('ot-numero').value,
     cliente,
-    tipo:             trabajos[0].tipo,  // retrocompat
+    tipo:             trabajos[0].tipo,
     tecnico,
     descripcion:      document.getElementById('ot-descripcion').value.trim(),
     fecha_asignacion: document.getElementById('ot-fecha').value,
+    fecha_inicio:     document.getElementById('ot-fecha-inicio').value,
+    hora_inicio:      document.getElementById('ot-hora-inicio').value,
+    duracion_horas:   document.getElementById('ot-duracion').value,
     contacto_nombre:  document.getElementById('ot-contacto-nombre').value.trim(),
     contacto_tel:     document.getElementById('ot-contacto-tel').value.trim(),
     direccion:        document.getElementById('ot-direccion').value.trim(),
     trabajos,
-    presupuesto:      trabajos.flatMap(t => t.presupuesto || []) // retrocompat
+    presupuesto:      trabajos.flatMap(t => t.presupuesto || [])
   };
 
   if (_editandoOTId) {
