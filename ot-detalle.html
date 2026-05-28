@@ -317,9 +317,12 @@ function renderDetalle(ot, f01, f03, f04, f06) {
   html += mkSeccion('🔧 Trabajo realizado', f03.length,
     f03.length === 0 ? mkVacio('Sin reportes F-03 registrados para esta OT.') :
     f03.map(r => {
-      const items  = parseItems(r['Ítems Utilizados'] || '');
-      const fotosT = parsePhotos(r['Fotos Trabajo']   || '');
-      const fotosV = parsePhotos(r['Foto VoBo']       || '');
+      const items       = parseItems(r['Ítems Utilizados'] || '');
+      const fotosAntes  = parsePhotos(r['Fotos Antes']    || r['Fotos Trabajo'] || '');
+      const fotosPlaca  = parsePhotos(r['Foto Placa']     || '');
+      const fotosProc   = parsePhotos(r['Fotos Proceso']  || '');
+      const fotosDes    = parsePhotos(r['Fotos Después']  || '');
+      const fotosV      = parsePhotos(r['Foto VoBo']      || '');
       const voboOK = r['VoBo'] && r['VoBo'] !== 'No';
       return `
         <div class="det-registro">
@@ -335,8 +338,11 @@ function renderDetalle(ot, f01, f03, f04, f06) {
           ${r['VoBo Justif'] ? `<div class="det-obs">VoBo: ${escHtml(r['VoBo Justif'])}</div>` : ''}
           ${items.length ? `<div class="det-sub-titulo">Materiales utilizados:</div>${mkTablaItems(items)}` : ''}
           ${r['Observaciones'] ? `<div class="det-obs">📝 ${escHtml(r['Observaciones'])}</div>` : ''}
-          ${fotosT.length ? `<div class="det-sub-titulo">Fotos del trabajo:</div>${mkFotos(fotosT)}` : ''}
-          ${fotosV.length ? `<div class="det-sub-titulo">Foto VoBo:</div>${mkFotos(fotosV, 'VoBo')}` : ''}
+          ${fotosAntes.length ? `<div class="det-sub-titulo">📷 Antes:</div>${mkFotos(fotosAntes)}` : ''}
+          ${fotosPlaca.length ? `<div class="det-sub-titulo">🏷️ Placa / Serie:</div>${mkFotos(fotosPlaca, '🏷️ Placa')}` : ''}
+          ${fotosProc.length  ? `<div class="det-sub-titulo">🔧 Proceso / Falla:</div>${mkFotos(fotosProc)}` : ''}
+          ${fotosDes.length   ? `<div class="det-sub-titulo">✅ Después:</div>${mkFotos(fotosDes)}` : ''}
+          ${fotosV.length     ? `<div class="det-sub-titulo">🤝 VoBo cliente:</div>${mkFotos(fotosV, 'VoBo')}` : ''}
         </div>`;
     }).join('')
   );

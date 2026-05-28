@@ -19,6 +19,35 @@
     .info-display.vacio { color: var(--texto-sub); font-weight: 400; font-style: italic; }
     .horas-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .horas-grid .campo { margin-bottom: 0; }
+
+    /* ── Protocolo fotográfico ──────────────────────────────────── */
+    .fzp-block {
+      border-left: 4px solid;
+      padding-left: 10px;
+      margin-bottom: 14px;
+    }
+    .fzp-block.antes   { border-color: var(--azul); }
+    .fzp-block.placa   { border-color: #8E44AD; }
+    .fzp-block.proceso { border-color: var(--naranja); }
+    .fzp-block.despues { border-color: var(--verde); }
+    .fzp-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .fzp-emoji { font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
+    .fzp-info  { flex: 1; }
+    .fzp-label { font-weight: 700; font-size: .92rem; color: var(--azul-dark); }
+    .fzp-desc  { font-size: .72rem; color: var(--texto-sub); margin-top: 2px; }
+    .fzp-count {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--texto-sub);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .fzp-count.ok { color: var(--verde); }
   </style>
 </head>
 <body>
@@ -192,20 +221,90 @@
     </div>
   </div>
 
-  <!-- SECCIÓN 6: Fotos del trabajo -->
+  <!-- SECCIÓN 6: Registro fotográfico -->
   <div class="seccion">
-    <div class="seccion-titulo">Fotos del trabajo terminado</div>
+    <div class="seccion-titulo">Registro fotográfico</div>
+    <div class="alerta-info" style="margin-bottom:16px;">
+      📋 <strong>Orden:</strong> Antes → Placa → Proceso → Después. Las 3 primeras y la última son obligatorias.
+    </div>
 
-    <div class="campo">
-      <label>Fotos (mínimo 2) <span class="req">*</span></label>
+    <!-- Zona 1: Antes -->
+    <div class="campo fzp-block antes">
+      <div class="fzp-header">
+        <span class="fzp-emoji">📷</span>
+        <div class="fzp-info">
+          <div class="fzp-label">Antes <span class="req">*</span></div>
+          <div class="fzp-desc">Estado del equipo al llegar, antes de tocar nada</div>
+        </div>
+        <span class="fzp-count" id="count-antes">Sin fotos</span>
+      </div>
       <div class="foto-zona">
-        <input type="file" id="fotos-trabajo" accept="image/*" class="foto-required" multiple>
+        <input type="file" id="fotos-antes" accept="image/*" class="foto-required" multiple>
         <div class="icon">📷</div>
-        <p>Al menos 2 fotos: antes y después del trabajo</p>
+        <p>Tocá para abrir cámara o galería</p>
         <div class="nombre-archivo"></div>
       </div>
-      <div class="fotos-preview" id="fotos-trabajo-preview"></div>
-      <span class="campo-error-msg">Se requieren al menos 2 fotos</span>
+      <div class="fotos-preview" id="preview-antes"></div>
+      <span class="campo-error-msg">Obligatorio: mínimo 1 foto del estado inicial</span>
+    </div>
+
+    <!-- Zona 2: Placa / Serie -->
+    <div class="campo fzp-block placa">
+      <div class="fzp-header">
+        <span class="fzp-emoji">🏷️</span>
+        <div class="fzp-info">
+          <div class="fzp-label">Placa / Número de serie <span class="req">*</span></div>
+          <div class="fzp-desc">Foto de la etiqueta con modelo y serial del equipo</div>
+        </div>
+        <span class="fzp-count" id="count-placa">Sin foto</span>
+      </div>
+      <div class="foto-zona">
+        <input type="file" id="foto-placa" accept="image/*" class="foto-required">
+        <div class="icon">🏷️</div>
+        <p>Tocá para fotografiar la placa del equipo</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="preview-placa"></div>
+      <span class="campo-error-msg">Obligatorio: foto de la placa con número de serie</span>
+    </div>
+
+    <!-- Zona 3: Proceso / Falla -->
+    <div class="campo fzp-block proceso">
+      <div class="fzp-header">
+        <span class="fzp-emoji">🔧</span>
+        <div class="fzp-info">
+          <div class="fzp-label">Proceso / Falla <span style="font-size:.78rem;font-weight:400;color:var(--texto-sub);">(opcional)</span></div>
+          <div class="fzp-desc">Falla encontrada, piezas cambiadas, trabajo en progreso</div>
+        </div>
+        <span class="fzp-count" id="count-proceso">—</span>
+      </div>
+      <div class="foto-zona">
+        <input type="file" id="fotos-proceso" accept="image/*" multiple>
+        <div class="icon">🔧</div>
+        <p>Tocá para agregar fotos del proceso (opcional)</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="preview-proceso"></div>
+    </div>
+
+    <!-- Zona 4: Después -->
+    <div class="campo fzp-block despues">
+      <div class="fzp-header">
+        <span class="fzp-emoji">✅</span>
+        <div class="fzp-info">
+          <div class="fzp-label">Después <span class="req">*</span></div>
+          <div class="fzp-desc">Equipo funcionando al finalizar el trabajo</div>
+        </div>
+        <span class="fzp-count" id="count-despues">Sin fotos</span>
+      </div>
+      <div class="foto-zona">
+        <input type="file" id="fotos-despues" accept="image/*" class="foto-required" multiple>
+        <div class="icon">✅</div>
+        <p>Tocá para fotografiar el resultado final</p>
+        <div class="nombre-archivo"></div>
+      </div>
+      <div class="fotos-preview" id="preview-despues"></div>
+      <span class="campo-error-msg">Obligatorio: mínimo 1 foto del equipo al terminar</span>
     </div>
 
     <div class="campo">
@@ -334,17 +433,25 @@ document.getElementById('vobo-select').addEventListener('change', function() {
   document.getElementById('campo-foto-vobo').style.display    = this.value === 'Obtenido'      ? 'block' : 'none';
 });
 
-// ── Fotos ──────────────────────────────────────────────────────────
-const fotosTrabajoInput = document.getElementById('fotos-trabajo');
-setupFotoField(fotosTrabajoInput, document.getElementById('fotos-trabajo-preview'));
-fotosTrabajoInput.addEventListener('change', function() {
-  if (this._fotos && this._fotos.length < 2) {
-    showToast('Se requieren al menos 2 fotos del trabajo', 'warn');
-    this._hasFile = false;
-  }
-});
-const fotoVoboInput = document.getElementById('foto-vobo');
-setupFotoField(fotoVoboInput, document.getElementById('fotos-vobo-preview'));
+// ── Protocolo fotográfico ──────────────────────────────────────────
+function _setupZona(inputId, previewId, countId, emptyLabel) {
+  const inp = document.getElementById(inputId);
+  const prv = document.getElementById(previewId);
+  setupFotoField(inp, prv, (n) => {
+    const el = document.getElementById(countId);
+    if (!el) return;
+    el.textContent = n === 0 ? emptyLabel : n + (n === 1 ? ' foto' : ' fotos');
+    el.className   = 'fzp-count' + (n > 0 ? ' ok' : '');
+  });
+  return inp;
+}
+
+const fotosAntes   = _setupZona('fotos-antes',   'preview-antes',   'count-antes',   'Sin fotos');
+const fotosPlaca   = _setupZona('foto-placa',     'preview-placa',   'count-placa',   'Sin foto');
+const fotosProceso = _setupZona('fotos-proceso',  'preview-proceso', 'count-proceso', '—');
+const fotosDespues = _setupZona('fotos-despues',  'preview-despues', 'count-despues', 'Sin fotos');
+const fotosVobo    = document.getElementById('foto-vobo');
+setupFotoField(fotosVobo, document.getElementById('fotos-vobo-preview'));
 
 // ── Auto-guardado ──────────────────────────────────────────────────
 let asSave;
@@ -362,9 +469,23 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
     showToast('Seleccioná el trabajo que vas a reportar', 'warn');
     return;
   }
-  if (!fotosTrabajoInput._fotos || fotosTrabajoInput._fotos.length < 2) {
-    fotosTrabajoInput._hasFile = false;
-    showToast('Se requieren al menos 2 fotos del trabajo terminado', 'warn');
+  // Validar fotos obligatorias del protocolo
+  if (!fotosAntes._fotos?.length) {
+    fotosAntes._hasFile = false;
+    document.getElementById('fotos-antes').closest('.campo').classList.add('error');
+    showToast('Foto ANTES obligatoria — estado inicial del equipo', 'warn');
+    return;
+  }
+  if (!fotosPlaca._fotos?.length) {
+    fotosPlaca._hasFile = false;
+    document.getElementById('foto-placa').closest('.campo').classList.add('error');
+    showToast('Foto de PLACA / número de serie obligatoria', 'warn');
+    return;
+  }
+  if (!fotosDespues._fotos?.length) {
+    fotosDespues._hasFile = false;
+    document.getElementById('fotos-despues').closest('.campo').classList.add('error');
+    showToast('Foto DESPUÉS obligatoria — equipo funcionando al terminar', 'warn');
     return;
   }
   if (!validarForm(formEl)) return;
@@ -377,8 +498,11 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
     timestamp: timestampCR(),
     items,
     trabajo_idx:   _trabajoIdx >= 0 ? _trabajoIdx : undefined,
-    fotos_trabajo: fotosTrabajoInput._fotos || [],
-    fotos_vobo:    fotoVoboInput._fotos || []
+    fotos_antes:   fotosAntes._fotos   || [],
+    fotos_placa:   fotosPlaca._fotos   || [],
+    fotos_proceso: fotosProceso._fotos || [],
+    fotos_despues: fotosDespues._fotos || [],
+    fotos_vobo:    fotosVobo._fotos    || []
   };
   fd.forEach((v, k) => { if (!k.startsWith('item_')) data[k] = v; });
 

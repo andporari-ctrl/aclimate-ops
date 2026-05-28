@@ -225,7 +225,7 @@ function comprimirFoto(file, maxDim, quality) {
 }
 
 // ── Setup de campo de foto ───────────────────────────────────────────
-function setupFotoField(inputEl, previewContainer) {
+function setupFotoField(inputEl, previewContainer, onUpdate) {
   inputEl._hasFile = false;
   inputEl._fotos = [];
 
@@ -235,6 +235,7 @@ function setupFotoField(inputEl, previewContainer) {
     if (txt) txt.textContent = n === 0 ? '' : n === 1 ? '1 foto agregada' : n + ' fotos agregadas';
     inputEl._hasFile = n > 0;
     inputEl.closest('.campo')?.classList.remove('error');
+    if (onUpdate) onUpdate(n);
   }
 
   function renderPreviews() {

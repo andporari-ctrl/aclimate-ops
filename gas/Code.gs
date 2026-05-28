@@ -407,15 +407,27 @@ function manejarF02(d) {
 function manejarF03(d) {
   const sheet = getSheet('F03-ReporteTrabajo');
 
+  const F03_BASE = [
+    'Timestamp', 'Fecha', 'OT', 'Técnico', 'Cliente', 'Tipo Trabajo',
+    'Hora Llegada', 'Hora Inicio', 'Hora Fin',
+    'Ítems Utilizados', 'Descripción Trabajo',
+    'Hubo Problema', 'Detalle Problema',
+    'Estado Equipo', 'VoBo', 'VoBo Justif', 'Observaciones'
+  ];
+  const F03_FOTO_COLS = ['Fotos Antes', 'Foto Placa', 'Fotos Proceso', 'Fotos Después', 'Foto VoBo'];
+
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      'Timestamp', 'Fecha', 'OT', 'Técnico', 'Cliente', 'Tipo Trabajo',
-      'Hora Llegada', 'Hora Inicio', 'Hora Fin',
-      'Ítems Utilizados', 'Descripción Trabajo',
-      'Hubo Problema', 'Detalle Problema',
-      'Estado Equipo', 'VoBo', 'VoBo Justif',
-      'Observaciones', 'Fotos Trabajo', 'Foto VoBo'
-    ]);
+    sheet.appendRow([...F03_BASE, ...F03_FOTO_COLS]);
+    formatearEncabezados(sheet);
+  } else {
+    // Migración: agregar columnas de foto nuevas si no existen
+    const hdrs = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    F03_FOTO_COLS.forEach(h => {
+      if (!hdrs.includes(h)) {
+        sheet.getRange(1, hdrs.length + 1).setValue(h);
+        hdrs.push(h);
+      }
+    });
     formatearEncabezados(sheet);
   }
 
@@ -423,17 +435,43 @@ function manejarF03(d) {
     .map(it => `${it.codigo} | ${it.nombre} | ${it.cantidad}`)
     .join('\n');
 
-  const fotosT  = guardarFotos(d.fotos_trabajo, `F03_${d.ot}_${d.fecha}_trabajo`);
-  const fotosV  = guardarFotos(d.fotos_vobo,    `F03_${d.ot}_${d.fecha}_vobo`);
+  const fotosAntes   = guardarFotos(d.fotos_antes   || [], `F03_${d.ot}_${d.fecha}_antes`);
+  const fotoPlaca    = guardarFotos(d.fotos_placa    || [], `F03_${d.ot}_${d.fecha}_placa`);
+  const fotosProceso = guardarFotos(d.fotos_proceso  || [], `F03_${d.ot}_${d.fecha}_proceso`);
+  const fotosDespues = guardarFotos(d.fotos_despues  || [], `F03_${d.ot}_${d.fecha}_despues`);
+  const fotosVobo    = guardarFotos(d.fotos_vobo     || [], `F03_${d.ot}_${d.fecha}_vobo`);
 
-  sheet.appendRow([
-    d.timestamp, d.fecha, d.ot, d.tecnico, d.cliente, d.tipo_trabajo,
-    d.hora_llegada, d.hora_inicio, d.hora_fin,
-    itemsStr, d.descripcion,
-    d.hubo_problema, d.problema_detalle || '',
-    d.estado_equipo, d.vobo, d.vobo_justificacion || '',
-    d.observaciones || '', fotosT, fotosV
-  ]);
+  // Escritura basada en encabezados para soportar esquema viejo y nuevo
+  const hdrs = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const row  = new Array(hdrs.length).fill('');
+  const set  = (h, v) => { const i = hdrs.indexOf(h); if (i >= 0) row[i] = v; };
+
+  set('Timestamp',           d.timestamp);
+  set('Fecha',               d.fecha);
+  set('OT',                  d.ot);
+  set('Técnico',             d.tecnico);
+  set('Cliente',             d.cliente);
+  set('Tipo Trabajo',        d.tipo_trabajo);
+  set('Hora Llegada',        d.hora_llegada);
+  set('Hora Inicio',         d.hora_inicio);
+  set('Hora Fin',            d.hora_fin);
+  set('Ítems Utilizados',    itemsStr);
+  set('Descripción Trabajo', d.descripcion);
+  set('Hubo Problema',       d.hubo_problema);
+  set('Detalle Problema',    d.problema_detalle    || '');
+  set('Estado Equipo',       d.estado_equipo);
+  set('VoBo',                d.vobo);
+  set('VoBo Justif',         d.vobo_justificacion  || '');
+  set('Observaciones',       d.observaciones       || '');
+  set('Fotos Antes',         fotosAntes);
+  set('Foto Placa',          fotoPlaca);
+  set('Fotos Proceso',       fotosProceso);
+  set('Fotos Después',       fotosDespues);
+  set('Foto VoBo',           fotosVobo);
+  // Retrocompatibilidad: si la hoja aún tiene la columna vieja, consolidar ahí
+  set('Fotos Trabajo', [fotosAntes, fotosProceso, fotosDespues].filter(Boolean).join('\n'));
+
+  sheet.appendRow(row);
 
   // Registrar consumo (informativo, sin cambio de stock)
   registrarMovimientos(d.items, 'Consumo', d.ot, d.tecnico, d.fecha, 'F03');
