@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Detalle OT — AClímate</title>
+  <link rel="stylesheet" href="aclimate.css">
+  <style>
+    .det-seccion {
+      background: #fff;
+      margin: 12px 12px 0;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: var(--sombra);
+    }
+    .det-seccion:last-child { margin-bottom: 24px; }
+    .det-seccion-titulo {
+      font-size: .82rem;
+      font-weight: 800;
+      color: var(--azul-dark);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .det-registro {
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .det-registro:last-child { margin-bottom: 0; }
+    .det-reg-meta {
+      font-size: .74rem;
+      color: var(--texto-sub);
+    }
+    .det-tipo-tag {
+      display: inline-block;
+      font-size: .74rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: var(--azul-light);
+      color: var(--azul-dark);
+      width: fit-content;
+    }
+    .det-desc {
+      font-size: .85rem;
+      color: var(--texto);
+      line-height: 1.45;
+    }
+    .det-alerta {
+      background: #FEF9E7;
+      border-left: 3px solid var(--naranja);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: .8rem;
+      color: var(--texto);
+    }
+    .det-obs {
+      font-size: .78rem;
+      color: var(--texto-sub);
+      font-style: italic;
+    }
+    .det-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: .78rem;
+      color: var(--texto);
+    }
+    .det-sub-titulo {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--texto-sub);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-top: 4px;
+    }
+    .det-tabla {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .78rem;
+      margin-top: 4px;
+    }
+    .det-tabla th {
+      background: var(--azul-dark);
+      color: #fff;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .det-tabla td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--gris-borde);
+      vertical-align: top;
+    }
+    .det-tabla tr:last-child td { border-bottom: none; }
+    .det-tabla tr:nth-child(even) td { background: var(--gris-bg); }
+    .det-fotos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .det-foto-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 12px;
+      background: var(--azul-light);
+      color: var(--azul-dark);
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid var(--azul);
+    }
+    .det-foto-link:hover { background: var(--azul); color: #fff; }
+    .det-vacio {
+      font-size: .8rem;
+      color: var(--texto-sub);
+      font-style: italic;
+      padding: 4px 0;
+    }
+    .det-badge {
+      background: var(--azul);
+      color: #fff;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+    /* Cabecera de OT */
+    .ot-info-card {
+      background: #fff;
+      margin: 12px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--sombra);
+    }
+    .ot-info-id {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--azul-dark);
+    }
+    .ot-info-cliente {
+      font-size: .95rem;
+      font-weight: 600;
+      margin: 4px 0 8px;
+    }
+    .ot-info-meta {
+      font-size: .76rem;
+      color: var(--texto-sub);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .ot-estado-cerrada {
+      background: #F4F6F8;
+      color: var(--texto-sub);
+      font-size: .75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+    .ot-estado-abierta {
+      background: #EAFAF1;
+      color: var(--verde);
+      font-size: .75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--verde);
+    }
+    .balance-ok   { color: var(--verde); font-weight: 700; }
+    .balance-warn { color: var(--naranja); font-weight: 700; }
+    .loading-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--texto-sub);
+    }
+    .loading-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Aclimate_logo.jpg" alt="AClímate" onerror="this.style.display='none'">
+  <div class="header-titles">
+    <h1 id="hdr-titulo">Detalle de OT</h1>
+    <p id="hdr-sub">Cargando...</p>
+  </div>
+  <a href="ot-manager.html" style="margin-left:auto;font-size:.75rem;color:var(--azul);text-decoration:none;font-weight:600;white-space:nowrap;">← OTs</a>
+</div>
+
+<div id="contenido">
+  <div class="loading-state">
+    <div class="icon">⏳</div>
+    <p>Cargando datos de la OT...</p>
+  </div>
+</div>
+
+<script src="auth.js?v=1"></script>
+<script src="config.js"></script>
+<script src="utils.js"></script>
+<script>
+checkAuth(); inyectarBadge();
+
+const params = new URLSearchParams(location.search);
+const OT_ID  = params.get('id');
+
+if (!OT_ID) {
+  document.getElementById('contenido').innerHTML =
+    `<div class="loading-state"><div class="icon">⚠️</div><p>No se especificó una OT.<br><a href="ot-manager.html" style="color:var(--azul)">← Volver al gestor</a></p></div>`;
+} else {
+  cargarDetalle();
+}
+
+async function cargarDetalle() {
+  try {
+    const base = CONFIG.GAS_URL;
+    const [otsRes, f01Res, f03Res, f04Res, f06Res] = await Promise.all([
+      fetch(base + '?action=ots').then(r => r.json()),
+      fetch(base + '?action=formularios&tipo=F01&limit=500').then(r => r.json()),
+      fetch(base + '?action=formularios&tipo=F03&limit=500').then(r => r.json()),
+      fetch(base + '?action=formularios&tipo=F04&limit=500').then(r => r.json()),
+      fetch(base + '?action=formularios&tipo=F06&limit=500').then(r => r.json()),
+    ]);
+
+    let ot = null;
+    if (otsRes.status === 'ok') ot = otsRes.data.find(o => String(o.id) === OT_ID);
+    if (!ot) {
+      const local = JSON.parse(localStorage.getItem('ots_local') || '[]');
+      ot = local.find(o => String(o.id) === OT_ID);
+    }
+    if (!ot) {
+      document.getElementById('contenido').innerHTML =
+        `<div class="loading-state"><div class="icon">🔍</div><p>OT <strong>${escHtml(OT_ID)}</strong> no encontrada.<br><a href="ot-manager.html" style="color:var(--azul)">← Volver</a></p></div>`;
+      return;
+    }
+
+    const f01 = (f01Res.status === 'ok' ? f01Res.data : []).filter(r => String(r['OT']) === OT_ID);
+    const f03 = (f03Res.status === 'ok' ? f03Res.data : []).filter(r => String(r['OT']) === OT_ID);
+    const f04 = (f04Res.status === 'ok' ? f04Res.data : []).filter(r => String(r['OT Origen']) === OT_ID);
+    const f06 = (f06Res.status === 'ok' ? f06Res.data : []).filter(r => String(r['OT']) === OT_ID);
+
+    renderDetalle(ot, f01, f03, f04, f06);
+  } catch(e) {
+    document.getElementById('contenido').innerHTML =
+      `<div class="loading-state"><div class="icon">⚠️</div><p>Error al cargar los datos.<br><small style="color:var(--texto-sub)">${escHtml(e.message)}</small><br><br><a href="ot-manager.html" style="color:var(--azul)">← Volver</a></p></div>`;
+  }
+}
+
+// ── Render principal ──────────────────────────────────────────────────
+function renderDetalle(ot, f01, f03, f04, f06) {
+  const tech    = ot.tecnico   || ot['técnico']          || '—';
+  const fechaAs = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
+  const cierre  = ot.timestamp_cierre || ot['timestamp_cierre'] || '';
+  const dir     = ot.direccion || ot['dirección'] || '';
+  const estado  = ot.estado || 'Abierta';
+
+  document.getElementById('hdr-titulo').textContent = ot.id || OT_ID;
+  document.getElementById('hdr-sub').textContent    = ot.cliente || '';
+
+  let trabajos = Array.isArray(ot.trabajos) && ot.trabajos.length ? ot.trabajos : null;
+  if (!trabajos) trabajos = [{ tipo: ot.tipo || '—', descripcion: ot.descripcion || '' }];
+
+  let html = '';
+
+  // ── OT info ───────────────────────────────────────────────────────
+  html += `
+    <div class="ot-info-card" style="border-left:4px solid ${estado === 'Cerrada' ? 'var(--gris-borde)' : 'var(--verde)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <span class="ot-info-id">${escHtml(ot.id || OT_ID)}</span>
+        <span class="${estado === 'Cerrada' ? 'ot-estado-cerrada' : 'ot-estado-abierta'}">${escHtml(estado)}</span>
+      </div>
+      <div class="ot-info-cliente">${escHtml(ot.cliente || '—')}</div>
+      <div class="ot-info-meta">
+        <span>👤 ${escHtml(tech)}</span>
+        <span>📅 Asignada: ${escHtml(fechaAs)}</span>
+        ${cierre  ? `<span>🔒 Cerrada: ${escHtml(cierre)}</span>`  : ''}
+        ${dir     ? `<span>📍 ${escHtml(dir)}</span>`               : ''}
+        ${ot.contacto || ot.contacto_nombre ? `<span>📞 ${escHtml(ot.contacto_nombre || ot.contacto || '')}${(ot.contacto_tel || ot['teléfono']) ? ' — ' + escHtml(ot.contacto_tel || ot['teléfono']) : ''}</span>` : ''}
+      </div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;">
+        ${trabajos.map(t => `
+          <div style="padding:7px 10px;border-radius:7px;background:var(--gris-bg);font-size:.8rem;">
+            <strong>${escHtml(t.tipo)}</strong>
+            ${t.descripcion ? `<div style="font-size:.75rem;color:var(--texto-sub);margin-top:2px;">${escHtml(t.descripcion)}</div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  // ── F01: Materiales despachados ────────────────────────────────────
+  html += mkSeccion('📦 Materiales despachados', f01.length,
+    f01.length === 0 ? mkVacio('Sin despachos F-01 registrados para esta OT.') :
+    f01.map(r => {
+      const items = parseItems(r['Ítems (código|nombre|cantidad)'] || '');
+      const fotos = parsePhotos(r['Fotos'] || '');
+      return `
+        <div class="det-registro">
+          <div class="det-reg-meta">📅 ${escHtml(r['Fecha'] || '')} &nbsp;·&nbsp; 👤 ${escHtml(r['Técnico'] || '')}</div>
+          ${items.length ? mkTablaItems(items) : mkVacio('Sin ítems')}
+          ${r['Observaciones'] ? `<div class="det-obs">📝 ${escHtml(r['Observaciones'])}</div>` : ''}
+          ${fotos.length ? mkFotos(fotos) : ''}
+        </div>`;
+    }).join('')
+  );
+
+  // ── F03: Trabajo realizado ─────────────────────────────────────────
+  html += mkSeccion('🔧 Trabajo realizado', f03.length,
+    f03.length === 0 ? mkVacio('Sin reportes F-03 registrados para esta OT.') :
+    f03.map(r => {
+      const items  = parseItems(r['Ítems Utilizados'] || '');
+      const fotosT = parsePhotos(r['Fotos Trabajo']   || '');
+      const fotosV = parsePhotos(r['Foto VoBo']       || '');
+      const voboOK = r['VoBo'] && r['VoBo'] !== 'No';
+      return `
+        <div class="det-registro">
+          <div class="det-reg-meta">📅 ${escHtml(r['Fecha'] || '')} &nbsp;·&nbsp; 👤 ${escHtml(r['Técnico'] || '')}</div>
+          <div class="det-reg-meta">🕐 Llegada: ${escHtml(r['Hora Llegada'] || '—')} &nbsp;·&nbsp; Inicio: ${escHtml(r['Hora Inicio'] || '—')} &nbsp;·&nbsp; Fin: ${escHtml(r['Hora Fin'] || '—')}</div>
+          ${r['Tipo Trabajo'] ? `<div class="det-tipo-tag">${escHtml(r['Tipo Trabajo'])}</div>` : ''}
+          ${r['Descripción Trabajo'] ? `<div class="det-desc">${escHtml(r['Descripción Trabajo'])}</div>` : ''}
+          ${r['Hubo Problema'] === 'Sí' ? `<div class="det-alerta">⚠️ <strong>Problema:</strong> ${escHtml(r['Detalle Problema'] || '—')}</div>` : ''}
+          <div class="det-row">
+            <span>Estado equipo: <strong>${escHtml(r['Estado Equipo'] || '—')}</strong></span>
+            <span style="color:${voboOK ? 'var(--verde)' : 'var(--rojo)'}">VoBo cliente: <strong>${escHtml(r['VoBo'] || '—')}</strong></span>
+          </div>
+          ${r['VoBo Justif'] ? `<div class="det-obs">VoBo: ${escHtml(r['VoBo Justif'])}</div>` : ''}
+          ${items.length ? `<div class="det-sub-titulo">Materiales utilizados:</div>${mkTablaItems(items)}` : ''}
+          ${r['Observaciones'] ? `<div class="det-obs">📝 ${escHtml(r['Observaciones'])}</div>` : ''}
+          ${fotosT.length ? `<div class="det-sub-titulo">Fotos del trabajo:</div>${mkFotos(fotosT)}` : ''}
+          ${fotosV.length ? `<div class="det-sub-titulo">Foto VoBo:</div>${mkFotos(fotosV, 'VoBo')}` : ''}
+        </div>`;
+    }).join('')
+  );
+
+  // ── F04: Devoluciones ──────────────────────────────────────────────
+  html += mkSeccion('📤 Devoluciones', f04.length,
+    f04.length === 0 ? mkVacio('Sin devoluciones F-04 registradas para esta OT.') :
+    f04.map(r => {
+      const items = parseItems(r['Ítems Devueltos'] || '');
+      const fotos = parsePhotos(r['Fotos'] || '');
+      return `
+        <div class="det-registro">
+          <div class="det-reg-meta">📅 ${escHtml(r['Fecha'] || '')} &nbsp;·&nbsp; 👤 ${escHtml(r['Técnico'] || '')}</div>
+          ${items.length ? mkTablaItems(items) : mkVacio('Sin ítems devueltos')}
+          <div class="det-row">
+            <span>Estado ítems: <strong>${escHtml(r['Estado Ítems'] || '—')}</strong></span>
+            ${r['Material en Camión'] ? `<span>En camión: <strong>${escHtml(r['Material en Camión'])}</strong></span>` : ''}
+          </div>
+          ${r['Detalle Camión'] ? `<div class="det-obs">📍 Camión: ${escHtml(r['Detalle Camión'])}</div>` : ''}
+          ${fotos.length ? mkFotos(fotos) : ''}
+        </div>`;
+    }).join('')
+  );
+
+  // ── F06: Gastos ────────────────────────────────────────────────────
+  if (f06.length) {
+    const totalGastos = f06.reduce((s, r) => s + (Number(r['Monto (₡)']) || 0), 0);
+    html += mkSeccion(`💳 Viáticos — Total ₡${totalGastos.toLocaleString('es-CR')}`, f06.length,
+      f06.map(r => {
+        const fotoR = parsePhotos(r['Foto Recibo'] || '');
+        const aprobado = r['Aprobado PM'] === 'Sí';
+        return `
+          <div class="det-registro">
+            <div class="det-reg-meta">📅 ${escHtml(r['Fecha'] || '')} &nbsp;·&nbsp; 👤 ${escHtml(r['Técnico'] || '')}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-weight:600;">${escHtml(r['Tipo Gasto'] || '—')}</span>
+              <span style="font-size:1rem;font-weight:800;color:var(--azul-dark);">₡${Number(r['Monto (₡)'] || 0).toLocaleString('es-CR')}</span>
+            </div>
+            <div class="det-desc">${escHtml(r['Descripción'] || '')}</div>
+            ${aprobado
+              ? `<div style="font-size:.75rem;color:var(--verde);">✅ Aprobado por PM</div>`
+              : `<div class="det-alerta">⚠️ Sin aprobación previa: ${escHtml(r['Justif. Sin Aprobación'] || '—')}</div>`}
+            ${r['Hay Vuelto'] === 'Sí' ? `<div class="det-obs">💰 Vuelto pendiente: ₡${Number(r['Monto Vuelto (₡)'] || 0).toLocaleString('es-CR')}</div>` : ''}
+            ${fotoR.length ? `<div class="det-sub-titulo">Recibo:</div>${mkFotos(fotoR, '🧾 Recibo')}` : ''}
+          </div>`;
+      }).join('')
+    );
+  }
+
+  // ── Balance de materiales ──────────────────────────────────────────
+  const todasSalidas   = f01.flatMap(r => parseItems(r['Ítems (código|nombre|cantidad)'] || ''));
+  const todasDevol     = f04.flatMap(r => parseItems(r['Ítems Devueltos'] || ''));
+  const todosConsumidos = f03.flatMap(r => parseItems(r['Ítems Utilizados'] || ''));
+
+  if (todasSalidas.length) {
+    const agg = {};
+    const acumular = (items, campo) => items.forEach(it => {
+      if (!agg[it.c]) agg[it.c] = { nombre: it.n, salida: 0, devuelto: 0, usado: 0 };
+      agg[it.c][campo] += Number(it.q) || 0;
+    });
+    acumular(todasSalidas,    'salida');
+    acumular(todasDevol,      'devuelto');
+    acumular(todosConsumidos, 'usado');
+
+    const filas = Object.entries(agg).map(([cod, v]) => {
+      const diff = v.salida - v.devuelto - v.usado;
+      const ok   = Math.abs(diff) === 0;
+      return `
+        <tr${ok ? '' : ' style="background:#FFF3CD"'}>
+          <td>${escHtml(cod)}<br><small style="color:var(--texto-sub)">${escHtml(v.nombre)}</small></td>
+          <td style="text-align:center">${v.salida}</td>
+          <td style="text-align:center">${v.usado}</td>
+          <td style="text-align:center">${v.devuelto}</td>
+          <td style="text-align:center" class="${ok ? 'balance-ok' : 'balance-warn'}">${ok ? '✅' : '⚠️ ' + diff}</td>
+        </tr>`;
+    }).join('');
+
+    html += `
+      <div class="det-seccion" style="margin-bottom:24px;">
+        <div class="det-seccion-titulo">📊 Balance de materiales</div>
+        <div style="overflow-x:auto;">
+          <table class="det-tabla">
+            <tr><th>Ítem</th><th>Salida</th><th>Usado</th><th>Devuelto</th><th>Dif.</th></tr>
+            ${filas}
+          </table>
+        </div>
+        <div style="font-size:.72rem;color:var(--texto-sub);margin-top:8px;">
+          Regla: Salida = Usado + Devuelto. ⚠️ indica diferencia pendiente de justificar.
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('contenido').innerHTML = html;
+}
+
+// ── Helpers de render ─────────────────────────────────────────────────
+function mkSeccion(titulo, count, contenido) {
+  const badge = count > 0
+    ? `<span class="det-badge">${count}</span>` : '';
+  return `<div class="det-seccion"><div class="det-seccion-titulo">${titulo} ${badge}</div>${contenido}</div>`;
+}
+
+function mkVacio(msg) {
+  return `<div class="det-vacio">${escHtml(msg)}</div>`;
+}
+
+function mkTablaItems(items) {
+  return `
+    <div style="overflow-x:auto;">
+      <table class="det-tabla">
+        <tr><th>Código</th><th>Descripción</th><th>Cant.</th></tr>
+        ${items.map(it => `<tr><td>${escHtml(it.c)}</td><td>${escHtml(it.n)}</td><td style="text-align:center">${escHtml(it.q)}</td></tr>`).join('')}
+      </table>
+    </div>`;
+}
+
+function mkFotos(urls, label) {
+  return `<div class="det-fotos">${urls.map((u, i) =>
+    `<a href="${escHtml(u)}" target="_blank" class="det-foto-link">${label || ('📷 Foto' + (urls.length > 1 ? ' ' + (i + 1) : ''))}</a>`
+  ).join('')}</div>`;
+}
+
+// ── Utilidades ────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function parseItems(str) {
+  if (!str || !str.trim()) return [];
+  return str.split('\n')
+    .map(l => { const p = l.split('|').map(s => s.trim()); return { c: p[0]||'', n: p[1]||'', q: p[2]||'' }; })
+    .filter(it => it.c);
+}
+
+function parsePhotos(str) {
+  if (!str || !str.trim()) return [];
+  return str.split('\n').map(u => u.trim()).filter(u => u.startsWith('http'));
+}
+</script>
+</body>
+</html>

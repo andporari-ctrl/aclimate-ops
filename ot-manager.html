@@ -26,7 +26,22 @@
       flex-direction: column;
       gap: 4px;
     }
-    .ot-card.cerrada { border-left-color: var(--gris-borde); opacity: .6; }
+    .ot-card.cerrada { border-left-color: var(--gris-borde); opacity: .88; }
+    .btn-ver-detalle {
+      padding: 7px 14px;
+      background: var(--azul-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-ver-detalle:hover { background: var(--azul); }
     .ot-card-header {
       display: flex;
       align-items: center;
@@ -585,7 +600,10 @@ function crearCardOT(ot, esAbierta) {
         <button class="btn-cerrar-ot"  onclick="confirmarCierre('${ot.id}')">🔒 Cerrar</button>
         <button class="btn-editar-ot"  onclick="abrirModal('${ot.id}')">✏️ Editar</button>
         <button class="btn-eliminar-ot" onclick="confirmarEliminar('${ot.id}')" title="Eliminar OT">🗑️</button>
-      </div>` : ''}
+      </div>` : `
+      <div class="ot-acciones" style="margin-top:6px;">
+        <a href="ot-detalle.html?id=${ot.id}" class="btn-ver-detalle">📋 Ver detalle completo</a>
+      </div>`}
   `;
   return card;
 }
