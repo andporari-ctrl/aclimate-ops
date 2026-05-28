@@ -909,7 +909,30 @@ async function guardarNuevaOT() {
 
 // ── Cerrar OT ────────────────────────────────────────────────────────
 async function confirmarCierre(otId) {
-  if (!confirm(`¿Cerrar la OT ${otId}?\n\nVerificá antes que F-01 = F-03 + F-04.`)) return;
+  // Verificar que exista F03 con fotos para esta OT
+  showToast('Verificando registros...', 'default', 2500);
+  try {
+    const resp = await fetch(`${CONFIG.GAS_URL}?action=formularios&tipo=F03&limit=500`, { cache: 'no-store' });
+    const json = await resp.json();
+    if (json.status === 'ok') {
+      const f03 = (json.data || []).filter(r => String(r['OT']) === otId);
+      if (!f03.length) {
+        showToast(`⚠️ No hay F-03 para ${otId}. El técnico debe enviar el reporte de trabajo antes de cerrar.`, 'error', 7000);
+        return;
+      }
+      const tieneFootos = f03.some(r =>
+        (r['Fotos Antes'] || r['Fotos Trabajo'] || r['Fotos Después'] || '').trim().startsWith('http')
+      );
+      if (!tieneFootos) {
+        showToast(`⚠️ El F-03 de ${otId} no tiene fotos. Las fotos (Antes y Después) son obligatorias para cerrar.`, 'error', 7000);
+        return;
+      }
+    }
+  } catch(e) {
+    if (!confirm(`No se pudo verificar el F-03 (${e.message}).\n\n¿Cerrar la OT de todas formas?`)) return;
+  }
+
+  if (!confirm(`¿Cerrar la OT ${otId}?`)) return;
   const ots = JSON.parse(localStorage.getItem('ots_local') || '[]');
   const ot  = ots.find(o => o.id === otId);
   if (ot) ot.estado = 'Cerrada';

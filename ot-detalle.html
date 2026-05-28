@@ -186,6 +186,40 @@
       color: var(--texto-sub);
     }
     .loading-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .det-foto-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      color: var(--azul); font-weight: 600; font-size: .75rem;
+      padding: 4px 10px; background: #EBF5FB; border-radius: 6px;
+      margin: 2px 2px 2px 0; border: none; cursor: pointer;
+    }
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,.92); justify-content: center;
+      align-items: center; flex-direction: column;
+    }
+    .lightbox-overlay.activo { display: flex; }
+    .lightbox-img {
+      max-width: 96vw; max-height: 76vh; border-radius: 8px;
+      object-fit: contain;
+    }
+    .lightbox-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 96vw; padding: 12px 0 0; gap: 10px;
+    }
+    .lightbox-close {
+      background: rgba(255,255,255,.18); border: none; color: #fff;
+      font-size: 1rem; padding: 9px 16px; border-radius: 8px; cursor: pointer;
+      font-weight: 700;
+    }
+    .lightbox-abrir {
+      color: #fff; font-size: .8rem; text-decoration: none;
+      background: rgba(255,255,255,.12); padding: 9px 16px; border-radius: 8px;
+    }
+    .btn-volver {
+      display: block; margin: 16px 12px 80px; padding: 13px;
+      background: var(--azul-dark); color: #fff; text-decoration: none;
+      text-align: center; border-radius: 10px; font-weight: 700; font-size: .88rem;
+    }
   </style>
 </head>
 <body>
@@ -203,6 +237,14 @@
   <div class="loading-state">
     <div class="icon">⏳</div>
     <p>Cargando datos de la OT...</p>
+  </div>
+</div>
+
+<div class="lightbox-overlay" id="lightbox" onclick="cerrarLightbox(event)">
+  <img class="lightbox-img" id="lightbox-img" src="" alt="Foto">
+  <div class="lightbox-bar">
+    <a class="lightbox-abrir" id="lightbox-link" href="#" target="_blank">↗ Abrir original</a>
+    <button class="lightbox-close" onclick="cerrarLightbox()">✕ Cerrar</button>
   </div>
 </div>
 
@@ -257,8 +299,31 @@ async function cargarDetalle() {
   }
 }
 
+// ── Lightbox ──────────────────────────────────────────────────────────
+let _fotosList = [];
+
+function abrirFoto(idx) {
+  const url = _fotosList[idx] || '';
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  const imgUrl = m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1600` : url;
+  document.getElementById('lightbox-img').src = imgUrl;
+  document.getElementById('lightbox-link').href = url;
+  document.getElementById('lightbox').classList.add('activo');
+}
+
+function cerrarLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox')) return;
+  document.getElementById('lightbox').classList.remove('activo');
+  document.getElementById('lightbox-img').src = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') cerrarLightbox();
+});
+
 // ── Render principal ──────────────────────────────────────────────────
 function renderDetalle(ot, f01, f03, f04, f06) {
+  _fotosList = [];
   const tech    = ot.tecnico   || ot['técnico']          || '—';
   const fechaAs = ot.fecha_asignacion || ot['fecha_asignación'] || '—';
   const cierre  = ot.timestamp_cierre || ot['timestamp_cierre'] || '';
@@ -435,6 +500,7 @@ function renderDetalle(ot, f01, f03, f04, f06) {
       </div>`;
   }
 
+  html += `<a href="ot-manager.html" class="btn-volver">← Volver a OTs</a>`;
   document.getElementById('contenido').innerHTML = html;
 }
 
@@ -460,9 +526,12 @@ function mkTablaItems(items) {
 }
 
 function mkFotos(urls, label) {
-  return `<div class="det-fotos">${urls.map((u, i) =>
-    `<a href="${escHtml(u)}" target="_blank" class="det-foto-link">${label || ('📷 Foto' + (urls.length > 1 ? ' ' + (i + 1) : ''))}</a>`
-  ).join('')}</div>`;
+  return `<div class="det-fotos">${urls.map((u, i) => {
+    const idx = _fotosList.length;
+    _fotosList.push(u);
+    const txt = label || ('📷 Foto' + (urls.length > 1 ? ' ' + (i + 1) : ''));
+    return `<button class="det-foto-link" onclick="abrirFoto(${idx})">${txt}</button>`;
+  }).join('')}</div>`;
 }
 
 // ── Utilidades ────────────────────────────────────────────────────────
