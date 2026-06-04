@@ -425,19 +425,25 @@
           <input type="time" id="ot-hora-inicio">
         </div>
       </div>
-      <div class="campo">
-        <label>Duración estimada</label>
-        <select id="ot-duracion">
-          <option value="">— Sin definir —</option>
-          <option value="0.5">30 minutos</option>
-          <option value="1">1 hora</option>
-          <option value="1.5">1 h 30 min</option>
-          <option value="2">2 horas</option>
-          <option value="3">3 horas</option>
-          <option value="4">4 horas</option>
-          <option value="6">6 horas</option>
-          <option value="8">Día completo (8h)</option>
-        </select>
+      <div style="display:flex;gap:10px;">
+        <div class="campo" style="flex:1;">
+          <label>Duración estimada</label>
+          <select id="ot-duracion">
+            <option value="">— Sin definir —</option>
+            <option value="0.5">30 minutos</option>
+            <option value="1">1 hora</option>
+            <option value="1.5">1 h 30 min</option>
+            <option value="2">2 horas</option>
+            <option value="3">3 horas</option>
+            <option value="4">4 horas</option>
+            <option value="6">6 horas</option>
+            <option value="8">Día completo (8h)</option>
+          </select>
+        </div>
+        <div class="campo" style="flex:1;">
+          <label>Días de trabajo estimados</label>
+          <input type="number" id="ot-dias-estimados" min="1" max="365" placeholder="Ej: 3" style="text-align:center;">
+        </div>
       </div>
     </div>
 
@@ -589,7 +595,7 @@ function crearCardOT(ot, esAbierta) {
       <span>👤 ${tech}</span>
       <span>📅 ${fecha}</span>
     </div>
-    ${ot.hora_inicio ? `<div style="font-size:.76rem;font-weight:700;color:#1A5276;background:#EBF5FB;border-radius:6px;padding:3px 8px;margin-top:4px;display:inline-block;">🕐 ${ot.hora_inicio}${ot.duracion_horas ? ' · ' + _fmtDur(ot.duracion_horas) : ''}</div>` : ''}
+    ${ot.hora_inicio ? `<div style="font-size:.76rem;font-weight:700;color:#1A5276;background:#EBF5FB;border-radius:6px;padding:3px 8px;margin-top:4px;display:inline-block;">🕐 ${ot.hora_inicio}${ot.duracion_horas ? ' · ' + _fmtDur(ot.duracion_horas) : ''}${ot.dias_estimados ? ' · ' + ot.dias_estimados + (ot.dias_estimados == 1 ? ' día' : ' días') : ''}</div>` : (ot.dias_estimados ? `<div style="font-size:.76rem;font-weight:700;color:#1A5276;background:#EBF5FB;border-radius:6px;padding:3px 8px;margin-top:4px;display:inline-block;">📅 ${ot.dias_estimados} ${ot.dias_estimados == 1 ? 'día estimado' : 'días estimados'}</div>` : '')}
     ${creado    ? `<div style="font-size:.72rem;color:var(--texto-sub);margin-top:2px;">🕐 Creada: ${creado}</div>` : ''}
     ${dir       ? `<div style="font-size:.76rem;color:var(--texto-sub);margin-top:2px;">📍 ${dir}</div>` : ''}
     ${(contacto||tel) ? `<div style="font-size:.76rem;color:var(--texto-sub);">📞 ${contacto}${tel?' — '+tel:''}</div>` : ''}
@@ -785,6 +791,7 @@ function _limpiarModal() {
   document.getElementById('ot-fecha-inicio').value     = '';
   document.getElementById('ot-hora-inicio').value      = '';
   document.getElementById('ot-duracion').value         = '';
+  document.getElementById('ot-dias-estimados').value   = '';
   document.getElementById('ot-contacto-nombre').value  = '';
   document.getElementById('ot-contacto-tel').value     = '';
   document.getElementById('ot-direccion').value         = '';
@@ -811,7 +818,8 @@ function abrirModal(otId = null) {
     document.getElementById('ot-fecha').value           = ot.fecha_asignacion || ot['fecha_asignación'] || fechaHoy();
     document.getElementById('ot-fecha-inicio').value   = ot.fecha_inicio || '';
     document.getElementById('ot-hora-inicio').value    = ot.hora_inicio  || '';
-    document.getElementById('ot-duracion').value       = ot.duracion_horas || '';
+    document.getElementById('ot-duracion').value        = ot.duracion_horas || '';
+    document.getElementById('ot-dias-estimados').value  = ot.dias_estimados || '';
     document.getElementById('ot-contacto-nombre').value = ot.contacto_nombre || ot.contacto || '';
     document.getElementById('ot-contacto-tel').value    = ot.contacto_tel || ot['teléfono'] || '';
     document.getElementById('ot-direccion').value       = ot.direccion || ot['dirección'] || '';
@@ -872,6 +880,7 @@ async function guardarNuevaOT() {
     fecha_inicio:     document.getElementById('ot-fecha-inicio').value,
     hora_inicio:      document.getElementById('ot-hora-inicio').value,
     duracion_horas:   document.getElementById('ot-duracion').value,
+    dias_estimados:   document.getElementById('ot-dias-estimados').value ? Number(document.getElementById('ot-dias-estimados').value) : '',
     contacto_nombre:  document.getElementById('ot-contacto-nombre').value.trim(),
     contacto_tel:     document.getElementById('ot-contacto-tel').value.trim(),
     direccion:        document.getElementById('ot-direccion').value.trim(),
