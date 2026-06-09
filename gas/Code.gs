@@ -759,6 +759,7 @@ function computarDashboard() {
 }
 
 // ── Inventario — Importar (seed inicial desde Excel Maestro) ─────────
+// Siempre hace reemplazo completo: limpia la hoja y carga todo de nuevo.
 function manejarInventarioImportar(d) {
   const sheet = getSheet('Inventario');
   const INV_HEADERS = [
@@ -767,44 +768,30 @@ function manejarInventarioImportar(d) {
     'Existencia', 'Costo Unit (₡)', 'CTD Inicial', 'Estado', 'Última Actualización'
   ];
 
-  // Crear encabezados si la hoja está vacía
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(INV_HEADERS);
-    formatearEncabezados(sheet);
-  }
-
   const items = d.items || [];
   if (!items.length) return { insertados: 0, actualizados: 0 };
 
-  // Leer mapa existente para decidir insertar vs actualizar
-  let existingData = sheet.getLastRow() > 1 ? sheet.getDataRange().getValues() : [INV_HEADERS];
-  const codigoIdx = existingData[0].indexOf('Código');
-  const existMap = {};
-  for (let i = 1; i < existingData.length; i++) {
-    existMap[String(existingData[i][codigoIdx])] = i + 1; // 1-indexed row
-  }
+  // Limpiar hoja completa y escribir encabezados frescos
+  sheet.clearContents();
+  sheet.appendRow(INV_HEADERS);
+  formatearEncabezados(sheet);
 
   const ts = Utilities.formatDate(new Date(), 'America/Costa_Rica', 'dd/MM/yyyy hh:mm a');
-  let insertados = 0, actualizados = 0;
 
-  items.forEach(it => {
-    const row = [
-      it.codigo, it.ubicacion, it.categoria, it.descripcion,
-      it.marca || '', it.proveedor || '', it.ubicacion_camion || '',
-      Number(it.stock_min) || 0, Number(it.stock_max) || 0,
-      Number(it.existencia) || 0, Number(it.costo_unit) || 0,
-      Number(it.ctd_inicial) || 0, it.estado || '', ts
-    ];
-    if (existMap[it.codigo]) {
-      sheet.getRange(existMap[it.codigo], 1, 1, row.length).setValues([row]);
-      actualizados++;
-    } else {
-      sheet.appendRow(row);
-      insertados++;
-    }
-  });
+  // Escribir todos los ítems de una vez (batch)
+  const rows = items.map(it => [
+    it.codigo, it.ubicacion, it.categoria, it.descripcion,
+    it.marca || '', it.proveedor || '', it.ubicacion_camion || '',
+    Number(it.stock_min) || 0, Number(it.stock_max) || 0,
+    Number(it.existencia) || 0, Number(it.costo_unit) || 0,
+    Number(it.ctd_inicial) || 0, it.estado || '', ts
+  ]);
 
-  return { insertados, actualizados, total: items.length };
+  if (rows.length > 0) {
+    sheet.getRange(2, 1, rows.length, INV_HEADERS.length).setValues(rows);
+  }
+
+  return { insertados: rows.length, actualizados: 0, total: rows.length };
 }
 
 // ── Inventario — Compra / ingreso ────────────────────────────────────

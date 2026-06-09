@@ -9876,15 +9876,15 @@ const INVENTARIO_INICIAL = [
     "codigo": "ACL-BOD-767",
     "ubicacion": "BODEGA",
     "categoria": "Materiales",
-    "descripcion": "Lámina de Piralu",
+    "descripcion": "Lámina de Piralu (½ lámina)",
     "marca": "—",
     "proveedor": "—",
     "ubicacion_camion": "",
     "stock_min": 0,
     "stock_max": 0,
-    "existencia": 0,
+    "existencia": 1,
     "costo_unit": 0,
-    "ctd_inicial": 0,
+    "ctd_inicial": 1,
     "estado": ""
   },
   {
